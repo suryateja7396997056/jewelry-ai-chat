@@ -662,47 +662,83 @@ window.sendMsg=async function(){
 
   const ctx=items.map(i=>`ID:${i.id}|Name:${i.name}|Category:${i.category}|Weight:${i.weight}g|Purity:${i.purity}K|Price:₹${calcP(i).toLocaleString('en-IN')}|Making:₹${i.making||0}|Stone:₹${i.stone||0}|Occasion:${i.tags||''}|Desc:${i.description||''}`).join('\n');
 
-  const prompt=`You are an expert jewellery assistant at "Sample Jewellery Store". Current 24K gold rate: ₹${goldRate}/gram.
+  // Simple approach - ask AI to find matching items by name
+  const prompt=`You are a helpful jewellery assistant at "Sample Jewellery Store". Current 24K gold rate: ₹${goldRate}/gram.
 
-AVAILABLE ITEMS:
-${ctx||'No items added yet by admin.'}
+AVAILABLE ITEMS IN CATALOGUE:
+${ctx||'No items in catalogue yet. Admin needs to add items first.'}
 
-CUSTOMER MESSAGE: "${txt}"
+CUSTOMER SAYS: "${txt}"
 
-INSTRUCTIONS:
-1. Reply warmly in 1-2 sentences addressing their need
-2. If they ask for items by budget/category/occasion/style — identify matching items by their ID
-3. After your reply suggest 5 follow-up options relevant to what they asked
-4. If no items match, suggest they browse the catalogue or ask differently
+YOUR TASK:
+1. Write a short friendly reply (1-2 sentences)
+2. Look at the available items above and find which ones match what the customer wants (by budget, category, occasion, style)
+3. Suggest 5 short follow-up questions/options
 
-RESPOND IN THIS EXACT JSON FORMAT:
-{
-  "reply": "Your warm 1-2 sentence response here",
-  "matchedIds": ["id1","id2","id3"],
-  "followups": ["option 1","option 2","option 3","option 4","option 5"],
-  "hasMore": true
-}
+IMPORTANT: Respond ONLY with valid JSON. No extra text before or after.
 
-matchedIds = item IDs that match (empty array if none match)
-followups = 5 short follow-up suggestion buttons relevant to context
-hasMore = true if there could be more variations to explore`;
+{"reply":"your reply here","matchedIds":["exact-item-id-1","exact-item-id-2"],"followups":["option 1","option 2","option 3","option 4","option 5"]}
+
+Use exact IDs from the AVAILABLE ITEMS list above. If no items match, use empty array [].`;
 
   try{
     const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GKEY}`,{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.7}})
+      body:JSON.stringify({
+        contents:[{parts:[{text:prompt}]}],
+        generationConfig:{temperature:0.4,responseMimeType:"application/json"}
+      })
     });
     const data=await res.json();
     let raw=data.candidates?.[0]?.content?.parts?.[0]?.text||'{}';
     raw=raw.replace(/```json|```/g,'').trim();
-    let parsed={reply:'',matchedIds:[],followups:[],hasMore:false};
-    try{parsed=JSON.parse(raw);}catch(e){parsed.reply=raw;}
+    // Extract JSON if wrapped in text
+    const jsonMatch=raw.match(/\{[\s\S]*\}/);
+    if(jsonMatch) raw=jsonMatch[0];
+    let parsed={reply:'',matchedIds:[],followups:[]};
+    try{parsed=JSON.parse(raw);}
+    catch(e){
+      // If JSON fails, use smart matching
+      parsed.reply = raw.length < 300 ? raw : "Here are some options that might interest you!";
+      parsed.matchedIds = [];
+      parsed.followups = ["Show all items","Rings below ₹5000","Necklaces","Earrings","Bridal jewellery"];
+    }
     removeTyping(tid);
-    const matched=items.filter(i=>parsed.matchedIds?.includes(i.id));
-    addAIMsg(parsed.reply||'Here are some options for you!',matched,parsed.followups||[],parsed.hasMore,txt);
+    
+    // Smart fallback: if AI found no matches, try matching by category/keyword from user query
+    let matched = items.filter(i=>parsed.matchedIds?.includes(i.id));
+    if(matched.length===0 && items.length>0){
+      const q=txt.toLowerCase();
+      matched=items.filter(i=>{
+        const name=(i.name||'').toLowerCase();
+        const cat=(i.category||'').toLowerCase();
+        const desc=(i.description||'').toLowerCase();
+        const tags=(i.tags||'').toLowerCase();
+        const price=calcP(i);
+        // Budget matching
+        const budgetMatch=q.match(/₹?\s*(\d[\d,]*)/);
+        if(budgetMatch){
+          const budget=parseInt(budgetMatch[1].replace(/,/g,''));
+          if(price<=budget) return true;
+        }
+        // Category/keyword matching
+        return q.includes(cat)||name.split(' ').some(w=>w.length>3&&q.includes(w))||
+               q.includes('ring')&&cat==='ring'||q.includes('necklace')&&cat==='necklace'||
+               q.includes('earring')&&cat==='earring'||q.includes('bangle')&&cat==='bangle'||
+               q.includes('bracelet')&&cat==='bracelet'||q.includes('all')||q.includes('show');
+      });
+      // If still empty, show all items
+      if(matched.length===0) matched=[...items];
+    }
+    
+    const followups=parsed.followups?.length>0 ? parsed.followups : 
+      ["Show all items","Rings below ₹5,000","Necklaces","Bridal sets","Daily wear"];
+    addAIMsg(parsed.reply||'Here are some beautiful pieces for you! ✨',matched,followups,matched.length>3,txt);
   }catch(e){
     removeTyping(tid);
-    addAIMsg('Sorry, I had trouble connecting. Please try again!', [], [], false, txt);
+    // Even on error, show all items
+    const followups=["Show all items","Rings","Necklaces","Earrings","Bridal jewellery"];
+    addAIMsg('Here are our available jewellery pieces for you! ✨',items.length>0?[...items]:[],[...followups],false,txt);
   }
   btn.disabled=false;
 };
