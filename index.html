@@ -8,45 +8,56 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --gold: #C9A84C;--gold-light: #E8C96A;--gold-dim: #8B6914;--gold-pale: rgba(201,168,76,0.08);
-  --black: #090909;--black2: #111111;--black3: #1A1A1A;--black4: #222222;--black5: #2C2C2C;
-  --white: #F5F0E8;--white2: #E8E0D0;--gray: #888880;--gray2: #555550;
-  --red: #E05555;--green: #55AA77;
-  --font-d: 'Playfair Display', serif;--font-b: 'DM Sans', sans-serif;
-  --radius: 14px;--shadow: 0 20px 60px rgba(0,0,0,0.6);
+  --gold: #D4AF37; --gold-light: #F9E596; --gold-dim: #997A15; --gold-pale: rgba(212, 175, 55, 0.08);
+  --black: #050505; --black2: #0E0E0E; --black3: #161616; --black4: #1E1E1E; --black5: #2A2A2A;
+  --white: #F8F5F0; --white2: #EAE3D8; --gray: #A0A0A0; --gray2: #666666;
+  --red: #E56363; --green: #63C18A;
+  --font-d: 'Playfair Display', serif; --font-b: 'DM Sans', sans-serif;
+  --radius: 16px; --shadow: 0 24px 64px rgba(0,0,0,0.8);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--black);color:var(--white);font-family:var(--font-b);height:100vh;overflow:hidden;}
+body{background:var(--black);color:var(--white);font-family:var(--font-b);height:100vh;overflow:hidden;
+  background-image:radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+                   radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.03) 0%, transparent 40%);
+}
 
 /* AUTH */
 #auth-screen{
-  position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;z-index:100;
-  background-image:radial-gradient(ellipse at 20% 50%,rgba(201,168,76,0.07) 0%,transparent 60%),
-                   radial-gradient(ellipse at 80% 20%,rgba(201,168,76,0.04) 0%,transparent 50%);
+  position:fixed;inset:0;background:rgba(5,5,5,0.8);display:flex;align-items:center;justify-content:center;z-index:100;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  background-image: url('https://images.unsplash.com/photo-1599643478514-4a4e09d5630e?q=80&w=2070&auto=format&fit=crop');
+  background-size: cover; background-position: center;
+}
+#auth-screen::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(5,5,5,0.96) 0%, rgba(5,5,5,0.7) 100%);
 }
 .auth-box{
-  background:var(--black3);border:1px solid rgba(201,168,76,0.18);border-radius:22px;
+  position: relative; z-index: 10;
+  background:rgba(22,22,22,0.65);border:1px solid rgba(212,175,55,0.25);border-radius:24px;
   padding:48px 44px;width:420px;max-width:95vw;
-  box-shadow:0 40px 80px rgba(0,0,0,0.8),inset 0 1px 0 rgba(201,168,76,0.12);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.9), inset 0 1px 0 rgba(212, 175, 55, 0.3);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
 }
 .auth-logo{text-align:center;margin-bottom:32px;}
-.auth-logo .gem{font-size:36px;display:block;margin-bottom:10px;}
-.auth-logo h1{font-family:var(--font-d);font-size:22px;color:var(--gold);letter-spacing:3px;font-weight:500;}
-.auth-logo p{font-size:10px;color:var(--gray);letter-spacing:4px;text-transform:uppercase;margin-top:4px;}
-.auth-tabs{display:flex;background:var(--black4);border-radius:10px;padding:4px;margin-bottom:28px;}
-.auth-tab{flex:1;padding:10px;text-align:center;font-size:14px;cursor:pointer;border-radius:8px;transition:all .2s;color:var(--gray);font-family:var(--font-b);border:none;background:none;}
-.auth-tab.active{background:var(--black3);color:var(--gold);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
-.auth-form input{width:100%;background:var(--black4);border:1px solid var(--black5);border-radius:10px;padding:14px 16px;font-size:14px;color:var(--white);font-family:var(--font-b);margin-bottom:12px;outline:none;transition:border .2s;}
-.auth-form input:focus{border-color:var(--gold-dim);}
+.auth-logo .gem{font-size:36px;display:block;margin-bottom:10px;animation:float 4s ease-in-out infinite;}
+@keyframes float { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(-8px);} }
+.auth-logo h1{font-family:var(--font-d);font-size:24px;color:var(--gold);letter-spacing:4px;font-weight:500;}
+.auth-logo p{font-size:10px;color:var(--gray);letter-spacing:4px;text-transform:uppercase;margin-top:6px;}
+.auth-tabs{display:flex;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:5px;margin-bottom:28px;}
+.auth-tab{flex:1;padding:12px;text-align:center;font-size:14px;cursor:pointer;border-radius:10px;transition:all .3s;color:var(--gray);font-family:var(--font-b);border:none;background:none;font-weight:500;}
+.auth-tab.active{background:var(--gold);color:var(--black);box-shadow:0 4px 16px rgba(212,175,55,0.3);}
+.auth-form input{width:100%;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;font-size:14px;color:var(--white);font-family:var(--font-b);margin-bottom:14px;outline:none;transition:border .3s, background .3s;}
+.auth-form input:focus{border-color:var(--gold);background:rgba(0,0,0,0.6);}
 .auth-form input::placeholder{color:var(--gray2);}
-.btn-gold{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:600;color:var(--black);cursor:pointer;font-family:var(--font-b);letter-spacing:.5px;transition:all .2s;margin-bottom:12px;}
-.btn-gold:hover{opacity:.88;transform:translateY(-1px);}
-.btn-google{width:100%;background:var(--black4);border:1px solid var(--black5);border-radius:10px;padding:13px;font-size:14px;color:var(--white);cursor:pointer;font-family:var(--font-b);display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;}
-.btn-google:hover{border-color:var(--gray2);}
-.divider{text-align:center;margin:14px 0;color:var(--gray2);font-size:12px;position:relative;}
-.divider::before,.divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--black5);}
+.btn-gold{width:100%;background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--gold-dim));background-size:200% auto;border:none;border-radius:12px;padding:16px;font-size:15px;font-weight:600;color:var(--black);cursor:pointer;font-family:var(--font-b);letter-spacing:.5px;transition:all .3s;margin-bottom:14px;box-shadow:0 8px 24px rgba(212,175,55,0.25);}
+.btn-gold:hover{background-position:right center;transform:translateY(-2px);box-shadow:0 12px 32px rgba(212,175,55,0.4);}
+.btn-google{width:100%;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;font-size:14px;color:var(--white);cursor:pointer;font-family:var(--font-b);display:flex;align-items:center;justify-content:center;gap:12px;transition:all .3s;}
+.btn-google:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);}
+.divider{text-align:center;margin:18px 0;color:var(--gray2);font-size:12px;position:relative;text-transform:uppercase;letter-spacing:1px;}
+.divider::before,.divider::after{content:'';position:absolute;top:50%;width:35%;height:1px;background:rgba(255,255,255,0.1);}
 .divider::before{left:0;}.divider::after{right:0;}
-.auth-msg{font-size:12px;text-align:center;margin-top:8px;min-height:18px;}
+.auth-msg{font-size:13px;text-align:center;margin-top:12px;min-height:18px;font-weight:500;}
 .auth-msg.err{color:var(--red);}.auth-msg.ok{color:var(--green);}
 
 /* APP */
@@ -118,7 +129,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);height
 .pcard-name{font-family:var(--font-d);font-size:14px;color:var(--white);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .pcard-price{font-family:var(--font-d);font-size:18px;color:var(--gold);margin-bottom:3px;}
 .pcard-meta{font-size:11px;color:var(--gray);}
-.pcard-desc{font-size:12px;color:var(--gray2);margin-top:6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.pcard-desc{font-size:12px;color:var(--gray2);margin-top:6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .pcard-actions{display:flex;gap:8px;margin-top:10px;}
 .btn-wish-sm{flex:1;background:none;border:1px solid rgba(201,168,76,0.25);border-radius:7px;padding:7px;font-size:12px;cursor:pointer;transition:all .2s;color:var(--gray);font-family:var(--font-b);}
 .btn-wish-sm:hover,.btn-wish-sm.sv{background:rgba(201,168,76,0.12);color:var(--gold);border-color:var(--gold);}
@@ -278,6 +289,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);height
     <div id="lf" class="auth-form">
       <input type="email" id="le" placeholder="Email address"/>
       <input type="password" id="lp" placeholder="Password"/>
+      <div style="text-align:right; margin-bottom:14px;"><a href="#" onclick="showForgot()" style="color:var(--gold); font-size:12px; text-decoration:none; font-weight:500;">Forgot password?</a></div>
       <button class="btn-gold" onclick="doLogin()">Sign In</button>
       <div class="divider">or continue with</div>
       <button class="btn-google" onclick="doGoogle()"><svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>Continue with Google</button>
@@ -286,11 +298,19 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);height
     <div id="sf" class="auth-form" style="display:none">
       <input type="text" id="sn" placeholder="Full name"/>
       <input type="email" id="se" placeholder="Email address"/>
+      <input type="text" id="sphone" placeholder="Phone Number (e.g. 9876543210)"/>
       <input type="password" id="sp" placeholder="Password (min 6 characters)"/>
       <button class="btn-gold" onclick="doSignup()">Create Account</button>
       <div class="divider">or continue with</div>
       <button class="btn-google" onclick="doGoogle()"><svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>Continue with Google</button>
       <div class="auth-msg" id="sm"></div>
+    </div>
+    <div id="ff" class="auth-form" style="display:none">
+      <p style="font-size:14px; text-align:center; margin-bottom:16px; color:var(--gray);">Enter your email to receive a password reset link.</p>
+      <input type="email" id="fe" placeholder="Email address"/>
+      <button class="btn-gold" onclick="doForgot()">Send Reset Link</button>
+      <button class="btn-google" style="margin-top:12px; background:none; border:none; color:var(--gray);" onclick="switchTab('login')">⬅ Back to Sign In</button>
+      <div class="auth-msg" id="fm"></div>
     </div>
   </div>
 </div>
@@ -454,7 +474,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);height
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged,updateProfile,sendEmailVerification}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged,updateProfile,sendEmailVerification,sendPasswordResetEmail}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import{getFirestore,collection,addDoc,getDocs,deleteDoc,doc,setDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const FC={apiKey:"AIzaSyAzzyQVLP1kNv62L5zdDUjYJH5fm0aUYBA",authDomain:"jewelry-ai-chat.firebaseapp.com",projectId:"jewelry-ai-chat",storageBucket:"jewelry-ai-chat.firebasestorage.app",messagingSenderId:"941334368131",appId:"1:941334368131:web:1354c4cb7f5700bf26f0b6"};
@@ -498,9 +518,19 @@ onAuthStateChanged(auth,u=>{
 
 // AUTH
 window.switchTab=function(t){
-  document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active'));event.target.classList.add('active');
+  document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active'));
+  if(event&&event.target.classList)event.target.classList.add('active');
   document.getElementById('lf').style.display=t==='login'?'block':'none';
   document.getElementById('sf').style.display=t==='signup'?'block':'none';
+  document.getElementById('ff').style.display=t==='forgot'?'block':'none';
+};
+window.showForgot=function(){ switchTab('forgot'); document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active')); };
+window.doForgot=async function(){
+  const e=document.getElementById('fe').value.trim(),m=document.getElementById('fm');
+  if(!e){m.className='auth-msg err';m.textContent='Enter your email address';return;}
+  m.className='auth-msg';m.textContent='Sending...';
+  try{await sendPasswordResetEmail(auth,e);m.className='auth-msg ok';m.textContent='✅ Reset link sent!';}
+  catch(err){m.className='auth-msg err';m.textContent=err.message;}
 };
 window.doLogin=async function(){
   const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value,m=document.getElementById('lm');
@@ -510,14 +540,21 @@ window.doLogin=async function(){
   catch(err){m.className='auth-msg err';m.textContent=err.code==='auth/invalid-credential'?'Invalid email or password':err.message;}
 };
 window.doSignup=async function(){
-  const n=document.getElementById('sn').value.trim(),e=document.getElementById('se').value.trim(),p=document.getElementById('sp').value,m=document.getElementById('sm');
-  if(!n||!e||!p){m.className='auth-msg err';m.textContent='Fill all fields';return;}
+  const n=document.getElementById('sn').value.trim(),e=document.getElementById('se').value.trim(),ph=document.getElementById('sphone').value.trim(),p=document.getElementById('sp').value,m=document.getElementById('sm');
+  if(!n||!e||!ph||!p){m.className='auth-msg err';m.textContent='Fill all fields';return;}
   if(p.length<6){m.className='auth-msg err';m.textContent='Password min 6 characters';return;}
   m.className='auth-msg';m.textContent='Creating account...';
-  try{const c=await createUserWithEmailAndPassword(auth,e,p);await updateProfile(c.user,{displayName:n});await sendEmailVerification(c.user);m.className='auth-msg ok';m.textContent='✅ Account created! Check email to verify.';}
+  try{const c=await createUserWithEmailAndPassword(auth,e,p);await updateProfile(c.user,{displayName:n});await sendEmailVerification(c.user);
+  await setDoc(doc(db,'users',c.user.uid),{name:n,email:e,phone:ph,createdAt:serverTimestamp()});
+  m.className='auth-msg ok';m.textContent='✅ Account created! Check email to verify.';}
   catch(err){m.className='auth-msg err';m.textContent=err.code==='auth/email-already-in-use'?'Email already registered':err.message;}
 };
-window.doGoogle=async function(){try{await signInWithPopup(auth,gp);}catch(e){notify('Google login failed');}};
+window.doGoogle=async function(){
+  try{
+    const result = await signInWithPopup(auth,gp);
+    await setDoc(doc(db,'users',result.user.uid),{name:result.user.displayName,email:result.user.email,updatedAt:serverTimestamp()},{merge:true});
+  }catch(e){notify('Google login failed');}
+};
 window.doLogout=async function(){await signOut(auth);};
 
 // NAVIGATION
