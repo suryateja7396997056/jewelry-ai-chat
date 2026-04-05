@@ -3,354 +3,681 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sample Jewellery Store — AI Assistant</title>
+<title>Sample Jewellery Store — AI Powered</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --gold: #D4AF37; --gold-light: #F9E596; --gold-dim: #997A15; --gold-pale: rgba(212, 175, 55, 0.08);
-  --black: #050505; --black2: #0E0E0E; --black3: #161616; --black4: #1E1E1E; --black5: #2A2A2A;
-  --white: #F8F5F0; --white2: #EAE3D8; --gray: #A0A0A0; --gray2: #666666;
-  --red: #E56363; --green: #63C18A;
-  --font-d: 'Playfair Display', serif; --font-b: 'DM Sans', sans-serif;
-  --radius: 16px; --shadow: 0 24px 64px rgba(0,0,0,0.8);
+:root{
+  --g1:#D4AF37;--g2:#B8860B;--g3:#8B6914;--g4:rgba(212,175,55,0.12);--g5:rgba(212,175,55,0.06);
+  --b0:#050505;--b1:#0A0A0A;--b2:#0F0F0F;--b3:#161616;--b4:#1E1E1E;--b5:#282828;--b6:#333333;
+  --w1:#F8F3E8;--w2:#EDE5D0;--w3:#C8BFA8;--w4:#8A8070;--w5:#4A4438;
+  --red:#C0392B;--green:#27AE60;--radius:12px;
+  --fd:'Cormorant Garamond',serif;--fb:'Jost',sans-serif;
+  --shadow-gold:0 0 40px rgba(212,175,55,0.08);
+  --shadow-deep:0 24px 64px rgba(0,0,0,0.8);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--black);color:var(--white);font-family:var(--font-b);height:100vh;overflow:hidden;
-  background-image:radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
-                   radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.03) 0%, transparent 40%);
-}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--b0);color:var(--w1);font-family:var(--fb);}
 
-/* AUTH */
-#auth-screen{
-  position:fixed;inset:0;background:rgba(5,5,5,0.8);display:flex;align-items:center;justify-content:center;z-index:100;
-  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  background-image: url('https://images.unsplash.com/photo-1599643478514-4a4e09d5630e?q=80&w=2070&auto=format&fit=crop');
-  background-size: cover; background-position: center;
-}
-#auth-screen::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(5,5,5,0.96) 0%, rgba(5,5,5,0.7) 100%);
-}
-.auth-box{
-  position: relative; z-index: 10;
-  background:rgba(22,22,22,0.65);border:1px solid rgba(212,175,55,0.25);border-radius:24px;
-  padding:48px 44px;width:420px;max-width:95vw;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.9), inset 0 1px 0 rgba(212, 175, 55, 0.3);
-  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-}
-.auth-logo{text-align:center;margin-bottom:32px;}
-.auth-logo .gem{font-size:36px;display:block;margin-bottom:10px;animation:float 4s ease-in-out infinite;}
-@keyframes float { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(-8px);} }
-.auth-logo h1{font-family:var(--font-d);font-size:24px;color:var(--gold);letter-spacing:4px;font-weight:500;}
-.auth-logo p{font-size:10px;color:var(--gray);letter-spacing:4px;text-transform:uppercase;margin-top:6px;}
-.auth-tabs{display:flex;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:5px;margin-bottom:28px;}
-.auth-tab{flex:1;padding:12px;text-align:center;font-size:14px;cursor:pointer;border-radius:10px;transition:all .3s;color:var(--gray);font-family:var(--font-b);border:none;background:none;font-weight:500;}
-.auth-tab.active{background:var(--gold);color:var(--black);box-shadow:0 4px 16px rgba(212,175,55,0.3);}
-.auth-form input{width:100%;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;font-size:14px;color:var(--white);font-family:var(--font-b);margin-bottom:14px;outline:none;transition:border .3s, background .3s;}
-.auth-form input:focus{border-color:var(--gold);background:rgba(0,0,0,0.6);}
-.auth-form input::placeholder{color:var(--gray2);}
-.btn-gold{width:100%;background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--gold-dim));background-size:200% auto;border:none;border-radius:12px;padding:16px;font-size:15px;font-weight:600;color:var(--black);cursor:pointer;font-family:var(--font-b);letter-spacing:.5px;transition:all .3s;margin-bottom:14px;box-shadow:0 8px 24px rgba(212,175,55,0.25);}
-.btn-gold:hover{background-position:right center;transform:translateY(-2px);box-shadow:0 12px 32px rgba(212,175,55,0.4);}
-.btn-google{width:100%;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;font-size:14px;color:var(--white);cursor:pointer;font-family:var(--font-b);display:flex;align-items:center;justify-content:center;gap:12px;transition:all .3s;}
-.btn-google:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);}
-.divider{text-align:center;margin:18px 0;color:var(--gray2);font-size:12px;position:relative;text-transform:uppercase;letter-spacing:1px;}
-.divider::before,.divider::after{content:'';position:absolute;top:50%;width:35%;height:1px;background:rgba(255,255,255,0.1);}
-.divider::before{left:0;}.divider::after{right:0;}
-.auth-msg{font-size:13px;text-align:center;margin-top:12px;min-height:18px;font-weight:500;}
-.auth-msg.err{color:var(--red);}.auth-msg.ok{color:var(--green);}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--b5);border-radius:4px;}
 
-/* APP */
+/* ═══════════════════════════════════════
+   AUTH SCREEN
+═══════════════════════════════════════ */
+#auth{
+  position:fixed;inset:0;z-index:200;display:flex;
+  background:var(--b0);
+}
+.auth-left{
+  flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#0A0A0A 0%,#111008 50%,#0A0A0A 100%);
+}
+.auth-left-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 30% 40%,rgba(212,175,55,0.06) 0%,transparent 70%),
+    radial-gradient(ellipse 60% 80% at 70% 60%,rgba(212,175,55,0.04) 0%,transparent 70%);
+}
+.auth-left-pattern{
+  position:absolute;inset:0;opacity:0.03;
+  background-image:repeating-linear-gradient(45deg,var(--g1) 0,var(--g1) 1px,transparent 0,transparent 50%);
+  background-size:30px 30px;
+}
+.auth-brand{position:relative;z-index:1;text-align:center;padding:40px;}
+.auth-brand-gem{
+  font-size:64px;margin-bottom:24px;display:block;
+  filter:drop-shadow(0 0 20px rgba(212,175,55,0.3));
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.auth-brand h1{
+  font-family:var(--fd);font-size:42px;font-weight:300;letter-spacing:6px;
+  color:var(--g1);text-transform:uppercase;margin-bottom:12px;
+  text-shadow:0 0 40px rgba(212,175,55,0.3);
+}
+.auth-brand p{
+  font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--w4);
+  font-weight:300;
+}
+.auth-brand-line{
+  width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--g1),transparent);
+  margin:20px auto;
+}
+.auth-brand-tagline{
+  font-family:var(--fd);font-style:italic;font-size:16px;color:var(--w3);
+  margin-top:16px;opacity:0.7;
+}
+.auth-right{
+  width:460px;background:var(--b1);border-left:1px solid rgba(212,175,55,0.08);
+  display:flex;align-items:center;justify-content:center;padding:40px 44px;
+  overflow-y:auto;
+}
+.auth-box{width:100%;}
+.auth-box-title{
+  font-family:var(--fd);font-size:28px;font-weight:300;color:var(--w1);
+  margin-bottom:6px;letter-spacing:1px;
+}
+.auth-box-sub{font-size:13px;color:var(--w4);margin-bottom:28px;font-weight:300;}
+
+/* TABS */
+.auth-tabs{display:flex;background:var(--b3);border-radius:10px;padding:4px;margin-bottom:28px;border:1px solid rgba(212,175,55,0.06);}
+.atab{flex:1;padding:10px;text-align:center;font-size:13px;cursor:pointer;border-radius:8px;transition:all .25s;color:var(--w4);font-family:var(--fb);border:none;background:none;letter-spacing:.5px;}
+.atab.on{background:var(--b5);color:var(--g1);box-shadow:0 2px 12px rgba(0,0,0,0.4);}
+
+/* FORM ELEMENTS */
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:11px;color:var(--w4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;font-weight:500;}
+.fg input{
+  width:100%;background:var(--b3);border:1px solid var(--b6);border-radius:10px;
+  padding:13px 16px;font-size:14px;color:var(--w1);font-family:var(--fb);
+  outline:none;transition:all .2s;font-weight:300;
+}
+.fg input:focus{border-color:var(--g3);background:var(--b4);box-shadow:0 0 0 3px rgba(212,175,55,0.04);}
+.fg input::placeholder{color:var(--w5);}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* BUTTONS */
+.btn-main{
+  width:100%;background:linear-gradient(135deg,var(--g1),var(--g2));
+  border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:600;
+  color:#000;cursor:pointer;font-family:var(--fb);letter-spacing:1px;
+  text-transform:uppercase;transition:all .25s;margin-bottom:12px;
+  box-shadow:0 4px 20px rgba(212,175,55,0.2);
+}
+.btn-main:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(212,175,55,0.3);}
+.btn-main:active{transform:translateY(0);}
+.btn-google{
+  width:100%;background:var(--b3);border:1px solid var(--b6);border-radius:10px;
+  padding:13px;font-size:13px;color:var(--w2);cursor:pointer;font-family:var(--fb);
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;
+  letter-spacing:.5px;font-weight:400;
+}
+.btn-google:hover{border-color:var(--g3);background:var(--b4);}
+.btn-text{background:none;border:none;color:var(--g1);cursor:pointer;font-size:12px;font-family:var(--fb);text-decoration:underline;text-underline-offset:3px;padding:0;}
+.btn-text:hover{color:var(--g2);}
+
+/* DIVIDER */
+.div{display:flex;align-items:center;gap:12px;margin:16px 0;}
+.div span{flex:1;height:1px;background:var(--b6);}
+.div p{font-size:11px;color:var(--w5);letter-spacing:1px;white-space:nowrap;}
+
+/* MESSAGES */
+.amsg{font-size:12px;text-align:center;margin-top:10px;min-height:16px;padding:8px;border-radius:8px;transition:all .2s;}
+.amsg.err{color:#ff6b6b;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.2);}
+.amsg.ok{color:#55efc4;background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.2);}
+.amsg:empty{padding:0;background:none;border:none;}
+
+/* FORGOT PASSWORD LINK */
+.forgot-row{display:flex;justify-content:flex-end;margin-top:-6px;margin-bottom:14px;}
+
+/* ═══════════════════════════════════════
+   MAIN APP
+═══════════════════════════════════════ */
 #app{display:none;height:100vh;flex-direction:row;}
 #app.on{display:flex;}
 
-/* SIDEBAR */
-.sidebar{width:256px;background:var(--black2);border-right:1px solid rgba(201,168,76,0.1);display:flex;flex-direction:column;flex-shrink:0;}
-.sb-logo{padding:22px 20px 16px;border-bottom:1px solid rgba(201,168,76,0.08);}
-.sb-logo .brand{font-family:var(--font-d);font-size:15px;color:var(--gold);letter-spacing:1.5px;}
-.sb-logo .sub{font-size:10px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
-.gold-bar{margin:14px 14px 0;background:var(--black3);border:1px solid rgba(201,168,76,0.18);border-radius:12px;padding:12px 16px;}
-.gold-bar .gl{font-size:10px;color:var(--gray);letter-spacing:1px;text-transform:uppercase;}
-.gold-bar .gp{font-size:20px;font-family:var(--font-d);color:var(--gold);margin-top:3px;}
-.gold-bar .gs{font-size:10px;color:var(--gray2);}
-.sb-nav{padding:8px 10px;flex:1;overflow-y:auto;}
-.nl{font-size:10px;color:var(--gray2);letter-spacing:2px;text-transform:uppercase;padding:12px 10px 5px;}
-.ni{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:all .15s;color:var(--gray);font-size:14px;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;font-family:var(--font-b);}
-.ni:hover{background:var(--black4);color:var(--white);}
-.ni.on{background:rgba(201,168,76,0.09);color:var(--gold);}
-.ni .ic{font-size:16px;width:20px;text-align:center;}
-.badge{margin-left:auto;background:var(--gold);color:var(--black);font-size:10px;font-weight:700;border-radius:10px;padding:2px 6px;}
-.sb-user{padding:14px 16px;border-top:1px solid rgba(201,168,76,0.08);display:flex;align-items:center;gap:10px;}
-.av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--black);flex-shrink:0;}
-.ui{flex:1;overflow:hidden;}
-.un{font-size:13px;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ue{font-size:10px;color:var(--gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.lo-btn{background:none;border:none;color:var(--gray);cursor:pointer;font-size:16px;padding:4px;border-radius:6px;transition:color .2s;}
-.lo-btn:hover{color:var(--red);}
+/* ═══════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════ */
+.sidebar{
+  width:260px;background:var(--b1);
+  border-right:1px solid rgba(212,175,55,0.07);
+  display:flex;flex-direction:column;flex-shrink:0;
+}
+.sb-top{padding:22px 20px 16px;border-bottom:1px solid rgba(212,175,55,0.06);}
+.sb-brand{display:flex;align-items:center;gap:10px;}
+.sb-gem{font-size:22px;filter:drop-shadow(0 0 8px rgba(212,175,55,0.4));}
+.sb-name{font-family:var(--fd);font-size:16px;color:var(--g1);letter-spacing:2px;font-weight:400;}
+.sb-sub{font-size:9px;color:var(--w4);letter-spacing:3px;text-transform:uppercase;margin-top:1px;}
 
-/* MAIN */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+/* GOLD RATE */
+.gold-rate{
+  margin:14px 14px 0;border-radius:12px;padding:14px 16px;
+  background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(212,175,55,0.03));
+  border:1px solid rgba(212,175,55,0.15);position:relative;overflow:hidden;
+}
+.gold-rate::before{
+  content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;
+  background:radial-gradient(circle,rgba(212,175,55,0.08),transparent);border-radius:50%;
+}
+.gr-label{font-size:9px;color:var(--w4);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+.gr-price{font-family:var(--fd);font-size:22px;color:var(--g1);font-weight:400;letter-spacing:1px;}
+.gr-sub{font-size:10px;color:var(--w5);margin-top:2px;}
+.gr-live{display:inline-flex;align-items:center;gap:4px;margin-top:4px;}
+.gr-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.gr-live-text{font-size:10px;color:var(--green);}
 
-/* CHAT */
+/* NAV */
+.sb-nav{padding:10px;flex:1;overflow-y:auto;}
+.nl{font-size:9px;color:var(--w5);letter-spacing:2px;text-transform:uppercase;padding:12px 10px 5px;font-weight:500;}
+.ni{
+  display:flex;align-items:center;gap:11px;padding:11px 14px;border-radius:10px;
+  cursor:pointer;transition:all .18s;color:var(--w4);font-size:13px;margin-bottom:2px;
+  border:none;background:none;width:100%;text-align:left;font-family:var(--fb);
+  font-weight:400;letter-spacing:.3px;position:relative;
+}
+.ni:hover{background:var(--b3);color:var(--w2);}
+.ni.on{background:rgba(212,175,55,0.08);color:var(--g1);}
+.ni.on::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--g1);border-radius:0 3px 3px 0;}
+.ni-ic{font-size:16px;width:20px;text-align:center;}
+.ni-badge{
+  margin-left:auto;background:var(--g1);color:#000;font-size:10px;
+  font-weight:700;border-radius:20px;padding:2px 7px;min-width:20px;text-align:center;
+}
+
+/* USER */
+.sb-user{
+  padding:14px 16px;border-top:1px solid rgba(212,175,55,0.06);
+  display:flex;align-items:center;gap:10px;
+}
+.u-av{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--g1),var(--g2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#000;
+  box-shadow:0 0 0 2px rgba(212,175,55,0.2);
+}
+.u-info{flex:1;overflow:hidden;}
+.u-name{font-size:13px;color:var(--w1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
+.u-email{font-size:10px;color:var(--w5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.lo-btn{background:none;border:1px solid var(--b6);color:var(--w4);cursor:pointer;font-size:13px;padding:6px;border-radius:8px;transition:all .2s;line-height:1;}
+.lo-btn:hover{border-color:var(--red);color:var(--red);}
+
+/* ═══════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════ */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--b0);}
+
+/* ═══════════════════════════════════════
+   CHAT VIEW
+═══════════════════════════════════════ */
 #vc{display:flex;flex-direction:column;height:100%;}
-.ch{padding:16px 22px;border-bottom:1px solid rgba(201,168,76,0.08);background:var(--black2);display:flex;align-items:center;gap:12px;}
-.ch h2{font-family:var(--font-d);font-size:17px;color:var(--white);}
-.ch p{font-size:12px;color:var(--gray);margin-top:1px;}
-.ai-badge{margin-left:auto;background:rgba(201,168,76,0.09);border:1px solid rgba(201,168,76,0.25);color:var(--gold);font-size:11px;padding:4px 12px;border-radius:20px;letter-spacing:.5px;}
-.msgs{flex:1;overflow-y:auto;padding:22px;display:flex;flex-direction:column;gap:22px;scroll-behavior:smooth;}
-.msgs::-webkit-scrollbar{width:3px;}
-.msgs::-webkit-scrollbar-thumb{background:var(--black5);border-radius:3px;}
-.msg{display:flex;gap:12px;animation:fu .3s ease;}
+.chat-hdr{
+  padding:18px 28px;border-bottom:1px solid rgba(212,175,55,0.06);
+  background:var(--b1);display:flex;align-items:center;gap:14px;
+  backdrop-filter:blur(10px);
+}
+.chat-hdr-info h2{font-family:var(--fd);font-size:20px;color:var(--w1);font-weight:400;letter-spacing:1px;}
+.chat-hdr-info p{font-size:12px;color:var(--w4);margin-top:2px;font-weight:300;}
+.ai-pill{
+  margin-left:auto;background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.2);
+  color:var(--g1);font-size:11px;padding:5px 14px;border-radius:20px;letter-spacing:1px;
+  font-weight:500;display:flex;align-items:center;gap:6px;
+}
+.ai-pill::before{content:'';width:6px;height:6px;background:var(--g1);border-radius:50%;animation:pulse 2s infinite;}
+
+/* MESSAGES */
+.msgs{flex:1;overflow-y:auto;padding:28px;display:flex;flex-direction:column;gap:24px;scroll-behavior:smooth;}
+.msg{display:flex;gap:14px;animation:fu .35s cubic-bezier(0.34,1.56,0.64,1);}
 .msg.u{flex-direction:row-reverse;}
-@keyframes fu{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.mav{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;}
-.msg.ai .mav{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--black);}
-.msg.u .mav{background:var(--black5);color:var(--white);}
-.msg-inner{max-width:75%;}
-.mb{padding:14px 18px;border-radius:16px;font-size:14px;line-height:1.65;}
-.msg.ai .mb{background:var(--black3);color:var(--white);border-radius:4px 16px 16px 16px;border:1px solid rgba(201,168,76,0.1);}
-.msg.u .mb{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--black);border-radius:16px 4px 16px 16px;font-weight:500;}
-.typing{display:flex;gap:5px;align-items:center;padding:4px 0;}
-.typing span{width:7px;height:7px;background:var(--gray);border-radius:50%;animation:bl 1.2s infinite;}
-.typing span:nth-child(2){animation-delay:.2s;}.typing span:nth-child(3){animation-delay:.4s;}
-@keyframes bl{0%,80%,100%{opacity:.25;}40%{opacity:1;}}
+@keyframes fu{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.mav{
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;
+  margin-top:2px;
+}
+.msg.ai .mav{background:linear-gradient(135deg,var(--g1),var(--g2));color:#000;}
+.msg.u .mav{background:var(--b4);color:var(--w2);border:1px solid var(--b6);}
+.msg-inner{max-width:78%;display:flex;flex-direction:column;gap:12px;}
+.mb{
+  padding:16px 20px;border-radius:16px;font-size:14px;line-height:1.7;font-weight:300;
+}
+.msg.ai .mb{
+  background:var(--b3);color:var(--w1);
+  border-radius:4px 16px 16px 16px;
+  border:1px solid rgba(212,175,55,0.08);
+}
+.msg.u .mb{
+  background:linear-gradient(135deg,var(--g1),var(--g2));color:#000;
+  border-radius:16px 4px 16px 16px;font-weight:500;
+}
+
+/* TYPING */
+.typing{display:flex;gap:5px;align-items:center;height:20px;}
+.typing span{width:7px;height:7px;background:var(--g3);border-radius:50%;animation:bl 1.4s infinite;}
+.typing span:nth-child(2){animation-delay:.2s;}
+.typing span:nth-child(3){animation-delay:.4s;}
+@keyframes bl{0%,80%,100%{opacity:.2;transform:scale(0.8);}40%{opacity:1;transform:scale(1);}}
 
 /* PRODUCT CARDS IN CHAT */
-.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:14px;}
-.pcard{background:var(--black4);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .22s;}
-.pcard:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.5);}
-.pcard-img{width:100%;height:160px;background:var(--black5);display:flex;align-items:center;justify-content:center;font-size:40px;position:relative;overflow:hidden;}
-.pcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
-.pcard:hover .pcard-img img{transform:scale(1.04);}
-.pcard-wish{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);border:none;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:all .2s;}
-.pcard-wish:hover,.pcard-wish.sv{background:rgba(201,168,76,0.25);color:var(--gold);}
-.pcard-body{padding:12px 14px 14px;}
-.pcard-cat{font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
-.pcard-name{font-family:var(--font-d);font-size:14px;color:var(--white);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pcard-price{font-family:var(--font-d);font-size:18px;color:var(--gold);margin-bottom:3px;}
-.pcard-meta{font-size:11px;color:var(--gray);}
-.pcard-desc{font-size:12px;color:var(--gray2);margin-top:6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.pcard-actions{display:flex;gap:8px;margin-top:10px;}
-.btn-wish-sm{flex:1;background:none;border:1px solid rgba(201,168,76,0.25);border-radius:7px;padding:7px;font-size:12px;cursor:pointer;transition:all .2s;color:var(--gray);font-family:var(--font-b);}
-.btn-wish-sm:hover,.btn-wish-sm.sv{background:rgba(201,168,76,0.12);color:var(--gold);border-color:var(--gold);}
-.btn-view-sm{flex:1;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:7px;padding:7px;font-size:12px;cursor:pointer;transition:all .2s;color:var(--gold);font-family:var(--font-b);}
-.btn-view-sm:hover{background:rgba(201,168,76,0.2);}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-top:4px;}
+.pcard{
+  background:var(--b4);border:1px solid rgba(212,175,55,0.12);border-radius:14px;
+  overflow:hidden;cursor:pointer;transition:all .25s;
+}
+.pcard:hover{border-color:var(--g1);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.6),var(--shadow-gold);}
+.pc-img{
+  width:100%;height:150px;background:var(--b5);position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:36px;
+}
+.pc-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+.pcard:hover .pc-img img{transform:scale(1.06);}
+.pc-wb{
+  position:absolute;top:8px;right:8px;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,0.1);border-radius:50%;
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:12px;transition:all .2s;z-index:2;
+}
+.pc-wb:hover,.pc-wb.on{background:rgba(212,175,55,0.2);border-color:var(--g1);}
+.pc-body{padding:12px 14px 14px;}
+.pc-cat{font-size:9px;color:var(--g1);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;font-weight:500;}
+.pc-name{font-family:var(--fd);font-size:15px;color:var(--w1);margin-bottom:5px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pc-price{font-family:var(--fd);font-size:19px;color:var(--g1);font-weight:400;margin-bottom:3px;}
+.pc-meta{font-size:11px;color:var(--w4);font-weight:300;}
+.pc-desc{font-size:12px;color:var(--w5);margin-top:7px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.pc-acts{display:flex;gap:7px;margin-top:10px;}
+.pc-btn-w{flex:1;background:none;border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:7px;font-size:11px;cursor:pointer;transition:all .2s;color:var(--w4);font-family:var(--fb);font-weight:400;}
+.pc-btn-w:hover,.pc-btn-w.on{background:rgba(212,175,55,0.1);color:var(--g1);border-color:var(--g1);}
+.pc-btn-v{flex:1;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:7px;font-size:11px;cursor:pointer;transition:all .2s;color:var(--g1);font-family:var(--fb);}
+.pc-btn-v:hover{background:rgba(212,175,55,0.16);}
 
-/* FOLLOW-UP OPTIONS */
-.followup-wrap{margin-top:14px;}
-.followup-label{font-size:11px;color:var(--gray);margin-bottom:8px;letter-spacing:.5px;}
-.followup-chips{display:flex;flex-wrap:wrap;gap:8px;}
-.fc{background:var(--black4);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:8px 14px;font-size:12px;color:var(--gold-light);cursor:pointer;transition:all .2s;font-family:var(--font-b);}
-.fc:hover{background:rgba(201,168,76,0.12);border-color:var(--gold);transform:translateY(-1px);}
+/* FOLLOW-UPS */
+.fu-wrap{margin-top:4px;}
+.fu-label{font-size:11px;color:var(--w4);margin-bottom:8px;letter-spacing:.5px;}
+.fu-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.fc{
+  background:var(--b4);border:1px solid rgba(212,175,55,0.15);border-radius:20px;
+  padding:8px 16px;font-size:12px;color:var(--w3);cursor:pointer;
+  transition:all .2s;font-family:var(--fb);font-weight:300;
+}
+.fc:hover{background:rgba(212,175,55,0.1);border-color:var(--g1);color:var(--g1);transform:translateY(-1px);}
 
-/* SHOW MORE */
-.show-more-btn{margin-top:12px;background:none;border:1px dashed rgba(201,168,76,0.3);border-radius:10px;padding:10px 18px;font-size:13px;color:var(--gray);cursor:pointer;width:100%;text-align:center;transition:all .2s;font-family:var(--font-b);}
-.show-more-btn:hover{border-color:var(--gold);color:var(--gold);}
+/* WELCOME QUERIES */
+.wq-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.wq{
+  background:var(--b4);border:1px solid rgba(212,175,55,0.15);border-radius:20px;
+  padding:9px 16px;font-size:13px;color:var(--w3);cursor:pointer;
+  transition:all .2s;font-family:var(--fb);font-weight:300;
+}
+.wq:hover{background:rgba(212,175,55,0.1);border-color:var(--g1);color:var(--g1);}
 
-/* SUGGESTED QUERIES */
-.sq-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
-.sq{background:var(--black4);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:9px 16px;font-size:13px;color:var(--gold-light);cursor:pointer;transition:all .2s;font-family:var(--font-b);}
-.sq:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);}
+/* EMPTY CATALOGUE MSG */
+.no-items-msg{
+  padding:20px;background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.1);
+  border-radius:12px;margin-top:12px;text-align:center;
+}
+.no-items-msg p{font-size:13px;color:var(--w4);font-weight:300;}
 
 /* INPUT */
-.input-area{padding:16px 22px 20px;border-top:1px solid rgba(201,168,76,0.08);background:var(--black2);}
-.input-wrap{display:flex;align-items:flex-end;gap:10px;background:var(--black4);border:1px solid rgba(201,168,76,0.18);border-radius:14px;padding:10px 14px;transition:border .2s;}
-.input-wrap:focus-within{border-color:var(--gold-dim);}
-#ci{flex:1;background:none;border:none;outline:none;color:var(--white);font-size:14px;font-family:var(--font-b);resize:none;max-height:120px;line-height:1.5;}
-#ci::placeholder{color:var(--gray2);}
-.send-btn{background:linear-gradient(135deg,var(--gold),var(--gold-dim));border:none;border-radius:9px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s;font-size:15px;}
-.send-btn:hover{opacity:.85;transform:scale(1.05);}
-.send-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
-.hint{font-size:11px;color:var(--gray2);text-align:center;margin-top:8px;}
+.input-area{padding:16px 28px 22px;border-top:1px solid rgba(212,175,55,0.06);background:var(--b1);}
+.input-wrap{
+  display:flex;align-items:flex-end;gap:12px;
+  background:var(--b3);border:1px solid rgba(212,175,55,0.15);border-radius:16px;
+  padding:12px 16px;transition:all .2s;
+}
+.input-wrap:focus-within{border-color:var(--g3);box-shadow:0 0 0 3px rgba(212,175,55,0.04);}
+#ci{
+  flex:1;background:none;border:none;outline:none;color:var(--w1);
+  font-size:14px;font-family:var(--fb);resize:none;max-height:120px;
+  line-height:1.6;font-weight:300;
+}
+#ci::placeholder{color:var(--w5);}
+.send-btn{
+  background:linear-gradient(135deg,var(--g1),var(--g2));border:none;border-radius:10px;
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;transition:all .2s;font-size:16px;color:#000;
+  box-shadow:0 4px 16px rgba(212,175,55,0.2);
+}
+.send-btn:hover{transform:scale(1.05);box-shadow:0 6px 20px rgba(212,175,55,0.3);}
+.send-btn:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+.input-hint{font-size:11px;color:var(--w5);text-align:center;margin-top:8px;font-weight:300;}
 
-/* CATALOG */
+/* ═══════════════════════════════════════
+   CATALOGUE VIEW
+═══════════════════════════════════════ */
 #vcat{display:none;flex-direction:column;height:100%;}
-#vcat.on{display:flex;}
-.cat-hdr{padding:16px 22px;border-bottom:1px solid rgba(201,168,76,0.08);background:var(--black2);display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
-.cat-hdr h2{font-family:var(--font-d);font-size:17px;}
-.chips{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto;}
-.chip{background:var(--black4);border:1px solid var(--black5);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--gray);cursor:pointer;transition:all .2s;font-family:var(--font-b);}
-.chip:hover{border-color:var(--gold-dim);color:var(--white);}
-.chip.on{background:rgba(201,168,76,0.1);border-color:var(--gold);color:var(--gold);}
-.cat-body{flex:1;overflow-y:auto;padding:22px;}
-.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;}
+.cat-hdr{
+  padding:18px 28px;border-bottom:1px solid rgba(212,175,55,0.06);
+  background:var(--b1);
+}
+.cat-hdr h2{font-family:var(--fd);font-size:20px;color:var(--w1);font-weight:400;letter-spacing:1px;margin-bottom:12px;}
+.cat-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{
+  background:var(--b3);border:1px solid var(--b6);border-radius:20px;
+  padding:7px 16px;font-size:12px;color:var(--w4);cursor:pointer;
+  transition:all .2s;font-family:var(--fb);font-weight:400;
+}
+.chip:hover{border-color:var(--g3);color:var(--w2);}
+.chip.on{background:rgba(212,175,55,0.1);border-color:var(--g1);color:var(--g1);}
+.cat-body{flex:1;overflow-y:auto;padding:24px 28px;}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;}
 
-/* CATALOG CARD */
-.cc{background:var(--black3);border:1px solid rgba(201,168,76,0.1);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .22s;}
-.cc:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:var(--shadow);}
-.cc-img{width:100%;height:190px;background:var(--black5);display:flex;align-items:center;justify-content:center;font-size:50px;position:relative;overflow:hidden;}
-.cc-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
-.cc:hover .cc-img img{transform:scale(1.05);}
-.cc-wb{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .2s;}
-.cc-wb:hover,.cc-wb.sv{background:rgba(201,168,76,0.3);color:var(--gold);}
-.cc-body{padding:14px 16px;}
-.cc-cat{font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
-.cc-name{font-family:var(--font-d);font-size:15px;color:var(--white);margin-bottom:8px;}
+/* CATALOGUE CARDS */
+.cc{
+  background:var(--b2);border:1px solid rgba(212,175,55,0.08);border-radius:16px;
+  overflow:hidden;cursor:pointer;transition:all .25s;
+}
+.cc:hover{border-color:var(--g1);transform:translateY(-4px);box-shadow:var(--shadow-deep),var(--shadow-gold);}
+.cc-img{
+  width:100%;height:200px;background:var(--b4);
+  display:flex;align-items:center;justify-content:center;font-size:54px;
+  position:relative;overflow:hidden;
+}
+.cc-img img{width:100%;height:100%;object-fit:cover;transition:transform .35s;}
+.cc:hover .cc-img img{transform:scale(1.06);}
+.cc-wb{
+  position:absolute;top:10px;right:10px;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,0.08);border-radius:50%;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:14px;transition:all .2s;
+}
+.cc-wb:hover,.cc-wb.on{background:rgba(212,175,55,0.2);border-color:var(--g1);}
+.cc-body{padding:16px 18px;}
+.cc-cat{font-size:9px;color:var(--g1);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-weight:500;}
+.cc-name{font-family:var(--fd);font-size:17px;color:var(--w1);margin-bottom:8px;font-weight:400;}
 .cc-row{display:flex;justify-content:space-between;align-items:flex-end;}
-.cc-price{font-family:var(--font-d);font-size:17px;color:var(--gold);}
-.cc-wt{font-size:11px;color:var(--gray);}
+.cc-price{font-family:var(--fd);font-size:19px;color:var(--g1);font-weight:400;}
+.cc-wt{font-size:11px;color:var(--w4);font-weight:300;}
 
-/* WISHLIST */
+/* ═══════════════════════════════════════
+   WISHLIST VIEW
+═══════════════════════════════════════ */
 #vwl{display:none;flex-direction:column;height:100%;}
-#vwl.on{display:flex;}
-.wl-hdr{padding:16px 22px;border-bottom:1px solid rgba(201,168,76,0.08);background:var(--black2);}
-.wl-hdr h2{font-family:var(--font-d);font-size:17px;}
-.wl-hdr p{font-size:12px;color:var(--gray);margin-top:2px;}
-.wl-body{flex:1;overflow-y:auto;padding:22px;}
-.wl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;}
+.wl-hdr{padding:18px 28px;border-bottom:1px solid rgba(212,175,55,0.06);background:var(--b1);}
+.wl-hdr h2{font-family:var(--fd);font-size:20px;color:var(--w1);font-weight:400;letter-spacing:1px;}
+.wl-hdr p{font-size:12px;color:var(--w4);margin-top:3px;font-weight:300;}
+.wl-body{flex:1;overflow-y:auto;padding:24px 28px;}
+.wl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;}
 
-/* ADMIN */
+/* ═══════════════════════════════════════
+   ADMIN VIEW
+═══════════════════════════════════════ */
 #vadm{display:none;flex-direction:column;height:100%;}
-#vadm.on{display:flex;}
-.adm-hdr{padding:16px 22px;border-bottom:1px solid rgba(201,168,76,0.08);background:var(--black2);}
-.adm-hdr h2{font-family:var(--font-d);font-size:17px;color:var(--gold);}
-.adm-hdr p{font-size:12px;color:var(--gray);margin-top:2px;}
-.adm-body{flex:1;overflow-y:auto;padding:22px;}
-.adm-form{background:var(--black3);border:1px solid rgba(201,168,76,0.12);border-radius:var(--radius);padding:26px;max-width:600px;}
-.adm-form h3{font-family:var(--font-d);font-size:16px;color:var(--gold);margin-bottom:20px;}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
-.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
-.fg label{font-size:11px;color:var(--gray);letter-spacing:.5px;text-transform:uppercase;}
-.fg input,.fg select,.fg textarea{background:var(--black4);border:1px solid var(--black5);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:var(--font-b);outline:none;transition:border .2s;}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold-dim);}
-.fg select option{background:var(--black3);}
-.fg textarea{resize:vertical;min-height:80px;}
-.adm-items{margin-top:28px;}
-.adm-items h3{font-family:var(--font-d);font-size:16px;color:var(--gold);margin-bottom:16px;}
-.air{display:flex;align-items:center;gap:14px;background:var(--black3);border:1px solid rgba(201,168,76,0.08);border-radius:10px;padding:12px 16px;margin-bottom:10px;}
-.air-thumb{width:46px;height:46px;border-radius:8px;background:var(--black5);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden;}
+.adm-hdr{padding:18px 28px;border-bottom:1px solid rgba(212,175,55,0.06);background:var(--b1);}
+.adm-hdr h2{font-family:var(--fd);font-size:20px;color:var(--g1);font-weight:400;letter-spacing:1px;}
+.adm-hdr p{font-size:12px;color:var(--w4);margin-top:3px;font-weight:300;}
+.adm-body{flex:1;overflow-y:auto;padding:24px 28px;}
+.adm-form{
+  background:var(--b2);border:1px solid rgba(212,175,55,0.1);border-radius:16px;
+  padding:28px;max-width:640px;
+}
+.adm-form-title{font-family:var(--fd);font-size:18px;color:var(--g1);font-weight:400;margin-bottom:22px;letter-spacing:.5px;}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.adm-form .fg{margin-bottom:14px;}
+.adm-form .fg label{font-size:10px;color:var(--w4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;display:block;font-weight:500;}
+.adm-form .fg input,.adm-form .fg select,.adm-form .fg textarea{
+  width:100%;background:var(--b4);border:1px solid var(--b6);border-radius:10px;
+  padding:11px 14px;font-size:13px;color:var(--w1);font-family:var(--fb);
+  outline:none;transition:all .2s;font-weight:300;
+}
+.adm-form .fg input:focus,.adm-form .fg select:focus,.adm-form .fg textarea:focus{border-color:var(--g3);}
+.adm-form .fg select option{background:var(--b3);}
+.adm-form .fg textarea{resize:vertical;min-height:80px;}
+.adm-form .fg small{display:block;font-size:10px;color:var(--w5);margin-top:5px;line-height:1.4;}
+.adm-items{margin-top:32px;max-width:640px;}
+.adm-items-title{font-family:var(--fd);font-size:18px;color:var(--g1);font-weight:400;margin-bottom:18px;letter-spacing:.5px;}
+.air{
+  display:flex;align-items:center;gap:14px;
+  background:var(--b2);border:1px solid rgba(212,175,55,0.08);border-radius:12px;
+  padding:14px 18px;margin-bottom:10px;transition:border .2s;
+}
+.air:hover{border-color:rgba(212,175,55,0.18);}
+.air-thumb{
+  width:48px;height:48px;border-radius:10px;background:var(--b4);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  flex-shrink:0;overflow:hidden;border:1px solid var(--b6);
+}
 .air-thumb img{width:100%;height:100%;object-fit:cover;}
-.air-d{flex:1;}
-.air-n{font-size:14px;color:var(--white);}
-.air-m{font-size:11px;color:var(--gray);}
-.del-btn{background:none;border:1px solid rgba(224,85,85,0.3);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--red);cursor:pointer;transition:all .2s;}
-.del-btn:hover{background:rgba(224,85,85,0.1);}
+.air-d{flex:1;overflow:hidden;}
+.air-n{font-size:14px;color:var(--w1);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.air-m{font-size:11px;color:var(--w4);margin-top:2px;font-weight:300;}
+.del-btn{
+  background:none;border:1px solid rgba(192,57,43,0.3);border-radius:8px;
+  padding:6px 12px;font-size:11px;color:var(--red);cursor:pointer;
+  transition:all .2s;font-family:var(--fb);white-space:nowrap;flex-shrink:0;
+}
+.del-btn:hover{background:rgba(192,57,43,0.1);}
 
-/* MODAL */
-.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px);}
+/* ═══════════════════════════════════════
+   MODAL
+═══════════════════════════════════════ */
+.modal-ov{
+  position:fixed;inset:0;background:rgba(0,0,0,0.88);
+  display:none;align-items:center;justify-content:center;z-index:300;
+  backdrop-filter:blur(6px);
+}
 .modal-ov.open{display:flex;}
-.modal{background:var(--black3);border:1px solid rgba(201,168,76,0.18);border-radius:22px;width:520px;max-width:95vw;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow);}
-.modal-img-wrap{width:100%;height:280px;background:var(--black5);overflow:hidden;border-radius:22px 22px 0 0;position:relative;}
+.modal{
+  background:var(--b2);border:1px solid rgba(212,175,55,0.15);
+  border-radius:20px;width:520px;max-width:95vw;max-height:90vh;
+  overflow-y:auto;box-shadow:var(--shadow-deep);
+  animation:mopen .3s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes mopen{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+.modal-img-wrap{width:100%;height:280px;overflow:hidden;border-radius:20px 20px 0 0;position:relative;}
 .modal-img-wrap img{width:100%;height:100%;object-fit:cover;}
-.modal-img-emoji{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:72px;}
-.modal-content{padding:28px;}
-.modal-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
-.modal-price{font-family:var(--font-d);font-size:28px;color:var(--gold);}
-.btn-cls{background:none;border:none;color:var(--gray);font-size:20px;cursor:pointer;padding:4px;transition:color .2s;}
-.btn-cls:hover{color:var(--white);}
-.modal-name{font-family:var(--font-d);font-size:20px;color:var(--white);margin-bottom:6px;}
-.modal-cat{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
-.modal-specs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
-.spec{background:var(--black4);border-radius:10px;padding:12px 16px;}
-.spec-l{font-size:10px;color:var(--gray);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;}
-.spec-v{font-size:15px;color:var(--white);font-weight:500;}
-.modal-desc{font-size:14px;color:var(--gray);line-height:1.7;margin-bottom:20px;}
+.modal-img-emoji{width:100%;height:100%;background:var(--b4);display:flex;align-items:center;justify-content:center;font-size:80px;}
+.modal-body{padding:28px 32px;}
+.modal-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
+.modal-price{font-family:var(--fd);font-size:30px;color:var(--g1);font-weight:400;}
+.m-cls{background:none;border:none;color:var(--w4);font-size:22px;cursor:pointer;padding:0 4px;transition:color .2s;line-height:1;}
+.m-cls:hover{color:var(--w1);}
+.modal-name{font-family:var(--fd);font-size:22px;color:var(--w1);font-weight:400;margin-bottom:4px;}
+.modal-cat{font-size:10px;color:var(--g1);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;font-weight:500;}
+.modal-specs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.spec{background:var(--b4);border-radius:10px;padding:12px 16px;border:1px solid var(--b6);}
+.spec-l{font-size:9px;color:var(--w4);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;font-weight:500;}
+.spec-v{font-size:15px;color:var(--w1);font-weight:500;}
+.modal-desc{font-size:14px;color:var(--w3);line-height:1.75;margin-bottom:22px;font-weight:300;}
 .modal-acts{display:flex;gap:10px;}
-.btn-wish-lg{flex:1;background:none;border:1px solid rgba(201,168,76,0.3);border-radius:10px;padding:13px;font-size:14px;color:var(--gold);cursor:pointer;font-family:var(--font-b);transition:all .2s;}
-.btn-wish-lg:hover,.btn-wish-lg.sv{background:rgba(201,168,76,0.1);}
+.m-wish-btn{
+  flex:1;background:none;border:1px solid rgba(212,175,55,0.25);border-radius:10px;
+  padding:13px;font-size:13px;color:var(--g1);cursor:pointer;font-family:var(--fb);
+  transition:all .2s;font-weight:400;
+}
+.m-wish-btn:hover,.m-wish-btn.on{background:rgba(212,175,55,0.1);}
 
-/* NOTIF */
-.notif{position:fixed;bottom:24px;right:24px;background:var(--black3);border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--white);z-index:999;box-shadow:var(--shadow);transform:translateY(80px);opacity:0;transition:all .3s;max-width:280px;}
+/* ═══════════════════════════════════════
+   NOTIFICATION
+═══════════════════════════════════════ */
+.notif{
+  position:fixed;bottom:28px;right:28px;z-index:999;
+  background:var(--b3);border:1px solid rgba(212,175,55,0.2);border-radius:12px;
+  padding:14px 20px;font-size:13px;color:var(--w1);
+  box-shadow:var(--shadow-deep);transform:translateY(80px);opacity:0;
+  transition:all .3s cubic-bezier(0.34,1.56,0.64,1);max-width:300px;font-weight:400;
+}
 .notif.show{transform:translateY(0);opacity:1;}
-.notif.gold{border-color:var(--gold);color:var(--gold-light);}
+.notif.gold{border-color:var(--g1);color:var(--g1);}
+.notif.ok{border-color:var(--green);color:#55efc4;}
 
-/* EMPTY */
-.empty{text-align:center;padding:60px 20px;color:var(--gray);}
-.empty .e-icon{font-size:48px;margin-bottom:16px;}
+/* EMPTY STATE */
+.empty{text-align:center;padding:60px 20px;color:var(--w4);}
+.empty .ei{font-size:52px;margin-bottom:18px;opacity:.5;}
+.empty p{font-size:15px;font-weight:300;line-height:1.6;}
 
-/* SCROLLBAR */
-.cat-body::-webkit-scrollbar,.wl-body::-webkit-scrollbar,.adm-body::-webkit-scrollbar{width:3px;}
-.cat-body::-webkit-scrollbar-thumb,.wl-body::-webkit-scrollbar-thumb,.adm-body::-webkit-scrollbar-thumb{background:var(--black5);border-radius:3px;}
+/* FORGOT PWD SCREEN */
+#forgot-screen{display:none;}
 
-@media(max-width:640px){
-  .sidebar{width:58px;}
-  .sb-logo .brand,.sb-logo .sub,.gold-bar,.ni span:not(.ic),.ui,.lo-btn,.nl{display:none;}
+/* RESPONSIVE */
+@media(max-width:700px){
+  .auth-left{display:none;}
+  .auth-right{width:100%;padding:32px 24px;}
+  .sidebar{width:56px;}
+  .sb-top .sb-name,.sb-top .sb-sub,.gold-rate,.ni span:not(.ni-ic),.u-info,.lo-btn,.nl,.ni-badge{display:none;}
   .ni{justify-content:center;padding:14px;}
   .sb-user{justify-content:center;}
-  .fr{grid-template-columns:1fr;}
-  .cat-grid,.wl-grid,.products-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
+  .cat-grid,.wl-grid,.pgrid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+  .fg2{grid-template-columns:1fr;}
+  .fr2{grid-template-columns:1fr;}
 }
 </style>
 </head>
 <body>
 
-<!-- AUTH -->
-<div id="auth-screen">
-  <div class="auth-box">
-    <div class="auth-logo">
-      <span class="gem">💎</span>
-      <h1>SAMPLE JEWELLERY</h1>
-      <p>AI-Powered Discovery</p>
+<!-- ═══════════════════════════════════
+     AUTH SCREEN
+═══════════════════════════════════════ -->
+<div id="auth">
+  <!-- LEFT BRANDING -->
+  <div class="auth-left">
+    <div class="auth-left-bg"></div>
+    <div class="auth-left-pattern"></div>
+    <div class="auth-brand">
+      <span class="auth-brand-gem">💎</span>
+      <div class="auth-brand-line"></div>
+      <h1>Sample Jewellery</h1>
+      <p>Est. 2024 · Hyderabad</p>
+      <div class="auth-brand-line"></div>
+      <p class="auth-brand-tagline">"Where every piece tells a story"</p>
     </div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
-      <button class="auth-tab" onclick="switchTab('signup')">Create Account</button>
-    </div>
-    <div id="lf" class="auth-form">
-      <input type="email" id="le" placeholder="Email address"/>
-      <input type="password" id="lp" placeholder="Password"/>
-      <div style="text-align:right; margin-bottom:14px;"><a href="#" onclick="showForgot()" style="color:var(--gold); font-size:12px; text-decoration:none; font-weight:500;">Forgot password?</a></div>
-      <button class="btn-gold" onclick="doLogin()">Sign In</button>
-      <div class="divider">or continue with</div>
-      <button class="btn-google" onclick="doGoogle()"><svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>Continue with Google</button>
-      <div class="auth-msg" id="lm"></div>
-    </div>
-    <div id="sf" class="auth-form" style="display:none">
-      <input type="text" id="sn" placeholder="Full name"/>
-      <input type="email" id="se" placeholder="Email address"/>
-      <input type="text" id="sphone" placeholder="Phone Number (e.g. 9876543210)"/>
-      <input type="password" id="sp" placeholder="Password (min 6 characters)"/>
-      <button class="btn-gold" onclick="doSignup()">Create Account</button>
-      <div class="divider">or continue with</div>
-      <button class="btn-google" onclick="doGoogle()"><svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>Continue with Google</button>
-      <div class="auth-msg" id="sm"></div>
-    </div>
-    <div id="ff" class="auth-form" style="display:none">
-      <p style="font-size:14px; text-align:center; margin-bottom:16px; color:var(--gray);">Enter your email to receive a password reset link.</p>
-      <input type="email" id="fe" placeholder="Email address"/>
-      <button class="btn-gold" onclick="doForgot()">Send Reset Link</button>
-      <button class="btn-google" style="margin-top:12px; background:none; border:none; color:var(--gray);" onclick="switchTab('login')">⬅ Back to Sign In</button>
-      <div class="auth-msg" id="fm"></div>
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="auth-right">
+    <div class="auth-box">
+
+      <!-- SIGN IN FORM -->
+      <div id="login-section">
+        <div class="auth-box-title">Welcome Back</div>
+        <div class="auth-box-sub">Sign in to your account to continue</div>
+        <div class="auth-tabs">
+          <button class="atab on" onclick="switchTab('login')">Sign In</button>
+          <button class="atab" onclick="switchTab('signup')">Create Account</button>
+        </div>
+        <div class="fg"><label>Email Address</label><input type="email" id="l-email" placeholder="your@email.com" autocomplete="email"/></div>
+        <div class="fg"><label>Password</label><input type="password" id="l-pass" placeholder="Enter your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+        <div class="forgot-row"><button class="btn-text" onclick="showForgot()">Forgot password?</button></div>
+        <button class="btn-main" onclick="doLogin()">Sign In</button>
+        <div class="div"><span></span><p>OR CONTINUE WITH</p><span></span></div>
+        <button class="btn-google" onclick="doGoogle()">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>
+          Continue with Google
+        </button>
+        <div class="amsg" id="l-msg"></div>
+      </div>
+
+      <!-- SIGN UP FORM -->
+      <div id="signup-section" style="display:none">
+        <div class="auth-box-title">Create Account</div>
+        <div class="auth-box-sub">Join us for a personalised jewellery experience</div>
+        <div class="auth-tabs">
+          <button class="atab" onclick="switchTab('login')">Sign In</button>
+          <button class="atab on" onclick="switchTab('signup')">Create Account</button>
+        </div>
+        <div class="fr2">
+          <div class="fg"><label>First Name</label><input type="text" id="s-fname" placeholder="Priya" autocomplete="given-name"/></div>
+          <div class="fg"><label>Last Name</label><input type="text" id="s-lname" placeholder="Sharma" autocomplete="family-name"/></div>
+        </div>
+        <div class="fg"><label>Phone Number</label><input type="tel" id="s-phone" placeholder="+91 98765 43210" autocomplete="tel"/></div>
+        <div class="fg"><label>Email Address</label><input type="email" id="s-email" placeholder="your@email.com" autocomplete="email"/></div>
+        <div class="fg"><label>Password</label><input type="password" id="s-pass" placeholder="Minimum 6 characters" autocomplete="new-password"/></div>
+        <div class="fg"><label>Confirm Password</label><input type="password" id="s-cpass" placeholder="Re-enter password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSignup()"/></div>
+        <button class="btn-main" onclick="doSignup()">Create My Account</button>
+        <div class="div"><span></span><p>OR CONTINUE WITH</p><span></span></div>
+        <button class="btn-google" onclick="doGoogle()">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>
+          Continue with Google
+        </button>
+        <div class="amsg" id="s-msg"></div>
+      </div>
+
+      <!-- FORGOT PASSWORD FORM -->
+      <div id="forgot-section" style="display:none">
+        <div class="auth-box-title">Reset Password</div>
+        <div class="auth-box-sub">Enter your email and we'll send a reset link</div>
+        <div class="fg"><label>Email Address</label><input type="email" id="f-email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')doReset()"/></div>
+        <button class="btn-main" onclick="doReset()">Send Reset Link</button>
+        <div style="text-align:center;margin-top:12px;">
+          <button class="btn-text" onclick="showLogin()">← Back to Sign In</button>
+        </div>
+        <div class="amsg" id="f-msg"></div>
+      </div>
+
     </div>
   </div>
 </div>
 
-<!-- APP -->
+<!-- ═══════════════════════════════════
+     MAIN APP
+═══════════════════════════════════════ -->
 <div id="app">
+
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <div class="sb-logo">
-      <div class="brand">💎 SAMPLE JEWELLERY</div>
-      <div class="sub">AI Assistant</div>
+    <div class="sb-top">
+      <div class="sb-brand">
+        <span class="sb-gem">💎</span>
+        <div>
+          <div class="sb-name">SAMPLE JEWELLERY</div>
+          <div class="sb-sub">AI Assistant</div>
+        </div>
+      </div>
     </div>
-    <div class="gold-bar">
-      <div class="gl">24K Gold Rate</div>
-      <div class="gp" id="grd">₹ —</div>
-      <div class="gs">per gram · live</div>
+
+    <div class="gold-rate">
+      <div class="gr-label">24K Gold Rate</div>
+      <div class="gr-price" id="gold-display">₹ —</div>
+      <div class="gr-sub">per gram</div>
+      <div class="gr-live"><div class="gr-dot"></div><span class="gr-live-text">Live</span></div>
     </div>
+
     <div class="sb-nav">
-      <div class="nl">Menu</div>
-      <button class="ni on" onclick="showV('chat')" id="n-chat"><span class="ic">💬</span><span>AI Assistant</span></button>
-      <button class="ni" onclick="showV('cat')" id="n-cat"><span class="ic">🪙</span><span>Catalogue</span></button>
-      <button class="ni" onclick="showV('wl')" id="n-wl"><span class="ic">❤️</span><span>My Wishlist</span><span class="badge" id="wbadge" style="display:none">0</span></button>
+      <div class="nl">Navigation</div>
+      <button class="ni on" id="n-chat" onclick="showView('chat')">
+        <span class="ni-ic">💬</span><span>AI Assistant</span>
+      </button>
+      <button class="ni" id="n-cat" onclick="showView('cat')">
+        <span class="ni-ic">🏛️</span><span>Catalogue</span>
+      </button>
+      <button class="ni" id="n-wl" onclick="showView('wl')">
+        <span class="ni-ic">❤️</span><span>My Wishlist</span>
+        <span class="ni-badge" id="wl-badge" style="display:none">0</span>
+      </button>
       <div class="nl" id="adm-nl" style="display:none">Admin</div>
-      <button class="ni" onclick="showV('adm')" id="n-adm" style="display:none"><span class="ic">⚙️</span><span>Manage Items</span></button>
+      <button class="ni" id="n-adm" onclick="showView('adm')" style="display:none">
+        <span class="ni-ic">⚙️</span><span>Manage Items</span>
+      </button>
     </div>
+
     <div class="sb-user">
-      <div class="av" id="uav">?</div>
-      <div class="ui"><div class="un" id="uname">—</div><div class="ue" id="uemail">—</div></div>
+      <div class="u-av" id="u-av">?</div>
+      <div class="u-info">
+        <div class="u-name" id="u-name">—</div>
+        <div class="u-email" id="u-email">—</div>
+      </div>
       <button class="lo-btn" onclick="doLogout()" title="Logout">⏻</button>
     </div>
   </div>
 
-  <!-- MAIN -->
+  <!-- MAIN CONTENT -->
   <div class="main">
 
     <!-- CHAT VIEW -->
     <div id="vc">
-      <div class="ch">
-        <div><h2>Jewellery AI Assistant</h2><p>Ask by budget, occasion, style or category</p></div>
-        <div class="ai-badge">✦ Gemini AI</div>
+      <div class="chat-hdr">
+        <div class="chat-hdr-info">
+          <h2>Jewellery AI Assistant</h2>
+          <p>Ask by budget, occasion, style or category</p>
+        </div>
+        <div class="ai-pill">Gemini AI</div>
       </div>
       <div class="msgs" id="msgs">
         <div class="msg ai">
@@ -358,15 +685,15 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);height
           <div class="msg-inner">
             <div class="mb">
               Namaste! 🙏 Welcome to <strong>Sample Jewellery Store</strong>.<br/><br/>
-              I'm your personal jewellery stylist. Tell me your <strong>budget</strong>, <strong>occasion</strong>, or <strong>style preference</strong> — and I'll find the perfect pieces for you with today's live gold prices! ✨
+              I'm your personal jewellery stylist. Tell me your <strong>budget</strong>, <strong>occasion</strong>, or <strong>preferred style</strong> — and I'll find the perfect pieces with today's live gold prices calculated instantly! ✨
             </div>
-            <div class="sq-wrap">
-              <button class="sq" onclick="useSQ(this)">Rings below ₹5,000</button>
-              <button class="sq" onclick="useSQ(this)">Bridal jewellery</button>
-              <button class="sq" onclick="useSQ(this)">Light weight earrings</button>
-              <button class="sq" onclick="useSQ(this)">Necklaces under ₹20,000</button>
-              <button class="sq" onclick="useSQ(this)">Show all items</button>
-              <button class="sq" onclick="useSQ(this)">Daily wear jewellery</button>
+            <div class="wq-wrap" id="welcome-queries">
+              <button class="wq" onclick="useWQ(this)">Show all jewellery</button>
+              <button class="wq" onclick="useWQ(this)">Rings below ₹5,000</button>
+              <button class="wq" onclick="useWQ(this)">Bridal jewellery sets</button>
+              <button class="wq" onclick="useWQ(this)">Light weight earrings</button>
+              <button class="wq" onclick="useWQ(this)">Necklaces under ₹20,000</button>
+              <button class="wq" onclick="useWQ(this)">Daily wear jewellery</button>
             </div>
           </div>
         </div>
@@ -376,15 +703,15 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);height
           <textarea id="ci" rows="1" placeholder="Ask me anything about jewellery..." onkeydown="enterKey(event)" oninput="autoH(this)"></textarea>
           <button class="send-btn" id="sbtn" onclick="sendMsg()">➤</button>
         </div>
-        <div class="hint">Enter to send · Shift+Enter for new line</div>
+        <div class="input-hint">Press Enter to send · Shift+Enter for new line</div>
       </div>
     </div>
 
-    <!-- CATALOG -->
+    <!-- CATALOGUE VIEW -->
     <div id="vcat">
       <div class="cat-hdr">
-        <div><h2>Full Catalogue</h2></div>
-        <div class="chips" id="cat-chips">
+        <h2>Full Catalogue</h2>
+        <div class="cat-chips">
           <button class="chip on" onclick="filterCat('all',this)">All</button>
           <button class="chip" onclick="filterCat('ring',this)">Rings</button>
           <button class="chip" onclick="filterCat('necklace',this)">Necklaces</button>
@@ -392,287 +719,441 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);height
           <button class="chip" onclick="filterCat('bracelet',this)">Bracelets</button>
           <button class="chip" onclick="filterCat('bangle',this)">Bangles</button>
           <button class="chip" onclick="filterCat('set',this)">Sets</button>
+          <button class="chip" onclick="filterCat('pendant',this)">Pendants</button>
         </div>
       </div>
       <div class="cat-body">
-        <div class="cat-grid" id="cat-grid"><div class="empty"><div class="e-icon">🔄</div><p>Loading...</p></div></div>
+        <div class="cat-grid" id="cat-grid">
+          <div class="empty"><div class="ei">🏛️</div><p>Loading catalogue...</p></div>
+        </div>
       </div>
     </div>
 
-    <!-- WISHLIST -->
+    <!-- WISHLIST VIEW -->
     <div id="vwl">
-      <div class="wl-hdr"><h2>❤️ My Wishlist</h2><p id="wl-ct">Your saved pieces</p></div>
-      <div class="wl-body"><div class="wl-grid" id="wl-grid"></div></div>
+      <div class="wl-hdr">
+        <h2>❤️ My Wishlist</h2>
+        <p id="wl-count-text">Your saved jewellery pieces</p>
+      </div>
+      <div class="wl-body">
+        <div class="wl-grid" id="wl-grid"></div>
+      </div>
     </div>
 
-    <!-- ADMIN -->
+    <!-- ADMIN VIEW -->
     <div id="vadm">
-      <div class="adm-hdr"><h2>⚙️ Manage Items</h2><p>Add or remove jewellery items from the catalogue</p></div>
+      <div class="adm-hdr">
+        <h2>⚙️ Manage Catalogue</h2>
+        <p>Add, update or remove jewellery items</p>
+      </div>
       <div class="adm-body">
         <div class="adm-form">
-          <h3>Add New Item</h3>
-          <div class="fr">
-            <div class="fg"><label>Item Name *</label><input id="in" placeholder="e.g. Gold Necklace"/></div>
+          <div class="adm-form-title">Add New Item</div>
+          <div class="fg2">
+            <div class="fg"><label>Item Name *</label><input id="a-name" placeholder="e.g. Bridal Gold Necklace"/></div>
             <div class="fg"><label>Category *</label>
-              <select id="ic"><option value="">Select</option><option value="ring">Ring</option><option value="necklace">Necklace</option><option value="earring">Earring</option><option value="bracelet">Bracelet</option><option value="bangle">Bangle</option><option value="set">Set</option><option value="pendant">Pendant</option><option value="chain">Chain</option></select>
+              <select id="a-cat">
+                <option value="">Select category</option>
+                <option value="ring">Ring</option>
+                <option value="necklace">Necklace</option>
+                <option value="earring">Earring</option>
+                <option value="bracelet">Bracelet</option>
+                <option value="bangle">Bangle</option>
+                <option value="set">Bridal Set</option>
+                <option value="pendant">Pendant</option>
+                <option value="chain">Chain</option>
+                <option value="anklet">Anklet</option>
+                <option value="mangalsutra">Mangalsutra</option>
+              </select>
             </div>
           </div>
-          <div class="fr">
-            <div class="fg"><label>Gold Weight (grams) *</label><input type="number" id="iw" placeholder="e.g. 5.5" step="0.1"/></div>
-            <div class="fg"><label>Making Charges (₹) *</label><input type="number" id="im" placeholder="e.g. 500"/></div>
+          <div class="fg2">
+            <div class="fg"><label>Gold Weight (grams) *</label><input type="number" id="a-weight" placeholder="e.g. 5.5" step="0.1" min="0"/></div>
+            <div class="fg"><label>Making Charges (₹) *</label><input type="number" id="a-making" placeholder="e.g. 500" min="0"/></div>
           </div>
-          <div class="fr">
-            <div class="fg"><label>Stone / Diamond Cost (₹)</label><input type="number" id="ist" placeholder="0"/></div>
+          <div class="fg2">
+            <div class="fg"><label>Stone / Diamond Cost (₹)</label><input type="number" id="a-stone" placeholder="0" min="0"/></div>
             <div class="fg"><label>Gold Purity</label>
-              <select id="ip"><option value="24">24K (99.9%)</option><option value="22" selected>22K (91.6%)</option><option value="18">18K (75%)</option></select>
+              <select id="a-purity">
+                <option value="24">24K — Pure Gold (99.9%)</option>
+                <option value="22" selected>22K — Standard (91.6%)</option>
+                <option value="18">18K — Light (75%)</option>
+                <option value="14">14K — Mixed (58.5%)</option>
+              </select>
             </div>
           </div>
-          <div class="fg"><label>Description</label><textarea id="id" placeholder="Describe the piece — occasion, style, features..."></textarea></div>
+          <div class="fg"><label>Description</label><textarea id="a-desc" placeholder="Describe the jewellery piece — style, occasion, features, craftsmanship..."></textarea></div>
           <div class="fg">
-            <label>Image URL (Upload to GitHub, paste link here)</label>
-            <input id="iurl" placeholder="https://raw.githubusercontent.com/your-repo/main/images/item.jpg"/>
-            <small style="color:var(--gray);font-size:11px;margin-top:4px;">Upload image to your GitHub repo → copy raw link → paste above</small>
+            <label>Image URL (from GitHub)</label>
+            <input id="a-img" placeholder="https://raw.githubusercontent.com/your-repo/main/images/item.jpg"/>
+            <small>Upload photo to GitHub images folder → click file → copy Raw URL → paste here</small>
           </div>
-          <div class="fg">
-            <label>Occasion Tags</label>
-            <input id="itags" placeholder="e.g. bridal, daily wear, gifting, festive"/>
-          </div>
-          <button class="btn-gold" onclick="addItem()" style="margin-top:6px">✦ Add to Catalogue</button>
-          <div class="auth-msg" id="adm-msg" style="text-align:left;margin-top:8px;"></div>
+          <div class="fg"><label>Occasion / Tags</label><input id="a-tags" placeholder="e.g. bridal, daily wear, gifting, festive, office"/></div>
+          <button class="btn-main" style="margin-top:8px" onclick="addItem()">✦ Add to Catalogue</button>
+          <div class="amsg" id="a-msg" style="text-align:left"></div>
         </div>
+
         <div class="adm-items">
-          <h3>Current Catalogue</h3>
-          <div id="adm-list"><p style="color:var(--gray)">Loading...</p></div>
+          <div class="adm-items-title">Current Catalogue</div>
+          <div id="adm-list"><p style="color:var(--w4);font-weight:300">Loading...</p></div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
-<!-- MODAL -->
+<!-- ITEM MODAL -->
 <div class="modal-ov" id="modal">
   <div class="modal">
-    <div class="modal-img-wrap" id="modal-img"><div class="modal-img-emoji" id="modal-emoji">💎</div></div>
-    <div class="modal-content">
+    <div class="modal-img-wrap" id="m-img-wrap">
+      <div class="modal-img-emoji" id="m-emoji">💎</div>
+    </div>
+    <div class="modal-body">
       <div class="modal-top">
         <div class="modal-price" id="m-price">₹ —</div>
-        <button class="btn-cls" onclick="closeModal()">✕</button>
+        <button class="m-cls" onclick="closeModal()">✕</button>
       </div>
       <div class="modal-name" id="m-name">—</div>
       <div class="modal-cat" id="m-cat">—</div>
       <div class="modal-specs" id="m-specs"></div>
       <div class="modal-desc" id="m-desc"></div>
       <div class="modal-acts">
-        <button class="btn-wish-lg" id="m-wish" onclick="wishFromModal()">🤍 Add to Wishlist</button>
-        <button class="btn-gold" style="flex:1;margin-bottom:0" onclick="closeModal()">Close</button>
+        <button class="m-wish-btn" id="m-wish" onclick="wishFromModal()">🤍 Add to Wishlist</button>
+        <button class="btn-main" style="flex:1;margin-bottom:0" onclick="closeModal()">Close</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- NOTIFICATION -->
 <div class="notif" id="notif"></div>
 
+<!-- ═══════════════════════════════════
+     FIREBASE + APP LOGIC
+═══════════════════════════════════════ -->
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged,updateProfile,sendEmailVerification,sendPasswordResetEmail}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import{getFirestore,collection,addDoc,getDocs,deleteDoc,doc,setDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const FC={apiKey:"AIzaSyAzzyQVLP1kNv62L5zdDUjYJH5fm0aUYBA",authDomain:"jewelry-ai-chat.firebaseapp.com",projectId:"jewelry-ai-chat",storageBucket:"jewelry-ai-chat.firebasestorage.app",messagingSenderId:"941334368131",appId:"1:941334368131:web:1354c4cb7f5700bf26f0b6"};
-const GKEY="AIzaSyAMqXPX8vhpkwvIbeIs2O1-XPKVZWQYILw";
-const ADMIN="suryateja7396997056@gmail.com";
+// ─── CONFIG ───────────────────────────
+const FC={
+  apiKey:"AIzaSyAzzyQVLP1kNv62L5zdDUjYJH5fm0aUYBA",
+  authDomain:"jewelry-ai-chat.firebaseapp.com",
+  projectId:"jewelry-ai-chat",
+  storageBucket:"jewelry-ai-chat.firebasestorage.app",
+  messagingSenderId:"941334368131",
+  appId:"1:941334368131:web:1354c4cb7f5700bf26f0b6"
+};
+const GEMINI="AIzaSyAMqXPX8vhpkwvIbeIs2O1-XPKVZWQYILw";
+const ADMIN_EMAIL="suryateja7396997056@gmail.com";
 
-const app=initializeApp(FC);
-const auth=getAuth(app);
-const db=getFirestore(app);
-const gp=new GoogleAuthProvider();
+// ─── INIT ─────────────────────────────
+const FB=initializeApp(FC);
+const auth=getAuth(FB);
+const db=getFirestore(FB);
+const GP=new GoogleAuthProvider();
 
-let CU=null,goldRate=7500,items=[],wishIds=new Set(),modalItemId=null,curFilter='all';
+// ─── STATE ────────────────────────────
+let CU=null,goldRate=7500,allItems=[],wishIds=new Set(),modalItemId=null,curFilter='all';
 
-// GOLD PRICE
-async function fetchGold(){
-  try{const r=await fetch('https://api.exchangerate-api.com/v4/latest/USD');const d=await r.json();goldRate=Math.round(64.3*(d.rates.INR||83));}catch(e){goldRate=7500;}
-  document.getElementById('grd').textContent='₹ '+goldRate.toLocaleString('en-IN');
-}
-
-function calcP(item){
-  const pf=item.purity==24?1:item.purity==22?0.916:0.75;
+// ─── HELPERS ──────────────────────────
+function calcPrice(item){
+  const pf=item.purity==24?1:item.purity==22?.916:item.purity==18?.75:.585;
   return Math.round(item.weight*goldRate*pf+(item.making||0)+(item.stone||0));
 }
+function catEmoji(c){
+  const m={ring:'💍',necklace:'📿',earring:'✨',bracelet:'⚜️',bangle:'🔮',set:'👑',pendant:'💠',chain:'⛓️',anklet:'🌸',mangalsutra:'🔴'};
+  return m[c]||'💎';
+}
+function fmtPrice(n){return'₹'+n.toLocaleString('en-IN');}
+function notify(txt,type=''){
+  const n=document.getElementById('notif');
+  n.textContent=txt;n.className='notif show'+(type?' '+type:'');
+  setTimeout(()=>n.classList.remove('show'),3200);
+}
 
-function catEmoji(c){return{ring:'💍',necklace:'📿',earring:'✨',bracelet:'⚜️',bangle:'🔮',set:'💠',pendant:'🌟',chain:'⛓️'}[c]||'💎';}
+// ─── GOLD PRICE ───────────────────────
+async function fetchGold(){
+  try{
+    const r=await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+    const d=await r.json();
+    goldRate=Math.round(64.3*(d.rates?.INR||83));
+  }catch(e){goldRate=7500;}
+  document.getElementById('gold-display').textContent=fmtPrice(goldRate);
+}
 
-// AUTH STATE
-onAuthStateChanged(auth,u=>{
+// ─── AUTH STATE ───────────────────────
+onAuthStateChanged(auth,async u=>{
   CU=u;
   if(u){
-    document.getElementById('auth-screen').style.display='none';
+    document.getElementById('auth').style.display='none';
     document.getElementById('app').classList.add('on');
     const nm=u.displayName||u.email.split('@')[0];
-    document.getElementById('uname').textContent=nm;
-    document.getElementById('uemail').textContent=u.email;
-    document.getElementById('uav').textContent=nm[0].toUpperCase();
-    if(u.email===ADMIN){document.getElementById('n-adm').style.display='flex';document.getElementById('adm-nl').style.display='block';}
-    fetchGold();loadItems();loadWish();
-  }else{document.getElementById('auth-screen').style.display='flex';document.getElementById('app').classList.remove('on');}
+    document.getElementById('u-name').textContent=nm;
+    document.getElementById('u-email').textContent=u.email;
+    document.getElementById('u-av').textContent=nm[0].toUpperCase();
+    if(u.email===ADMIN_EMAIL){
+      document.getElementById('n-adm').style.display='flex';
+      document.getElementById('adm-nl').style.display='block';
+    }
+    fetchGold();
+    await loadItems();
+    await loadWishlist();
+  }else{
+    document.getElementById('auth').style.display='flex';
+    document.getElementById('app').classList.remove('on');
+  }
 });
 
-// AUTH
-window.switchTab=function(t){
-  document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active'));
-  if(event&&event.target.classList)event.target.classList.add('active');
-  document.getElementById('lf').style.display=t==='login'?'block':'none';
-  document.getElementById('sf').style.display=t==='signup'?'block':'none';
-  document.getElementById('ff').style.display=t==='forgot'?'block':'none';
+// ─── AUTH FUNCTIONS ───────────────────
+window.switchTab=function(tab){
+  document.querySelectorAll('.atab').forEach(t=>t.classList.remove('on'));
+  event.target.classList.add('on');
+  document.getElementById('login-section').style.display=tab==='login'?'block':'none';
+  document.getElementById('signup-section').style.display=tab==='signup'?'block':'none';
+  document.getElementById('forgot-section').style.display='none';
 };
-window.showForgot=function(){ switchTab('forgot'); document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active')); };
-window.doForgot=async function(){
-  const e=document.getElementById('fe').value.trim(),m=document.getElementById('fm');
-  if(!e){m.className='auth-msg err';m.textContent='Enter your email address';return;}
-  m.className='auth-msg';m.textContent='Sending...';
-  try{await sendPasswordResetEmail(auth,e);m.className='auth-msg ok';m.textContent='✅ Reset link sent!';}
-  catch(err){m.className='auth-msg err';m.textContent=err.message;}
+
+window.showForgot=function(){
+  document.getElementById('login-section').style.display='none';
+  document.getElementById('signup-section').style.display='none';
+  document.getElementById('forgot-section').style.display='block';
 };
+
+window.showLogin=function(){
+  document.getElementById('login-section').style.display='block';
+  document.getElementById('signup-section').style.display='none';
+  document.getElementById('forgot-section').style.display='none';
+};
+
 window.doLogin=async function(){
-  const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value,m=document.getElementById('lm');
-  if(!e||!p){m.className='auth-msg err';m.textContent='Fill all fields';return;}
-  m.className='auth-msg';m.textContent='Signing in...';
+  const e=document.getElementById('l-email').value.trim();
+  const p=document.getElementById('l-pass').value;
+  const msg=document.getElementById('l-msg');
+  if(!e||!p){msg.className='amsg err';msg.textContent='Please enter email and password';return;}
+  msg.className='amsg';msg.textContent='Signing in...';
   try{await signInWithEmailAndPassword(auth,e,p);}
-  catch(err){m.className='auth-msg err';m.textContent=err.code==='auth/invalid-credential'?'Invalid email or password':err.message;}
+  catch(err){
+    msg.className='amsg err';
+    if(err.code==='auth/invalid-credential')msg.textContent='Incorrect email or password';
+    else if(err.code==='auth/too-many-requests')msg.textContent='Too many attempts. Please try again later.';
+    else msg.textContent=err.message;
+  }
 };
+
 window.doSignup=async function(){
-  const n=document.getElementById('sn').value.trim(),e=document.getElementById('se').value.trim(),ph=document.getElementById('sphone').value.trim(),p=document.getElementById('sp').value,m=document.getElementById('sm');
-  if(!n||!e||!ph||!p){m.className='auth-msg err';m.textContent='Fill all fields';return;}
-  if(p.length<6){m.className='auth-msg err';m.textContent='Password min 6 characters';return;}
-  m.className='auth-msg';m.textContent='Creating account...';
-  try{const c=await createUserWithEmailAndPassword(auth,e,p);await updateProfile(c.user,{displayName:n});await sendEmailVerification(c.user);
-  await setDoc(doc(db,'users',c.user.uid),{name:n,email:e,phone:ph,createdAt:serverTimestamp()});
-  m.className='auth-msg ok';m.textContent='✅ Account created! Check email to verify.';}
-  catch(err){m.className='auth-msg err';m.textContent=err.code==='auth/email-already-in-use'?'Email already registered':err.message;}
-};
-window.doGoogle=async function(){
+  const fn=document.getElementById('s-fname').value.trim();
+  const ln=document.getElementById('s-lname').value.trim();
+  const ph=document.getElementById('s-phone').value.trim();
+  const e=document.getElementById('s-email').value.trim();
+  const p=document.getElementById('s-pass').value;
+  const cp=document.getElementById('s-cpass').value;
+  const msg=document.getElementById('s-msg');
+  if(!fn||!ln||!e||!p){msg.className='amsg err';msg.textContent='Please fill all required fields';return;}
+  if(p.length<6){msg.className='amsg err';msg.textContent='Password must be at least 6 characters';return;}
+  if(p!==cp){msg.className='amsg err';msg.textContent='Passwords do not match';return;}
+  msg.className='amsg';msg.textContent='Creating your account...';
   try{
-    const result = await signInWithPopup(auth,gp);
-    await setDoc(doc(db,'users',result.user.uid),{name:result.user.displayName,email:result.user.email,updatedAt:serverTimestamp()},{merge:true});
-  }catch(e){notify('Google login failed');}
+    const cred=await createUserWithEmailAndPassword(auth,e,p);
+    await updateProfile(cred.user,{displayName:fn+' '+ln});
+    await sendEmailVerification(cred.user);
+    // Save phone to Firestore
+    if(ph){await setDoc(doc(db,'users',cred.user.uid,'profile','info'),{phone:ph,firstName:fn,lastName:ln,createdAt:serverTimestamp()});}
+    msg.className='amsg ok';msg.textContent='✅ Account created! Check your email to verify.';
+  }catch(err){
+    msg.className='amsg err';
+    if(err.code==='auth/email-already-in-use')msg.textContent='This email is already registered. Try signing in.';
+    else msg.textContent=err.message;
+  }
 };
+
+window.doGoogle=async function(){
+  try{await signInWithPopup(auth,GP);}
+  catch(e){notify('Google sign-in failed. Please try again.');}
+};
+
+window.doReset=async function(){
+  const e=document.getElementById('f-email').value.trim();
+  const msg=document.getElementById('f-msg');
+  if(!e){msg.className='amsg err';msg.textContent='Please enter your email address';return;}
+  msg.className='amsg';msg.textContent='Sending reset link...';
+  try{
+    await sendPasswordResetEmail(auth,e);
+    msg.className='amsg ok';msg.textContent='✅ Password reset link sent! Check your email.';
+  }catch(err){
+    msg.className='amsg err';
+    if(err.code==='auth/user-not-found')msg.textContent='No account found with this email.';
+    else msg.textContent=err.message;
+  }
+};
+
 window.doLogout=async function(){await signOut(auth);};
 
-// NAVIGATION
-window.showV=function(v){
-  const ids={chat:'vc',cat:'vcat',wl:'vwl',adm:'vadm'};
-  Object.values(ids).forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
-  const show=document.getElementById(ids[v]);if(show)show.style.display='flex';
+// ─── NAVIGATION ───────────────────────
+window.showView=function(v){
+  // Hide all
+  document.getElementById('vc').style.display='none';
+  document.getElementById('vcat').style.display='none';
+  document.getElementById('vwl').style.display='none';
+  document.getElementById('vadm').style.display='none';
+  // Show selected
+  const map={chat:'vc',cat:'vcat',wl:'vwl',adm:'vadm'};
+  const el=document.getElementById(map[v]);
+  if(el)el.style.display='flex';
+  // Nav highlight
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
-  const nel=document.getElementById('n-'+v);if(nel)nel.classList.add('on');
-  if(v==='cat')renderCat(curFilter);
-  if(v==='wl')renderWL();
-  if(v==='adm')renderAdmList();
+  const ni=document.getElementById('n-'+v);
+  if(ni)ni.classList.add('on');
+  // Load data
+  if(v==='cat')renderCatalog(curFilter);
+  if(v==='wl')renderWishlist();
+  if(v==='adm')renderAdminList();
 };
 
-// ITEMS
+// ─── DATA ────────────────────────────
 async function loadItems(){
-  const s=await getDocs(collection(db,'jewelry_items'));
-  items=s.docs.map(d=>({id:d.id,...d.data()}));
-  renderCat(curFilter);
-}
-async function loadWish(){
-  if(!CU)return;
-  const s=await getDocs(collection(db,'users',CU.uid,'wishlist'));
-  wishIds=new Set(s.docs.map(d=>d.id));
-  updateBadge();
-}
-function updateBadge(){
-  const b=document.getElementById('wbadge');
-  wishIds.size>0?(b.style.display='inline',b.textContent=wishIds.size):b.style.display='none';
+  try{
+    const snap=await getDocs(collection(db,'jewelry_items'));
+    allItems=snap.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){allItems=[];}
 }
 
-// TOGGLE WISH
+async function loadWishlist(){
+  if(!CU)return;
+  try{
+    const snap=await getDocs(collection(db,'users',CU.uid,'wishlist'));
+    wishIds=new Set(snap.docs.map(d=>d.id));
+    updateWishBadge();
+  }catch(e){wishIds=new Set();}
+}
+
+function updateWishBadge(){
+  const b=document.getElementById('wl-badge');
+  if(wishIds.size>0){b.style.display='inline';b.textContent=wishIds.size;}
+  else b.style.display='none';
+}
+
+// ─── WISHLIST TOGGLE ─────────────────
 window.toggleWish=async function(id,rerender){
-  if(!CU){notify('Please login first');return;}
+  if(!CU){notify('Please sign in first');return;}
   const ref=doc(db,'users',CU.uid,'wishlist',id);
-  if(wishIds.has(id)){await deleteDoc(ref);wishIds.delete(id);notify('Removed from wishlist');}
-  else{const it=items.find(i=>i.id===id);await setDoc(ref,{...it,savedAt:serverTimestamp()});wishIds.add(id);notify('❤️ Added to wishlist!','gold');}
-  updateBadge();
-  if(rerender==='wl')renderWL();
-  // update all wish buttons
-  document.querySelectorAll('[data-wid="'+id+'"]').forEach(b=>{
-    b.classList.toggle('sv',wishIds.has(id));
-    b.textContent=wishIds.has(id)?'❤️ Saved':'🤍 Save';
+  if(wishIds.has(id)){
+    await deleteDoc(ref);wishIds.delete(id);notify('Removed from wishlist');
+  }else{
+    const it=allItems.find(i=>i.id===id);
+    if(it){await setDoc(ref,{...it,savedAt:serverTimestamp()});}
+    wishIds.add(id);notify('❤️ Saved to wishlist!','gold');
+  }
+  updateWishBadge();
+  // Update all wish buttons for this item
+  document.querySelectorAll(`[data-wid="${id}"]`).forEach(b=>{
+    const isIn=wishIds.has(id);
+    b.classList.toggle('on',isIn);
+    b.textContent=isIn?'❤️ Saved':'🤍 Save';
   });
-  document.querySelectorAll('[data-wib="'+id+'"]').forEach(b=>{
-    b.classList.toggle('sv',wishIds.has(id));
+  document.querySelectorAll(`[data-wib="${id}"]`).forEach(b=>{
+    b.classList.toggle('on',wishIds.has(id));
     b.textContent=wishIds.has(id)?'❤️':'🤍';
   });
+  if(rerender==='wl')renderWishlist();
 };
 
-// CATALOG RENDER
+// ─── CATALOG RENDER ──────────────────
 window.filterCat=function(f,el){
   curFilter=f;
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');
-  renderCat(f);
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  renderCatalog(f);
 };
-function renderCat(f){
-  const g=document.getElementById('cat-grid');
-  const list=f==='all'?items:items.filter(i=>i.category===f);
-  if(!list.length){g.innerHTML='<div class="empty"><div class="e-icon">🔍</div><p>No items in this category yet</p></div>';return;}
-  g.innerHTML=list.map(item=>ccHTML(item)).join('');
+
+function renderCatalog(f){
+  const grid=document.getElementById('cat-grid');
+  const list=f==='all'?allItems:allItems.filter(i=>i.category===f);
+  if(!list.length){
+    grid.innerHTML='<div class="empty"><div class="ei">🔍</div><p>No items in this category yet.<br/>Admin can add items from the Manage Items panel.</p></div>';
+    return;
+  }
+  grid.innerHTML=list.map(item=>catalogCardHTML(item)).join('');
 }
-function ccHTML(item){
-  const price=calcP(item);const w=wishIds.has(item.id);
+
+function catalogCardHTML(item){
+  const price=calcPrice(item);const w=wishIds.has(item.id);
+  const imgHTML=item.imageUrl
+    ?`<img src="${item.imageUrl}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML+='<span style=font-size:54px>${catEmoji(item.category)}</span>'"/>`
+    :`<span style="font-size:54px">${catEmoji(item.category)}</span>`;
   return`<div class="cc" onclick="openModal('${item.id}')">
     <div class="cc-img">
-      ${item.imageUrl?`<img src="${item.imageUrl}" alt="${item.name}" onerror="this.parentElement.innerHTML='${catEmoji(item.category)}'"/>`:`<span style="font-size:50px">${catEmoji(item.category)}</span>`}
-      <button class="cc-wb ${w?'sv':''}" data-wib="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}')">${w?'❤️':'🤍'}</button>
+      ${imgHTML}
+      <button class="cc-wb ${w?'on':''}" data-wib="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}')">${w?'❤️':'🤍'}</button>
     </div>
     <div class="cc-body">
-      <div class="cc-cat">${item.category||'Jewellery'}</div>
+      <div class="cc-cat">${item.category||'jewellery'}</div>
       <div class="cc-name">${item.name}</div>
-      <div class="cc-row"><div class="cc-price">₹${price.toLocaleString('en-IN')}</div><div class="cc-wt">${item.weight}g · ${item.purity}K</div></div>
+      <div class="cc-row">
+        <div class="cc-price">${fmtPrice(price)}</div>
+        <div class="cc-wt">${item.weight}g · ${item.purity}K</div>
+      </div>
     </div>
   </div>`;
 }
 
-// WISHLIST
-function renderWL(){
-  const g=document.getElementById('wl-grid');
-  const list=items.filter(i=>wishIds.has(i.id));
-  document.getElementById('wl-ct').textContent=list.length+' saved pieces';
-  if(!list.length){g.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="e-icon">🤍</div><p>No saved items yet.<br/>Browse and tap ❤️ to save pieces.</p></div>';return;}
-  g.innerHTML=list.map(item=>{
-    const price=calcP(item);
+// ─── WISHLIST RENDER ─────────────────
+function renderWishlist(){
+  const grid=document.getElementById('wl-grid');
+  const list=allItems.filter(i=>wishIds.has(i.id));
+  document.getElementById('wl-count-text').textContent=list.length+' saved piece'+(list.length!==1?'s':'');
+  if(!list.length){
+    grid.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="ei">🤍</div><p>No saved items yet.<br/>Browse the catalogue and tap ❤️ to save pieces you love.</p></div>';
+    return;
+  }
+  grid.innerHTML=list.map(item=>{
+    const price=calcPrice(item);
+    const imgHTML=item.imageUrl
+      ?`<img src="${item.imageUrl}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML+='<span style=font-size:54px>${catEmoji(item.category)}</span>'"/>`
+      :`<span style="font-size:54px">${catEmoji(item.category)}</span>`;
     return`<div class="cc" onclick="openModal('${item.id}')">
       <div class="cc-img">
-        ${item.imageUrl?`<img src="${item.imageUrl}" alt="${item.name}" onerror="this.parentElement.innerHTML='${catEmoji(item.category)}'"/>`:`<span style="font-size:50px">${catEmoji(item.category)}</span>`}
-        <button class="cc-wb sv" data-wib="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}','wl')">❤️</button>
+        ${imgHTML}
+        <button class="cc-wb on" data-wib="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}','wl')">❤️</button>
       </div>
       <div class="cc-body">
-        <div class="cc-cat">${item.category||'Jewellery'}</div>
+        <div class="cc-cat">${item.category||'jewellery'}</div>
         <div class="cc-name">${item.name}</div>
-        <div class="cc-row"><div class="cc-price">₹${price.toLocaleString('en-IN')}</div><div class="cc-wt">${item.weight}g · ${item.purity}K</div></div>
+        <div class="cc-row">
+          <div class="cc-price">${fmtPrice(price)}</div>
+          <div class="cc-wt">${item.weight}g · ${item.purity}K</div>
+        </div>
       </div>
     </div>`;
   }).join('');
 }
 
-// MODAL
+// ─── MODAL ────────────────────────────
 window.openModal=function(id){
   modalItemId=id;
-  const it=items.find(i=>i.id===id);if(!it)return;
-  const price=calcP(it);const w=wishIds.has(id);
-  document.getElementById('m-price').textContent='₹'+price.toLocaleString('en-IN');
+  const it=allItems.find(i=>i.id===id);if(!it)return;
+  const price=calcPrice(it);const w=wishIds.has(id);
+  document.getElementById('m-price').textContent=fmtPrice(price);
   document.getElementById('m-name').textContent=it.name;
-  document.getElementById('m-cat').textContent=(it.category||'jewellery').toUpperCase()+' · '+it.purity+'K GOLD';
-  document.getElementById('m-desc').textContent=it.description||'A stunning piece from our exclusive collection, crafted with fine gold.';
+  document.getElementById('m-cat').textContent=(it.category||'Jewellery').toUpperCase()+' · '+it.purity+'K GOLD';
+  document.getElementById('m-desc').textContent=it.description||'A stunning piece from our exclusive collection, crafted with the finest gold.';
   document.getElementById('m-specs').innerHTML=`
-    <div class="spec"><div class="spec-l">Weight</div><div class="spec-v">${it.weight}g</div></div>
+    <div class="spec"><div class="spec-l">Gold Weight</div><div class="spec-v">${it.weight}g</div></div>
     <div class="spec"><div class="spec-l">Purity</div><div class="spec-v">${it.purity}K Gold</div></div>
-    <div class="spec"><div class="spec-l">Making Charges</div><div class="spec-v">₹${(it.making||0).toLocaleString('en-IN')}</div></div>
-    <div class="spec"><div class="spec-l">Stone Cost</div><div class="spec-v">₹${(it.stone||0).toLocaleString('en-IN')}</div></div>
+    <div class="spec"><div class="spec-l">Making Charges</div><div class="spec-v">${fmtPrice(it.making||0)}</div></div>
+    <div class="spec"><div class="spec-l">Stone Cost</div><div class="spec-v">${fmtPrice(it.stone||0)}</div></div>
   `;
-  const mw=document.getElementById('modal-img');
-  if(it.imageUrl){mw.innerHTML=`<img src="${it.imageUrl}" alt="${it.name}" onerror="this.parentElement.innerHTML='<div class=modal-img-emoji>${catEmoji(it.category)}</div>'"/>`;}
-  else{mw.innerHTML=`<div class="modal-img-emoji">${catEmoji(it.category)}</div>`;}
-  const mwb=document.getElementById('m-wish');mwb.textContent=w?'❤️ Saved to Wishlist':'🤍 Add to Wishlist';mwb.classList.toggle('sv',w);
+  const iw=document.getElementById('m-img-wrap');
+  if(it.imageUrl){
+    iw.innerHTML=`<img src="${it.imageUrl}" alt="${it.name}" onerror="this.parentElement.innerHTML='<div class=modal-img-emoji>${catEmoji(it.category)}</div>'"/>`;
+  }else{
+    iw.innerHTML=`<div class="modal-img-emoji">${catEmoji(it.category)}</div>`;
+  }
+  const wb=document.getElementById('m-wish');
+  wb.textContent=w?'❤️ Saved to Wishlist':'🤍 Add to Wishlist';
+  wb.classList.toggle('on',w);
   document.getElementById('modal').classList.add('open');
 };
 window.closeModal=function(){document.getElementById('modal').classList.remove('open');modalItemId=null;};
@@ -680,225 +1161,233 @@ window.wishFromModal=async function(){
   if(!modalItemId)return;
   await toggleWish(modalItemId);
   const w=wishIds.has(modalItemId);
-  const b=document.getElementById('m-wish');b.textContent=w?'❤️ Saved to Wishlist':'🤍 Add to Wishlist';b.classList.toggle('sv',w);
+  const wb=document.getElementById('m-wish');
+  wb.textContent=w?'❤️ Saved to Wishlist':'🤍 Add to Wishlist';
+  wb.classList.toggle('on',w);
 };
+// Close modal on overlay click
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
-// CHAT
+// ─── CHAT ─────────────────────────────
 window.enterKey=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}};
-window.autoH=function(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';};
-window.useSQ=function(el){document.getElementById('ci').value=el.textContent;sendMsg();el.closest('.sq-wrap')?.remove();};
+window.autoH=function(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';};
+window.useWQ=function(el){
+  document.getElementById('ci').value=el.textContent;
+  document.getElementById('welcome-queries')?.remove();
+  sendMsg();
+};
+window.useFC=function(el){document.getElementById('ci').value=el.textContent;sendMsg();};
 
 window.sendMsg=async function(){
   const inp=document.getElementById('ci');
   const txt=inp.value.trim();if(!txt)return;
   inp.value='';inp.style.height='auto';
-  const btn=document.getElementById('sbtn');btn.disabled=true;
-  addUserMsg(txt);
+  document.getElementById('sbtn').disabled=true;
+  addUserBubble(txt);
   const tid=addTyping();
 
-  const ctx=items.map(i=>`ID:${i.id}|Name:${i.name}|Category:${i.category}|Weight:${i.weight}g|Purity:${i.purity}K|Price:₹${calcP(i).toLocaleString('en-IN')}|Making:₹${i.making||0}|Stone:₹${i.stone||0}|Occasion:${i.tags||''}|Desc:${i.description||''}`).join('\n');
+  // Build item context
+  const ctx=allItems.length?allItems.map(i=>
+    `[ID:${i.id}] ${i.name} | ${i.category} | ${i.weight}g ${i.purity}K | Price:${fmtPrice(calcPrice(i))} | Tags:${i.tags||''} | Desc:${(i.description||'').slice(0,80)}`
+  ).join('\n'):'No items added to catalogue yet.';
 
-  // Simple approach - ask AI to find matching items by name
-  const prompt=`You are a helpful jewellery assistant at "Sample Jewellery Store". Current 24K gold rate: ₹${goldRate}/gram.
+  const prompt=`You are a warm and knowledgeable jewellery assistant at "Sample Jewellery Store", Hyderabad. Current 24K gold rate: ₹${goldRate}/gram.
 
-AVAILABLE ITEMS IN CATALOGUE:
-${ctx||'No items in catalogue yet. Admin needs to add items first.'}
+CATALOGUE (${allItems.length} items):
+${ctx}
 
-CUSTOMER SAYS: "${txt}"
+CUSTOMER MESSAGE: "${txt}"
 
-YOUR TASK:
-1. Write a short friendly reply (1-2 sentences)
-2. Look at the available items above and find which ones match what the customer wants (by budget, category, occasion, style)
-3. Suggest 5 short follow-up questions/options
+TASK: Help the customer find jewellery. Respond ONLY in valid JSON — no markdown, no extra text.
 
-IMPORTANT: Respond ONLY with valid JSON. No extra text before or after.
+Rules:
+- matchedIds: array of item IDs that match the customer's request (budget/category/occasion/style). Empty array [] if no match or no items.
+- followups: exactly 5 short follow-up options the customer might want next
+- If customer asks to "show all" or similar, include ALL item IDs
+- For budget queries like "below ₹5000", include items whose price is less than that budget
 
-{"reply":"your reply here","matchedIds":["exact-item-id-1","exact-item-id-2"],"followups":["option 1","option 2","option 3","option 4","option 5"]}
-
-Use exact IDs from the AVAILABLE ITEMS list above. If no items match, use empty array [].`;
+{"reply":"warm 1-2 sentence response","matchedIds":["id1","id2"],"followups":["option1","option2","option3","option4","option5"]}`;
 
   try{
-    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GKEY}`,{
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI}`,{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        contents:[{parts:[{text:prompt}]}],
-        generationConfig:{temperature:0.4,responseMimeType:"application/json"}
-      })
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.4,responseMimeType:'application/json'}})
     });
     const data=await res.json();
-    let raw=data.candidates?.[0]?.content?.parts?.[0]?.text||'{}';
+    let raw=(data.candidates?.[0]?.content?.parts?.[0]?.text||'{}').trim();
     raw=raw.replace(/```json|```/g,'').trim();
-    // Extract JSON if wrapped in text
-    const jsonMatch=raw.match(/\{[\s\S]*\}/);
-    if(jsonMatch) raw=jsonMatch[0];
+    const jm=raw.match(/\{[\s\S]*\}/);
+    if(jm)raw=jm[0];
     let parsed={reply:'',matchedIds:[],followups:[]};
-    try{parsed=JSON.parse(raw);}
-    catch(e){
-      // If JSON fails, use smart matching
-      parsed.reply = raw.length < 300 ? raw : "Here are some options that might interest you!";
-      parsed.matchedIds = [];
-      parsed.followups = ["Show all items","Rings below ₹5000","Necklaces","Earrings","Bridal jewellery"];
-    }
+    try{parsed=JSON.parse(raw);}catch(e){parsed.reply=raw.slice(0,200);}
     removeTyping(tid);
-    
-    // Smart fallback: if AI found no matches, try matching by category/keyword from user query
-    let matched = items.filter(i=>parsed.matchedIds?.includes(i.id));
-    if(matched.length===0 && items.length>0){
+
+    // Get matched items from AI
+    let matched=allItems.filter(i=>parsed.matchedIds?.includes(i.id));
+
+    // Smart fallback matching if AI matched nothing but items exist
+    if(matched.length===0&&allItems.length>0){
       const q=txt.toLowerCase();
-      matched=items.filter(i=>{
-        const name=(i.name||'').toLowerCase();
-        const cat=(i.category||'').toLowerCase();
-        const desc=(i.description||'').toLowerCase();
-        const tags=(i.tags||'').toLowerCase();
-        const price=calcP(i);
+      // Check for "all" / "show everything" type requests
+      const showAll=/(all|everything|show|catalogue|list|what do you have)/i.test(q);
+      if(showAll){
+        matched=[...allItems];
+      }else{
         // Budget matching
-        const budgetMatch=q.match(/₹?\s*(\d[\d,]*)/);
+        const budgetMatch=q.match(/(?:₹|rs\.?|inr)?\s*(\d[\d,]*)\s*(?:thousand|k)?/i);
+        let budget=0;
         if(budgetMatch){
-          const budget=parseInt(budgetMatch[1].replace(/,/g,''));
-          if(price<=budget) return true;
+          budget=parseInt(budgetMatch[1].replace(/,/g,''));
+          if(q.includes('k')||q.includes('thousand'))budget*=1000;
         }
-        // Category/keyword matching
-        return q.includes(cat)||name.split(' ').some(w=>w.length>3&&q.includes(w))||
-               q.includes('ring')&&cat==='ring'||q.includes('necklace')&&cat==='necklace'||
-               q.includes('earring')&&cat==='earring'||q.includes('bangle')&&cat==='bangle'||
-               q.includes('bracelet')&&cat==='bracelet'||q.includes('all')||q.includes('show');
-      });
-      // If still empty, show all items
-      if(matched.length===0) matched=[...items];
+        matched=allItems.filter(i=>{
+          const price=calcPrice(i);
+          const nm=(i.name||'').toLowerCase();
+          const cat=(i.category||'').toLowerCase();
+          const desc=(i.description||'').toLowerCase();
+          const tags=(i.tags||'').toLowerCase();
+          if(budget>0&&price<=budget)return true;
+          if(q.includes(cat))return true;
+          if(nm.split(' ').some(w=>w.length>3&&q.includes(w)))return true;
+          if(tags.split(',').some(t=>q.includes(t.trim())))return true;
+          return false;
+        });
+        // If still nothing, show all
+        if(matched.length===0)matched=[...allItems];
+      }
     }
-    
-    const followups=parsed.followups?.length>0 ? parsed.followups : 
-      ["Show all items","Rings below ₹5,000","Necklaces","Bridal sets","Daily wear"];
-    addAIMsg(parsed.reply||'Here are some beautiful pieces for you! ✨',matched,followups,matched.length>3,txt);
+
+    const followups=parsed.followups?.length===5?parsed.followups:
+      ['Show bridal jewellery','Rings below ₹5,000','Light weight pieces','With diamond stones','Daily wear items'];
+    const replyText=parsed.reply||`Here are ${matched.length>0?'some beautiful pieces':'our catalogue'} for you! ✨`;
+    addAIBubble(replyText,matched,followups,txt);
+
   }catch(e){
     removeTyping(tid);
-    // Even on error, show all items
-    const followups=["Show all items","Rings","Necklaces","Earrings","Bridal jewellery"];
-    addAIMsg('Here are our available jewellery pieces for you! ✨',items.length>0?[...items]:[],[...followups],false,txt);
+    // On error, show items with generic message
+    const followups=['Show all items','Rings','Necklaces','Earrings','Bridal sets'];
+    addAIBubble('Here are our available jewellery pieces! ✨',allItems.length>0?[...allItems]:[],followups,txt);
   }
-  btn.disabled=false;
+  document.getElementById('sbtn').disabled=false;
 };
 
-function addUserMsg(txt){
+function addUserBubble(txt){
   const msgs=document.getElementById('msgs');
   const nm=CU?.displayName||'U';
   const d=document.createElement('div');d.className='msg u';
-  d.innerHTML=`<div class="mav">${nm[0].toUpperCase()}</div><div class="msg-inner"><div class="mb">${txt.replace(/</g,'&lt;')}</div></div>`;
+  d.innerHTML=`<div class="mav">${nm[0].toUpperCase()}</div><div class="msg-inner"><div class="mb">${escHtml(txt)}</div></div>`;
   msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
 }
 
-function addAIMsg(txt,matched,followups,hasMore,origQuery){
+function addAIBubble(txt,matched,followups,origQuery){
   const msgs=document.getElementById('msgs');
   const d=document.createElement('div');d.className='msg ai';
 
+  // Build items HTML
   let itemsHTML='';
   if(matched.length>0){
-    itemsHTML='<div class="products-grid">'+matched.map(item=>{
-      const price=calcP(item);const w=wishIds.has(item.id);
+    itemsHTML=`<div class="pgrid">`+matched.map(item=>{
+      const price=calcPrice(item);const w=wishIds.has(item.id);
+      const imgHTML=item.imageUrl
+        ?`<img src="${item.imageUrl}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML+='<span style=font-size:36px>${catEmoji(item.category)}</span>'"/>`
+        :`<span style="font-size:36px">${catEmoji(item.category)}</span>`;
       return`<div class="pcard" onclick="openModal('${item.id}')">
-        <div class="pcard-img">
-          ${item.imageUrl?`<img src="${item.imageUrl}" alt="${item.name}" onerror="this.parentElement.innerHTML='<span style=font-size:40px>${catEmoji(item.category)}</span>'"/>`:`<span style="font-size:40px">${catEmoji(item.category)}</span>`}
-          <button class="pcard-wish ${w?'sv':''}" data-wib="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}')">${w?'❤️':'🤍'}</button>
+        <div class="pc-img">
+          ${imgHTML}
+          <button class="pc-wb ${w?'on':''}" data-wib="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}')">${w?'❤️':'🤍'}</button>
         </div>
-        <div class="pcard-body">
-          <div class="pcard-cat">${item.category||'jewellery'}</div>
-          <div class="pcard-name">${item.name}</div>
-          <div class="pcard-price">₹${price.toLocaleString('en-IN')}</div>
-          <div class="pcard-meta">${item.weight}g · ${item.purity}K Gold</div>
-          <div class="pcard-desc">${item.description||'Premium quality jewellery from our exclusive collection.'}</div>
-          <div class="pcard-actions">
-            <button class="btn-wish-sm ${w?'sv':''}" data-wid="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}')">${w?'❤️ Saved':'🤍 Save'}</button>
-            <button class="btn-view-sm" onclick="event.stopPropagation();openModal('${item.id}')">View Details</button>
+        <div class="pc-body">
+          <div class="pc-cat">${item.category||'jewellery'}</div>
+          <div class="pc-name">${item.name}</div>
+          <div class="pc-price">${fmtPrice(price)}</div>
+          <div class="pc-meta">${item.weight}g · ${item.purity}K Gold</div>
+          <div class="pc-desc">${item.description||'Premium quality jewellery from our exclusive collection.'}</div>
+          <div class="pc-acts">
+            <button class="pc-btn-w ${w?'on':''}" data-wid="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}')">${w?'❤️ Saved':'🤍 Save'}</button>
+            <button class="pc-btn-v" onclick="event.stopPropagation();openModal('${item.id}')">View Details</button>
           </div>
         </div>
       </div>`;
-    }).join('')+'</div>';
+    }).join('')+`</div>`;
+  }else if(allItems.length===0){
+    itemsHTML=`<div class="no-items-msg"><p>No items added to catalogue yet. The admin will add jewellery pieces soon!</p></div>`;
   }
 
-  let fuHTML='';
-  if(followups&&followups.length>0){
-    fuHTML=`<div class="followup-wrap">
-      <div class="followup-label">What would you like to explore next?</div>
-      <div class="followup-chips">${followups.map(f=>`<button class="fc" onclick="useFU(this)">${f}</button>`).join('')}</div>
-    </div>`;
-  }
+  // Follow-up chips
+  const fuHTML=followups.length?`<div class="fu-wrap">
+    <div class="fu-label">What would you like to explore?</div>
+    <div class="fu-chips">${followups.map(f=>`<button class="fc" onclick="useFC(this)">${f}</button>`).join('')}</div>
+  </div>`:'';
 
-  let moreHTML='';
-  if(hasMore&&matched.length>0){
-    moreHTML=`<button class="show-more-btn" onclick="showMore(this,'${origQuery.replace(/'/g,"\\'")}')">Show 10 more options ↓</button>`;
-  }
-
-  d.innerHTML=`<div class="mav">💎</div><div class="msg-inner"><div class="mb">${txt.replace(/\n/g,'<br/>')}${itemsHTML}${moreHTML}</div>${fuHTML}</div>`;
+  d.innerHTML=`<div class="mav">💎</div><div class="msg-inner"><div class="mb">${txt.replace(/\n/g,'<br/>')}${itemsHTML}</div>${fuHTML}</div>`;
   msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
 }
 
-window.useFU=function(el){
-  document.getElementById('ci').value=el.textContent;
-  sendMsg();
-};
-
-window.showMore=async function(btn,origQuery){
-  btn.textContent='Loading more options...';btn.disabled=true;
-  document.getElementById('ci').value='Show me 10 more different options for: '+origQuery;
-  await sendMsg();
-  btn.remove();
-};
-
 function addTyping(){
   const msgs=document.getElementById('msgs');
-  const id='t'+Date.now();const d=document.createElement('div');d.className='msg ai';d.id=id;
+  const id='t'+Date.now();
+  const d=document.createElement('div');d.className='msg ai';d.id=id;
   d.innerHTML='<div class="mav">💎</div><div class="msg-inner"><div class="mb"><div class="typing"><span></span><span></span><span></span></div></div></div>';
   msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return id;
 }
 function removeTyping(id){document.getElementById(id)?.remove();}
+function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-// ADMIN
+// ─── ADMIN ────────────────────────────
 window.addItem=async function(){
-  const n=document.getElementById('in').value.trim();
-  const c=document.getElementById('ic').value;
-  const w=parseFloat(document.getElementById('iw').value);
-  const m=parseFloat(document.getElementById('im').value)||0;
-  const st=parseFloat(document.getElementById('ist').value)||0;
-  const p=parseInt(document.getElementById('ip').value);
-  const desc=document.getElementById('id').value.trim();
-  const url=document.getElementById('iurl').value.trim();
-  const tags=document.getElementById('itags').value.trim();
-  const msg=document.getElementById('adm-msg');
-  if(!n||!c||!w){msg.className='auth-msg err';msg.textContent='Fill all required fields';return;}
-  msg.className='auth-msg';msg.textContent='Adding...';
+  const name=document.getElementById('a-name').value.trim();
+  const cat=document.getElementById('a-cat').value;
+  const wt=parseFloat(document.getElementById('a-weight').value);
+  const mk=parseFloat(document.getElementById('a-making').value)||0;
+  const st=parseFloat(document.getElementById('a-stone').value)||0;
+  const pu=parseInt(document.getElementById('a-purity').value);
+  const desc=document.getElementById('a-desc').value.trim();
+  const img=document.getElementById('a-img').value.trim();
+  const tags=document.getElementById('a-tags').value.trim();
+  const msg=document.getElementById('a-msg');
+  if(!name||!cat||!wt){msg.className='amsg err';msg.textContent='Please fill Name, Category and Weight';return;}
+  msg.className='amsg';msg.textContent='Adding item...';
   try{
-    await addDoc(collection(db,'jewelry_items'),{name:n,category:c,weight:w,making:m,stone:st,purity:p,description:desc,imageUrl:url,tags:tags,createdAt:serverTimestamp()});
-    msg.className='auth-msg ok';msg.textContent='✅ Item added!';
-    ['in','iw','im','ist','id','iurl','itags'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('ic').value='';
-    await loadItems();renderAdmList();
-  }catch(e){msg.className='auth-msg err';msg.textContent='Error: '+e.message;}
+    await addDoc(collection(db,'jewelry_items'),{
+      name,category:cat,weight:wt,making:mk,stone:st,purity:pu,
+      description:desc,imageUrl:img,tags,createdAt:serverTimestamp()
+    });
+    msg.className='amsg ok';msg.textContent='✅ Item added to catalogue!';
+    ['a-name','a-weight','a-making','a-stone','a-desc','a-img','a-tags'].forEach(id=>{document.getElementById(id).value='';});
+    document.getElementById('a-cat').value='';
+    await loadItems();renderAdminList();
+    setTimeout(()=>msg.textContent='',4000);
+  }catch(e){msg.className='amsg err';msg.textContent='Error: '+e.message;}
 };
 
-function renderAdmList(){
+function renderAdminList(){
   const c=document.getElementById('adm-list');
-  if(!items.length){c.innerHTML='<p style="color:var(--gray)">No items yet. Add your first item above!</p>';return;}
-  c.innerHTML=items.map(it=>{
-    const price=calcP(it);
+  if(!allItems.length){
+    c.innerHTML='<p style="color:var(--w4);font-weight:300;font-size:14px">No items yet. Add your first jewellery item above!</p>';
+    return;
+  }
+  c.innerHTML=allItems.map(it=>{
+    const price=calcPrice(it);
+    const thumb=it.imageUrl?`<img src="${it.imageUrl}" alt="${it.name}" onerror="this.style.display='none';this.parentElement.textContent='${catEmoji(it.category)}'"/>`:`${catEmoji(it.category)}`;
     return`<div class="air">
-      <div class="air-thumb">${it.imageUrl?`<img src="${it.imageUrl}" alt="${it.name}" onerror="this.parentElement.textContent='${catEmoji(it.category)}'"/>`:`${catEmoji(it.category)}`}</div>
-      <div class="air-d"><div class="air-n">${it.name}</div><div class="air-m">${it.category} · ${it.weight}g · ${it.purity}K · ₹${price.toLocaleString('en-IN')}</div></div>
+      <div class="air-thumb">${thumb}</div>
+      <div class="air-d">
+        <div class="air-n">${it.name}</div>
+        <div class="air-m">${it.category} · ${it.weight}g · ${it.purity}K · ${fmtPrice(price)}</div>
+      </div>
       <button class="del-btn" onclick="delItem('${it.id}')">Delete</button>
     </div>`;
   }).join('');
 }
 
 window.delItem=async function(id){
-  if(!confirm('Delete this item?'))return;
+  if(!confirm('Delete this item from catalogue?'))return;
   await deleteDoc(doc(db,'jewelry_items',id));
-  await loadItems();renderAdmList();notify('Item deleted');
+  await loadItems();renderAdminList();notify('Item deleted');
 };
 
-// NOTIFY
-window.notify=function(txt,type=''){
-  const n=document.getElementById('notif');n.textContent=txt;n.className='notif show '+(type==='gold'?'gold':'');
-  setTimeout(()=>n.classList.remove('show'),3000);
-};
+// Make notify global
+window.notify=notify;
 </script>
 </body>
 </html>
