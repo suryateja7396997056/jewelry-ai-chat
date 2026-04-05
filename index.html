@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sample Jewellery Store — AI Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dim: #8B6914;
+    --black: #090909;
+    --black2: #111111;
+    --black3: #1A1A1A;
+    --black4: #242424;
+    --black5: #2E2E2E;
+    --white: #F5F0E8;
+    --white2: #EDE8DC;
+    --gray: #888880;
+    --gray2: #555550;
+    --red: #E05555;
+    --green: #55AA77;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--black);color:var(--white);font-family:var(--font-body);height:100vh;overflow:hidden;}
+
+  /* ===== AUTH SCREEN ===== */
+  #auth-screen {
+    position:fixed;inset:0;background:var(--black);
+    display:flex;align-items:center;justify-content:center;z-index:100;
+    background-image: radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.08) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.05) 0%, transparent 50%);
+  }
+  .auth-box {
+    background:var(--black3);border:1px solid rgba(201,168,76,0.2);
+    border-radius:20px;padding:48px 44px;width:420px;max-width:95vw;
+    box-shadow:0 40px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(201,168,76,0.15);
+  }
+  .auth-logo {
+    text-align:center;margin-bottom:32px;
+  }
+  .auth-logo .logo-icon {
+    font-size:32px;display:block;margin-bottom:8px;
+  }
+  .auth-logo h1 {
+    font-family:var(--font-display);font-size:22px;color:var(--gold);letter-spacing:2px;font-weight:500;
+  }
+  .auth-logo p {
+    font-size:11px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;margin-top:4px;
+  }
+  .auth-tabs {
+    display:flex;background:var(--black4);border-radius:10px;padding:4px;margin-bottom:28px;
+  }
+  .auth-tab {
+    flex:1;padding:10px;text-align:center;font-size:14px;cursor:pointer;border-radius:8px;
+    transition:all 0.2s;color:var(--gray);font-family:var(--font-body);border:none;background:none;
+  }
+  .auth-tab.active {background:var(--black3);color:var(--gold);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
+  .auth-form input {
+    width:100%;background:var(--black4);border:1px solid var(--black5);border-radius:10px;
+    padding:14px 16px;font-size:14px;color:var(--white);font-family:var(--font-body);
+    margin-bottom:12px;outline:none;transition:border 0.2s;
+  }
+  .auth-form input:focus{border-color:var(--gold-dim);}
+  .auth-form input::placeholder{color:var(--gray2);}
+  .btn-primary {
+    width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));
+    border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:600;
+    color:var(--black);cursor:pointer;font-family:var(--font-body);letter-spacing:0.5px;
+    transition:all 0.2s;margin-bottom:12px;
+  }
+  .btn-primary:hover{opacity:0.9;transform:translateY(-1px);}
+  .btn-google {
+    width:100%;background:var(--black4);border:1px solid var(--black5);border-radius:10px;
+    padding:13px;font-size:14px;color:var(--white);cursor:pointer;font-family:var(--font-body);
+    display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;
+  }
+  .btn-google:hover{border-color:var(--gray2);background:var(--black5);}
+  .auth-divider {
+    text-align:center;margin:14px 0;color:var(--gray2);font-size:12px;position:relative;
+  }
+  .auth-divider::before,.auth-divider::after {
+    content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--black5);
+  }
+  .auth-divider::before{left:0;} .auth-divider::after{right:0;}
+  .auth-msg{font-size:12px;text-align:center;margin-top:8px;min-height:18px;}
+  .auth-msg.error{color:var(--red);}
+  .auth-msg.success{color:var(--green);}
+
+  /* ===== MAIN APP ===== */
+  #app {display:none;height:100vh;flex-direction:row;}
+  #app.visible{display:flex;}
+
+  /* SIDEBAR */
+  .sidebar {
+    width:260px;background:var(--black2);border-right:1px solid rgba(201,168,76,0.12);
+    display:flex;flex-direction:column;flex-shrink:0;
+  }
+  .sidebar-logo {
+    padding:24px 20px 18px;border-bottom:1px solid rgba(201,168,76,0.1);
+  }
+  .sidebar-logo .brand {
+    font-family:var(--font-display);font-size:16px;color:var(--gold);letter-spacing:1px;
+  }
+  .sidebar-logo .brand-sub {
+    font-size:10px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-top:2px;
+  }
+  .gold-price-bar {
+    margin:14px 16px;background:var(--black3);border:1px solid rgba(201,168,76,0.2);
+    border-radius:10px;padding:10px 14px;
+  }
+  .gold-price-bar .label {font-size:10px;color:var(--gray);letter-spacing:1px;text-transform:uppercase;}
+  .gold-price-bar .price {font-size:18px;font-family:var(--font-display);color:var(--gold);margin-top:2px;}
+  .gold-price-bar .per {font-size:10px;color:var(--gray2);}
+  .sidebar-nav {padding:8px 10px;flex:1;overflow-y:auto;}
+  .nav-label {font-size:10px;color:var(--gray2);letter-spacing:2px;text-transform:uppercase;padding:12px 10px 6px;}
+  .nav-item {
+    display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;
+    cursor:pointer;transition:all 0.15s;color:var(--gray);font-size:14px;margin-bottom:2px;
+    border:none;background:none;width:100%;text-align:left;font-family:var(--font-body);
+  }
+  .nav-item:hover{background:var(--black4);color:var(--white);}
+  .nav-item.active{background:rgba(201,168,76,0.1);color:var(--gold);}
+  .nav-item .icon{font-size:16px;width:20px;text-align:center;}
+  .nav-item .badge {
+    margin-left:auto;background:var(--gold);color:var(--black);font-size:10px;
+    font-weight:700;border-radius:10px;padding:2px 6px;
+  }
+  .sidebar-user {
+    padding:14px 16px;border-top:1px solid rgba(201,168,76,0.1);
+    display:flex;align-items:center;gap:10px;
+  }
+  .user-avatar {
+    width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));
+    display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;
+    color:var(--black);flex-shrink:0;
+  }
+  .user-info{flex:1;overflow:hidden;}
+  .user-name{font-size:13px;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .user-email{font-size:10px;color:var(--gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .btn-logout {
+    background:none;border:none;color:var(--gray);cursor:pointer;font-size:16px;
+    padding:4px;border-radius:6px;transition:color 0.2s;
+  }
+  .btn-logout:hover{color:var(--red);}
+
+  /* MAIN CONTENT */
+  .main-content{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+  /* CHAT VIEW */
+  #view-chat{display:flex;flex-direction:column;height:100%;}
+  .chat-header {
+    padding:18px 24px;border-bottom:1px solid rgba(201,168,76,0.1);
+    display:flex;align-items:center;gap:12px;background:var(--black2);
+  }
+  .chat-header h2{font-family:var(--font-display);font-size:18px;color:var(--white);}
+  .chat-header p{font-size:12px;color:var(--gray);margin-top:2px;}
+  .chat-ai-badge {
+    margin-left:auto;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);
+    color:var(--gold);font-size:11px;padding:4px 10px;border-radius:20px;letter-spacing:0.5px;
+  }
+  .chat-messages {
+    flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:20px;
+    scroll-behavior:smooth;
+  }
+  .chat-messages::-webkit-scrollbar{width:4px;}
+  .chat-messages::-webkit-scrollbar-track{background:transparent;}
+  .chat-messages::-webkit-scrollbar-thumb{background:var(--black5);border-radius:4px;}
+  .msg {display:flex;gap:12px;animation:fadeUp 0.3s ease;}
+  .msg.user{flex-direction:row-reverse;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .msg-avatar {
+    width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;
+    justify-content:center;font-size:13px;font-weight:600;
+  }
+  .msg.ai .msg-avatar{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--black);}
+  .msg.user .msg-avatar{background:var(--black5);color:var(--white);}
+  .msg-bubble {
+    max-width:70%;padding:14px 18px;border-radius:16px;font-size:14px;line-height:1.6;
+  }
+  .msg.ai .msg-bubble{background:var(--black3);color:var(--white);border-radius:4px 16px 16px 16px;border:1px solid rgba(201,168,76,0.1);}
+  .msg.user .msg-bubble{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--black);border-radius:16px 4px 16px 16px;font-weight:500;}
+  .msg-bubble .typing{display:flex;gap:4px;align-items:center;padding:4px 0;}
+  .msg-bubble .typing span{width:6px;height:6px;background:var(--gray);border-radius:50%;animation:blink 1.2s infinite;}
+  .msg-bubble .typing span:nth-child(2){animation-delay:0.2s;}
+  .msg-bubble .typing span:nth-child(3){animation-delay:0.4s;}
+  @keyframes blink{0%,80%,100%{opacity:0.3;}40%{opacity:1;}}
+
+  /* Item cards in chat */
+  .chat-items-grid {
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:12px;
+  }
+  .chat-item-card {
+    background:var(--black4);border:1px solid rgba(201,168,76,0.15);border-radius:12px;
+    overflow:hidden;cursor:pointer;transition:all 0.2s;
+  }
+  .chat-item-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,0.1);}
+  .chat-item-img {
+    width:100%;height:120px;object-fit:cover;background:var(--black5);
+    display:flex;align-items:center;justify-content:center;font-size:30px;
+  }
+  .chat-item-img img{width:100%;height:100%;object-fit:cover;}
+  .chat-item-info{padding:10px 12px;}
+  .chat-item-name{font-size:13px;font-weight:500;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .chat-item-price{font-size:14px;font-family:var(--font-display);color:var(--gold);margin-top:2px;}
+  .chat-item-weight{font-size:11px;color:var(--gray);margin-top:1px;}
+  .chat-item-actions{display:flex;gap:6px;margin-top:8px;}
+  .btn-wish {
+    flex:1;background:none;border:1px solid rgba(201,168,76,0.3);border-radius:6px;
+    padding:5px;font-size:13px;cursor:pointer;transition:all 0.2s;color:var(--gray);
+  }
+  .btn-wish:hover,.btn-wish.saved{background:rgba(201,168,76,0.15);color:var(--gold);border-color:var(--gold);}
+
+  /* Suggested queries */
+  .suggested-queries {
+    display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;
+  }
+  .sq {
+    background:var(--black4);border:1px solid rgba(201,168,76,0.2);border-radius:20px;
+    padding:8px 14px;font-size:13px;color:var(--gold-light);cursor:pointer;transition:all 0.2s;
+    font-family:var(--font-body);
+  }
+  .sq:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);}
+  .chat-input-area {
+    padding:16px 24px 20px;border-top:1px solid rgba(201,168,76,0.1);background:var(--black2);
+  }
+  .chat-input-wrap {
+    display:flex;align-items:flex-end;gap:10px;background:var(--black4);
+    border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:10px 14px;
+    transition:border 0.2s;
+  }
+  .chat-input-wrap:focus-within{border-color:var(--gold-dim);}
+  #chat-input {
+    flex:1;background:none;border:none;outline:none;color:var(--white);font-size:14px;
+    font-family:var(--font-body);resize:none;max-height:120px;line-height:1.5;
+  }
+  #chat-input::placeholder{color:var(--gray2);}
+  .btn-send {
+    background:linear-gradient(135deg,var(--gold),var(--gold-dim));border:none;border-radius:8px;
+    width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;flex-shrink:0;transition:all 0.2s;font-size:16px;
+  }
+  .btn-send:hover{opacity:0.85;}
+  .btn-send:disabled{opacity:0.4;cursor:not-allowed;}
+  .chat-hint{font-size:11px;color:var(--gray2);text-align:center;margin-top:8px;}
+
+  /* CATALOG VIEW */
+  #view-catalog{display:none;flex-direction:column;height:100%;}
+  #view-catalog.active{display:flex;}
+  .catalog-header {
+    padding:18px 24px;border-bottom:1px solid rgba(201,168,76,0.1);background:var(--black2);
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  }
+  .catalog-header h2{font-family:var(--font-display);font-size:18px;color:var(--white);}
+  .filter-chips{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;}
+  .chip {
+    background:var(--black4);border:1px solid var(--black5);border-radius:20px;
+    padding:6px 14px;font-size:12px;color:var(--gray);cursor:pointer;transition:all 0.2s;
+    font-family:var(--font-body);
+  }
+  .chip:hover{border-color:var(--gold-dim);color:var(--white);}
+  .chip.active{background:rgba(201,168,76,0.1);border-color:var(--gold);color:var(--gold);}
+  .catalog-body{flex:1;overflow-y:auto;padding:24px;}
+  .catalog-grid {
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;
+  }
+  .catalog-card {
+    background:var(--black3);border:1px solid rgba(201,168,76,0.12);border-radius:14px;
+    overflow:hidden;cursor:pointer;transition:all 0.2s;
+  }
+  .catalog-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.4);}
+  .catalog-img {
+    width:100%;height:180px;background:var(--black5);display:flex;align-items:center;
+    justify-content:center;font-size:48px;position:relative;overflow:hidden;
+  }
+  .catalog-img img{width:100%;height:100%;object-fit:cover;}
+  .catalog-wish-btn {
+    position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.6);border:none;
+    border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:14px;transition:all 0.2s;
+  }
+  .catalog-wish-btn:hover,.catalog-wish-btn.saved{background:rgba(201,168,76,0.3);color:var(--gold);}
+  .catalog-info{padding:14px 16px;}
+  .catalog-cat{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+  .catalog-name{font-size:15px;font-family:var(--font-display);color:var(--white);margin-bottom:6px;}
+  .catalog-meta{display:flex;justify-content:space-between;align-items:flex-end;}
+  .catalog-price{font-size:17px;font-family:var(--font-display);color:var(--gold);}
+  .catalog-weight{font-size:11px;color:var(--gray);}
+  .empty-state{text-align:center;padding:60px 20px;color:var(--gray);}
+  .empty-state .icon{font-size:48px;margin-bottom:16px;}
+  .empty-state p{font-size:15px;}
+
+  /* WISHLIST VIEW */
+  #view-wishlist{display:none;flex-direction:column;height:100%;}
+  #view-wishlist.active{display:flex;}
+  .wishlist-header {
+    padding:18px 24px;border-bottom:1px solid rgba(201,168,76,0.1);background:var(--black2);
+  }
+  .wishlist-header h2{font-family:var(--font-display);font-size:18px;color:var(--white);}
+  .wishlist-header p{font-size:13px;color:var(--gray);margin-top:2px;}
+  .wishlist-body{flex:1;overflow-y:auto;padding:24px;}
+  .wishlist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;}
+
+  /* ADMIN VIEW */
+  #view-admin{display:none;flex-direction:column;height:100%;}
+  #view-admin.active{display:flex;}
+  .admin-header{padding:18px 24px;border-bottom:1px solid rgba(201,168,76,0.1);background:var(--black2);}
+  .admin-header h2{font-family:var(--font-display);font-size:18px;color:var(--gold);}
+  .admin-header p{font-size:13px;color:var(--gray);margin-top:2px;}
+  .admin-body{flex:1;overflow-y:auto;padding:24px;}
+  .admin-form {
+    background:var(--black3);border:1px solid rgba(201,168,76,0.15);border-radius:14px;padding:28px;
+    max-width:600px;
+  }
+  .admin-form h3{font-family:var(--font-display);font-size:16px;color:var(--gold);margin-bottom:20px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+  .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+  .form-group label{font-size:12px;color:var(--gray);letter-spacing:0.5px;}
+  .form-group input,.form-group select,.form-group textarea {
+    background:var(--black4);border:1px solid var(--black5);border-radius:8px;
+    padding:10px 14px;font-size:14px;color:var(--white);font-family:var(--font-body);outline:none;
+    transition:border 0.2s;
+  }
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold-dim);}
+  .form-group select option{background:var(--black3);}
+  .form-group textarea{resize:vertical;min-height:80px;}
+  .admin-items-list{margin-top:28px;}
+  .admin-items-list h3{font-family:var(--font-display);font-size:16px;color:var(--gold);margin-bottom:16px;}
+  .admin-item-row {
+    display:flex;align-items:center;gap:14px;background:var(--black3);border:1px solid rgba(201,168,76,0.1);
+    border-radius:10px;padding:12px 16px;margin-bottom:10px;
+  }
+  .admin-item-row .item-thumb {
+    width:44px;height:44px;border-radius:8px;background:var(--black5);
+    display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden;
+  }
+  .admin-item-row .item-thumb img{width:100%;height:100%;object-fit:cover;}
+  .admin-item-row .item-details{flex:1;}
+  .admin-item-row .item-name{font-size:14px;color:var(--white);}
+  .admin-item-row .item-meta{font-size:12px;color:var(--gray);}
+  .btn-delete {
+    background:none;border:1px solid rgba(224,85,85,0.3);border-radius:6px;
+    padding:5px 10px;font-size:12px;color:var(--red);cursor:pointer;transition:all 0.2s;
+  }
+  .btn-delete:hover{background:rgba(224,85,85,0.1);}
+
+  /* MODAL */
+  .modal-overlay {
+    position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;
+    align-items:center;justify-content:center;z-index:200;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal {
+    background:var(--black3);border:1px solid rgba(201,168,76,0.2);border-radius:20px;
+    padding:32px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;
+    box-shadow:0 40px 80px rgba(0,0,0,0.8);
+  }
+  .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+  .modal-header h3{font-family:var(--font-display);font-size:20px;color:var(--gold);}
+  .btn-close {
+    background:none;border:none;color:var(--gray);font-size:20px;cursor:pointer;
+    padding:4px 8px;border-radius:6px;transition:color 0.2s;
+  }
+  .btn-close:hover{color:var(--white);}
+  .modal-img {
+    width:100%;height:240px;background:var(--black5);border-radius:12px;margin-bottom:20px;
+    display:flex;align-items:center;justify-content:center;font-size:64px;overflow:hidden;
+  }
+  .modal-img img{width:100%;height:100%;object-fit:cover;}
+  .modal-price{font-size:28px;font-family:var(--font-display);color:var(--gold);margin-bottom:4px;}
+  .modal-name{font-size:18px;color:var(--white);margin-bottom:12px;}
+  .modal-meta{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
+  .meta-chip {
+    background:var(--black4);border:1px solid var(--black5);border-radius:8px;
+    padding:6px 12px;font-size:12px;color:var(--gray);
+  }
+  .meta-chip span{color:var(--white);display:block;font-size:14px;margin-top:1px;}
+  .modal-desc{font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:20px;}
+  .modal-actions{display:flex;gap:10px;}
+  .btn-secondary {
+    flex:1;background:var(--black4);border:1px solid rgba(201,168,76,0.3);border-radius:10px;
+    padding:12px;font-size:14px;color:var(--gold);cursor:pointer;font-family:var(--font-body);
+    transition:all 0.2s;
+  }
+  .btn-secondary:hover{background:rgba(201,168,76,0.1);}
+
+  /* Notification */
+  .notif {
+    position:fixed;bottom:24px;right:24px;background:var(--black3);border:1px solid rgba(201,168,76,0.3);
+    border-radius:12px;padding:14px 18px;font-size:13px;color:var(--white);z-index:999;
+    box-shadow:0 8px 24px rgba(0,0,0,0.5);transform:translateY(80px);opacity:0;
+    transition:all 0.3s;max-width:280px;
+  }
+  .notif.show{transform:translateY(0);opacity:1;}
+  .notif.gold{border-color:var(--gold);color:var(--gold-light);}
+
+  /* Upload area */
+  .upload-area {
+    border:2px dashed var(--black5);border-radius:10px;padding:20px;text-align:center;
+    cursor:pointer;transition:all 0.2s;color:var(--gray);font-size:13px;
+  }
+  .upload-area:hover{border-color:var(--gold-dim);color:var(--white);}
+  .upload-area.uploading{border-color:var(--gold);color:var(--gold);}
+  .upload-preview{width:80px;height:80px;border-radius:8px;object-fit:cover;margin:8px auto 0;}
+  
+  /* Scrollbar */
+  .catalog-body::-webkit-scrollbar,.wishlist-body::-webkit-scrollbar,.admin-body::-webkit-scrollbar{width:4px;}
+  .catalog-body::-webkit-scrollbar-thumb,.wishlist-body::-webkit-scrollbar-thumb,.admin-body::-webkit-scrollbar-thumb{background:var(--black5);border-radius:4px;}
+
+  /* Responsive */
+  @media(max-width:640px){
+    .sidebar{width:60px;}
+    .sidebar-logo .brand,.sidebar-logo .brand-sub,.gold-price-bar,.nav-item span:not(.icon),.user-info,.nav-label{display:none;}
+    .nav-item{justify-content:center;padding:14px;}
+    .sidebar-user{justify-content:center;}
+    .user-avatar{margin:0;}
+    .btn-logout{display:none;}
+    .form-row{grid-template-columns:1fr;}
+    .catalog-grid,.wishlist-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
+  }
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <span class="logo-icon">💎</span>
+      <h1>SAMPLE JEWELLERY</h1>
+      <p>AI-Powered Discovery</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" onclick="switchTab('signup')">Create Account</button>
+    </div>
+    <div class="auth-form" id="login-form">
+      <input type="email" id="login-email" placeholder="Email address" autocomplete="email"/>
+      <input type="password" id="login-password" placeholder="Password" autocomplete="current-password"/>
+      <button class="btn-primary" onclick="loginEmail()">Sign In</button>
+      <div class="auth-divider">or continue with</div>
+      <button class="btn-google" onclick="loginGoogle()">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>
+        Continue with Google
+      </button>
+      <div class="auth-msg" id="login-msg"></div>
+    </div>
+    <div class="auth-form" id="signup-form" style="display:none;">
+      <input type="text" id="signup-name" placeholder="Full name" autocomplete="name"/>
+      <input type="email" id="signup-email" placeholder="Email address" autocomplete="email"/>
+      <input type="password" id="signup-password" placeholder="Password (min 6 chars)" autocomplete="new-password"/>
+      <button class="btn-primary" onclick="signupEmail()">Create Account</button>
+      <div class="auth-divider">or continue with</div>
+      <button class="btn-google" onclick="loginGoogle()">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>
+        Continue with Google
+      </button>
+      <div class="auth-msg" id="signup-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="brand">💎 SAMPLE JEWELLERY</div>
+      <div class="brand-sub">AI Assistant</div>
+    </div>
+    <div class="gold-price-bar">
+      <div class="label">24K Gold Rate</div>
+      <div class="price" id="gold-rate-display">₹ —</div>
+      <div class="per">per gram · live</div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-label">Navigation</div>
+      <button class="nav-item active" onclick="showView('chat')" id="nav-chat">
+        <span class="icon">💬</span><span>AI Assistant</span>
+      </button>
+      <button class="nav-item" onclick="showView('catalog')" id="nav-catalog">
+        <span class="icon">🪙</span><span>Catalogue</span>
+      </button>
+      <button class="nav-item" onclick="showView('wishlist')" id="nav-wishlist">
+        <span class="icon">❤️</span><span>My Wishlist</span>
+        <span class="badge" id="wishlist-badge" style="display:none">0</span>
+      </button>
+      <div class="nav-label" id="admin-label" style="display:none">Admin</div>
+      <button class="nav-item" onclick="showView('admin')" id="nav-admin" style="display:none">
+        <span class="icon">⚙️</span><span>Manage Items</span>
+      </button>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar">?</div>
+      <div class="user-info">
+        <div class="user-name" id="user-name-display">—</div>
+        <div class="user-email" id="user-email-display">—</div>
+      </div>
+      <button class="btn-logout" onclick="logout()" title="Logout">⬡</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- CHAT VIEW -->
+    <div id="view-chat">
+      <div class="chat-header">
+        <div>
+          <h2>Jewellery AI Assistant</h2>
+          <p>Ask me anything — budget, occasion, or style</p>
+        </div>
+        <div class="chat-ai-badge">✦ Gemini AI</div>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="msg ai">
+          <div class="msg-avatar">💎</div>
+          <div>
+            <div class="msg-bubble">
+              Namaste! 🙏 Welcome to Sample Jewellery Store.<br/><br/>
+              I'm your personal jewellery assistant. Tell me your <strong>budget</strong>, <strong>occasion</strong>, or <strong>preferred style</strong> — and I'll show you the perfect pieces with today's gold prices calculated live!
+            </div>
+            <div class="suggested-queries" id="suggested-queries">
+              <button class="sq" onclick="sendSQ(this)">Show rings below ₹5000</button>
+              <button class="sq" onclick="sendSQ(this)">Bridal jewellery sets</button>
+              <button class="sq" onclick="sendSQ(this)">Light weight earrings</button>
+              <button class="sq" onclick="sendSQ(this)">Gold necklaces under ₹20,000</button>
+              <button class="sq" onclick="sendSQ(this)">Show all items</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <div class="chat-input-wrap">
+          <textarea id="chat-input" rows="1" placeholder="Ask about budget, occasion, or style..." onkeydown="handleEnter(event)" oninput="autoResize(this)"></textarea>
+          <button class="btn-send" id="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+        <div class="chat-hint">Press Enter to send · Shift+Enter for new line</div>
+      </div>
+    </div>
+
+    <!-- CATALOG VIEW -->
+    <div id="view-catalog">
+      <div class="catalog-header">
+        <div>
+          <h2>Full Catalogue</h2>
+        </div>
+        <div class="filter-chips" id="filter-chips">
+          <button class="chip active" onclick="filterCatalog('all',this)">All</button>
+          <button class="chip" onclick="filterCatalog('ring',this)">Rings</button>
+          <button class="chip" onclick="filterCatalog('necklace',this)">Necklaces</button>
+          <button class="chip" onclick="filterCatalog('earring',this)">Earrings</button>
+          <button class="chip" onclick="filterCatalog('bracelet',this)">Bracelets</button>
+          <button class="chip" onclick="filterCatalog('bangle',this)">Bangles</button>
+          <button class="chip" onclick="filterCatalog('set',this)">Sets</button>
+        </div>
+      </div>
+      <div class="catalog-body">
+        <div class="catalog-grid" id="catalog-grid">
+          <div class="empty-state"><div class="icon">🔄</div><p>Loading catalogue...</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WISHLIST VIEW -->
+    <div id="view-wishlist">
+      <div class="wishlist-header">
+        <h2>❤️ My Wishlist</h2>
+        <p id="wishlist-count-text">Your saved jewellery pieces</p>
+      </div>
+      <div class="wishlist-body">
+        <div class="wishlist-grid" id="wishlist-grid"></div>
+      </div>
+    </div>
+
+    <!-- ADMIN VIEW -->
+    <div id="view-admin">
+      <div class="admin-header">
+        <h2>⚙️ Manage Jewellery Items</h2>
+        <p>Add, edit, or remove items from the catalogue</p>
+      </div>
+      <div class="admin-body">
+        <div class="admin-form">
+          <h3>Add New Item</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Item Name *</label>
+              <input type="text" id="item-name" placeholder="e.g. Gold Necklace Set"/>
+            </div>
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="item-category">
+                <option value="">Select category</option>
+                <option value="ring">Ring</option>
+                <option value="necklace">Necklace</option>
+                <option value="earring">Earring</option>
+                <option value="bracelet">Bracelet</option>
+                <option value="bangle">Bangle</option>
+                <option value="set">Set</option>
+                <option value="pendant">Pendant</option>
+                <option value="chain">Chain</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Gold Weight (grams) *</label>
+              <input type="number" id="item-weight" placeholder="e.g. 5.5" step="0.1"/>
+            </div>
+            <div class="form-group">
+              <label>Making Charges (₹) *</label>
+              <input type="number" id="item-making" placeholder="e.g. 500"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Stone/Diamond Cost (₹)</label>
+              <input type="number" id="item-stone" placeholder="0"/>
+            </div>
+            <div class="form-group">
+              <label>Gold Purity</label>
+              <select id="item-purity">
+                <option value="24">24K (99.9%)</option>
+                <option value="22" selected>22K (91.6%)</option>
+                <option value="18">18K (75%)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="item-desc" placeholder="Describe the piece, occasion, style..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Product Image</label>
+            <div class="upload-area" id="upload-area" onclick="document.getElementById('img-upload').click()">
+              <div id="upload-text">📸 Click to upload image</div>
+              <input type="file" id="img-upload" accept="image/*" style="display:none" onchange="uploadImage(this)"/>
+              <img id="upload-preview" class="upload-preview" style="display:none"/>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="addItem()" style="margin-top:6px">Add to Catalogue ✦</button>
+          <div class="auth-msg" id="admin-msg" style="text-align:left;"></div>
+        </div>
+        <div class="admin-items-list">
+          <h3>Current Catalogue</h3>
+          <div id="admin-items-container"><p style="color:var(--gray)">Loading...</p></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ITEM MODAL -->
+<div class="modal-overlay" id="item-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-name">Item Name</h3>
+      <button class="btn-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-img" id="modal-img">💎</div>
+    <div class="modal-price" id="modal-price">₹ —</div>
+    <div class="modal-meta" id="modal-meta"></div>
+    <div class="modal-desc" id="modal-desc"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="toggleWishFromModal()" id="modal-wish-btn">❤️ Add to Wishlist</button>
+      <button class="btn-primary" style="flex:1" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, updateProfile, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAzzyQVLP1kNv62L5zdDUjYJH5fm0aUYBA",
+  authDomain: "jewelry-ai-chat.firebaseapp.com",
+  projectId: "jewelry-ai-chat",
+  storageBucket: "jewelry-ai-chat.firebasestorage.app",
+  messagingSenderId: "941334368131",
+  appId: "1:941334368131:web:1354c4cb7f5700bf26f0b6",
+  measurementId: "G-ESGSNBWM55"
+};
+
+const GEMINI_API_KEY = "AIzaSyAMqXPX8vhpkwvIbeIs2O1-XPKVZWQYILw";
+const CLOUDINARY_CLOUD = "dgb6j5pwc";
+const ADMIN_EMAIL = "suryateja7396997056@gmail.com";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
+
+let currentUser = null;
+let goldRatePerGram = 7500;
+let allItems = [];
+let wishlistIds = new Set();
+let uploadedImageUrl = "";
+let currentModalItemId = null;
+let currentFilter = 'all';
+
+// Fetch gold price
+async function fetchGoldPrice(){
+  try {
+    // Using a free gold price approximation
+    // You can replace with goldapi.io key for live data
+    const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+    const data = await res.json();
+    // Approx gold price: $2000/oz = $64.3/g, multiply by INR rate
+    const usdToInr = data.rates.INR || 83;
+    goldRatePerGram = Math.round(64.3 * usdToInr);
+  } catch(e) {
+    goldRatePerGram = 7500; // fallback
+  }
+  document.getElementById('gold-rate-display').textContent = '₹ ' + goldRatePerGram.toLocaleString('en-IN');
+}
+
+// Calculate item price
+function calcPrice(item){
+  const purityFactor = item.purity == 24 ? 1 : item.purity == 22 ? 0.916 : 0.75;
+  const goldValue = item.weight * goldRatePerGram * purityFactor;
+  return Math.round(goldValue + (item.making || 0) + (item.stone || 0));
+}
+
+// AUTH STATE
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  if(user){
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+    const name = user.displayName || user.email.split('@')[0];
+    document.getElementById('user-name-display').textContent = name;
+    document.getElementById('user-email-display').textContent = user.email;
+    document.getElementById('user-avatar').textContent = name[0].toUpperCase();
+    if(user.email === ADMIN_EMAIL){
+      document.getElementById('nav-admin').style.display = 'flex';
+      document.getElementById('admin-label').style.display = 'block';
+    }
+    fetchGoldPrice();
+    loadItems();
+    loadWishlist();
+  } else {
+    document.getElementById('auth-screen').style.display = 'flex';
+    document.getElementById('app').classList.remove('visible');
+  }
+});
+
+// AUTH FUNCTIONS
+window.loginEmail = async function(){
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-msg');
+  if(!email||!pass){msg.className='auth-msg error';msg.textContent='Please fill all fields';return;}
+  msg.className='auth-msg';msg.textContent='Signing in...';
+  try{
+    await signInWithEmailAndPassword(auth,email,pass);
+  } catch(e){
+    msg.className='auth-msg error';
+    msg.textContent = e.code==='auth/invalid-credential' ? 'Invalid email or password' : e.message;
+  }
+};
+
+window.signupEmail = async function(){
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pass = document.getElementById('signup-password').value;
+  const msg = document.getElementById('signup-msg');
+  if(!name||!email||!pass){msg.className='auth-msg error';msg.textContent='Please fill all fields';return;}
+  if(pass.length<6){msg.className='auth-msg error';msg.textContent='Password must be 6+ characters';return;}
+  msg.className='auth-msg';msg.textContent='Creating account...';
+  try{
+    const cred = await createUserWithEmailAndPassword(auth,email,pass);
+    await updateProfile(cred.user,{displayName:name});
+    await sendEmailVerification(cred.user);
+    msg.className='auth-msg success';msg.textContent='Account created! Check email for verification.';
+  } catch(e){
+    msg.className='auth-msg error';
+    msg.textContent = e.code==='auth/email-already-in-use' ? 'Email already registered' : e.message;
+  }
+};
+
+window.loginGoogle = async function(){
+  try {
+    await signInWithPopup(auth, googleProvider);
+  } catch(e){
+    showNotif('Google login failed: ' + e.message);
+  }
+};
+
+window.logout = async function(){
+  await signOut(auth);
+};
+
+window.switchTab = function(tab){
+  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('login-form').style.display = tab==='login'?'block':'none';
+  document.getElementById('signup-form').style.display = tab==='signup'?'block':'none';
+};
+
+// NAVIGATION
+window.showView = function(view){
+  ['chat','catalog','wishlist','admin'].forEach(v=>{
+    document.getElementById('view-'+v).style.display = v===view?'flex':'none';
+    document.getElementById('view-'+v).classList.toggle('active', v===view);
+  });
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const navEl = document.getElementById('nav-'+view);
+  if(navEl) navEl.classList.add('active');
+  if(view==='catalog') renderCatalog(currentFilter);
+  if(view==='wishlist') renderWishlist();
+  if(view==='admin') renderAdminItems();
+};
+
+// LOAD ITEMS
+async function loadItems(){
+  const snap = await getDocs(collection(db,'jewelry_items'));
+  allItems = snap.docs.map(d=>({id:d.id,...d.data()}));
+  renderCatalog(currentFilter);
+}
+
+// LOAD WISHLIST
+async function loadWishlist(){
+  if(!currentUser) return;
+  const snap = await getDocs(collection(db,'users',currentUser.uid,'wishlist'));
+  wishlistIds = new Set(snap.docs.map(d=>d.id));
+  updateWishlistBadge();
+}
+
+function updateWishlistBadge(){
+  const badge = document.getElementById('wishlist-badge');
+  if(wishlistIds.size>0){
+    badge.style.display='inline';
+    badge.textContent=wishlistIds.size;
+  } else {
+    badge.style.display='none';
+  }
+}
+
+// CATALOG
+window.filterCatalog = function(cat, el){
+  currentFilter = cat;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderCatalog(cat);
+};
+
+function renderCatalog(filter){
+  const grid = document.getElementById('catalog-grid');
+  let items = filter==='all' ? allItems : allItems.filter(i=>i.category===filter);
+  if(items.length===0){
+    grid.innerHTML='<div class="empty-state"><div class="icon">🔍</div><p>No items in this category yet</p></div>';
+    return;
+  }
+  grid.innerHTML = items.map(item=>{
+    const price = calcPrice(item);
+    const wished = wishlistIds.has(item.id);
+    return `
+    <div class="catalog-card" onclick="openModal('${item.id}')">
+      <div class="catalog-img">
+        ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.name}"/>` : getCategoryEmoji(item.category)}
+        <button class="catalog-wish-btn ${wished?'saved':''}" onclick="event.stopPropagation();toggleWish('${item.id}')" id="wish-cat-${item.id}">${wished?'❤️':'🤍'}</button>
+      </div>
+      <div class="catalog-info">
+        <div class="catalog-cat">${item.category || 'Jewellery'}</div>
+        <div class="catalog-name">${item.name}</div>
+        <div class="catalog-meta">
+          <div class="catalog-price">₹${price.toLocaleString('en-IN')}</div>
+          <div class="catalog-weight">${item.weight}g · ${item.purity}K</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function getCategoryEmoji(cat){
+  const map={ring:'💍',necklace:'📿',earring:'✨',bracelet:'⚜️',bangle:'🔮',set:'🫧',pendant:'💠',chain:'⛓️'};
+  return map[cat]||'💎';
+}
+
+// WISHLIST
+window.toggleWish = async function(itemId){
+  if(!currentUser){showNotif('Please login first');return;}
+  const wishRef = doc(db,'users',currentUser.uid,'wishlist',itemId);
+  if(wishlistIds.has(itemId)){
+    await deleteDoc(wishRef);
+    wishlistIds.delete(itemId);
+    showNotif('Removed from wishlist');
+  } else {
+    const item = allItems.find(i=>i.id===itemId);
+    await setDoc(wishRef,{...item,savedAt:serverTimestamp()});
+    wishlistIds.add(itemId);
+    showNotif('❤️ Added to wishlist!','gold');
+  }
+  updateWishlistBadge();
+  // Update UI
+  const catBtn = document.getElementById('wish-cat-'+itemId);
+  if(catBtn){catBtn.textContent=wishlistIds.has(itemId)?'❤️':'🤍';catBtn.classList.toggle('saved',wishlistIds.has(itemId));}
+};
+
+function renderWishlist(){
+  const grid = document.getElementById('wishlist-grid');
+  const wishItems = allItems.filter(i=>wishlistIds.has(i.id));
+  document.getElementById('wishlist-count-text').textContent = wishItems.length + ' saved pieces';
+  if(wishItems.length===0){
+    grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="icon">🤍</div><p>No saved items yet.<br/>Browse the catalogue and tap ❤️ to save.</p></div>';
+    return;
+  }
+  grid.innerHTML = wishItems.map(item=>{
+    const price = calcPrice(item);
+    return `
+    <div class="catalog-card" onclick="openModal('${item.id}')">
+      <div class="catalog-img">
+        ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.name}"/>` : getCategoryEmoji(item.category)}
+        <button class="catalog-wish-btn saved" onclick="event.stopPropagation();toggleWish('${item.id}');setTimeout(renderWishlist,300)">❤️</button>
+      </div>
+      <div class="catalog-info">
+        <div class="catalog-cat">${item.category||'Jewellery'}</div>
+        <div class="catalog-name">${item.name}</div>
+        <div class="catalog-meta">
+          <div class="catalog-price">₹${price.toLocaleString('en-IN')}</div>
+          <div class="catalog-weight">${item.weight}g · ${item.purity}K</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// MODAL
+window.openModal = function(itemId){
+  currentModalItemId = itemId;
+  const item = allItems.find(i=>i.id===itemId);
+  if(!item) return;
+  const price = calcPrice(item);
+  const wished = wishlistIds.has(itemId);
+  document.getElementById('modal-name').textContent = item.name;
+  document.getElementById('modal-price').textContent = '₹' + price.toLocaleString('en-IN');
+  document.getElementById('modal-img').innerHTML = item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.name}"/>` : getCategoryEmoji(item.category);
+  document.getElementById('modal-desc').textContent = item.description || 'A beautiful piece from our exclusive collection.';
+  document.getElementById('modal-wish-btn').textContent = wished ? '❤️ Saved to Wishlist' : '🤍 Add to Wishlist';
+  document.getElementById('modal-meta').innerHTML = `
+    <div class="meta-chip">Category<span>${item.category||'—'}</span></div>
+    <div class="meta-chip">Weight<span>${item.weight}g</span></div>
+    <div class="meta-chip">Purity<span>${item.purity}K Gold</span></div>
+    <div class="meta-chip">Making<span>₹${(item.making||0).toLocaleString('en-IN')}</span></div>
+  `;
+  document.getElementById('item-modal').classList.add('open');
+};
+
+window.closeModal = function(){
+  document.getElementById('item-modal').classList.remove('open');
+  currentModalItemId = null;
+};
+
+window.toggleWishFromModal = async function(){
+  if(!currentModalItemId) return;
+  await toggleWish(currentModalItemId);
+  const wished = wishlistIds.has(currentModalItemId);
+  document.getElementById('modal-wish-btn').textContent = wished ? '❤️ Saved to Wishlist' : '🤍 Add to Wishlist';
+};
+
+// CHAT
+window.handleEnter = function(e){
+  if(e.key==='Enter' && !e.shiftKey){e.preventDefault();sendMessage();}
+};
+window.autoResize = function(el){
+  el.style.height='auto';el.style.height=el.scrollHeight+'px';
+};
+window.sendSQ = function(el){
+  document.getElementById('chat-input').value = el.textContent;
+  sendMessage();
+  document.getElementById('suggested-queries').remove();
+};
+
+window.sendMessage = async function(){
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value='';input.style.height='auto';
+  const btn = document.getElementById('send-btn');
+  btn.disabled=true;
+  addMsg('user', text);
+  const typingId = addTyping();
+  
+  // Build context about jewelry
+  const itemContext = allItems.map(i=>`${i.name} (${i.category}, ${i.weight}g ${i.purity}K, Price: ₹${calcPrice(i).toLocaleString('en-IN')})`).join('\n');
+  const prompt = `You are a helpful jewellery assistant for "Sample Jewellery Store". Current gold rate: ₹${goldRatePerGram}/gram.
+
+Available jewellery items:
+${itemContext || 'No items added yet (admin needs to add items)'}
+
+Customer says: "${text}"
+
+Reply helpfully in 2-3 sentences. If they ask for items by budget/category/occasion, list matching item NAMES exactly as they appear above. Keep response friendly and concise. If asking for items, end with: SHOW_ITEMS:[comma separated item names matching the request]`;
+
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+    });
+    const data = await res.json();
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not process that. Please try again.';
+    removeTyping(typingId);
+    
+    // Check for item display trigger
+    let displayText = reply;
+    let matchedItems = [];
+    const showMatch = reply.match(/SHOW_ITEMS:\[(.*?)\]/);
+    if(showMatch){
+      displayText = reply.replace(/SHOW_ITEMS:\[.*?\]/,'').trim();
+      const names = showMatch[1].split(',').map(n=>n.trim().toLowerCase());
+      matchedItems = allItems.filter(i=>names.some(n=>i.name.toLowerCase().includes(n)||n.includes(i.name.toLowerCase())));
+    }
+    addMsg('ai', displayText, matchedItems);
+  } catch(e){
+    removeTyping(typingId);
+    addMsg('ai','Sorry, I had trouble connecting. Please check your internet and try again.');
+  }
+  btn.disabled=false;
+};
+
+function addMsg(role, text, items=[]){
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const avatar = role==='ai' ? '💎' : (currentUser?.displayName||'U')[0].toUpperCase();
+  let itemsHtml = '';
+  if(items.length>0){
+    itemsHtml = '<div class="chat-items-grid">' + items.map(item=>{
+      const price = calcPrice(item);
+      const wished = wishlistIds.has(item.id);
+      return `<div class="chat-item-card" onclick="openModal('${item.id}')">
+        <div class="chat-item-img">${item.imageUrl?`<img src="${item.imageUrl}" alt="${item.name}"/>`:'💎'}</div>
+        <div class="chat-item-info">
+          <div class="chat-item-name">${item.name}</div>
+          <div class="chat-item-price">₹${price.toLocaleString('en-IN')}</div>
+          <div class="chat-item-weight">${item.weight}g · ${item.purity}K</div>
+          <div class="chat-item-actions">
+            <button class="btn-wish ${wished?'saved':''}" onclick="event.stopPropagation();toggleWish('${item.id}')">${wished?'❤️ Saved':'🤍 Save'}</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('') + '</div>';
+  }
+  div.innerHTML = `<div class="msg-avatar">${avatar}</div><div><div class="msg-bubble">${text.replace(/\n/g,'<br/>')}${itemsHtml}</div></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addTyping(){
+  const msgs = document.getElementById('chat-messages');
+  const id = 'typing-' + Date.now();
+  const div = document.createElement('div');
+  div.className='msg ai';div.id=id;
+  div.innerHTML='<div class="msg-avatar">💎</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+  return id;
+}
+function removeTyping(id){document.getElementById(id)?.remove();}
+
+// ADMIN - ADD ITEM
+window.uploadImage = async function(input){
+  const file = input.files[0];
+  if(!file) return;
+  const area = document.getElementById('upload-area');
+  const text = document.getElementById('upload-text');
+  const preview = document.getElementById('upload-preview');
+  area.classList.add('uploading');
+  text.textContent='Uploading...';
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', 'ml_default');
+  try {
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`,{method:'POST',body:formData});
+    const data = await res.json();
+    if(data.secure_url){
+      uploadedImageUrl = data.secure_url;
+      preview.src = data.secure_url;
+      preview.style.display='block';
+      text.textContent='✅ Image uploaded!';
+    } else {
+      text.textContent='Upload failed. Try again.';
+    }
+  } catch(e){
+    text.textContent='Upload error. Check internet.';
+  }
+  area.classList.remove('uploading');
+};
+
+window.addItem = async function(){
+  const name = document.getElementById('item-name').value.trim();
+  const category = document.getElementById('item-category').value;
+  const weight = parseFloat(document.getElementById('item-weight').value);
+  const making = parseFloat(document.getElementById('item-making').value)||0;
+  const stone = parseFloat(document.getElementById('item-stone').value)||0;
+  const purity = parseInt(document.getElementById('item-purity').value);
+  const description = document.getElementById('item-desc').value.trim();
+  const msg = document.getElementById('admin-msg');
+  if(!name||!category||!weight){msg.className='auth-msg error';msg.textContent='Fill all required fields';return;}
+  msg.className='auth-msg';msg.textContent='Adding item...';
+  try {
+    await addDoc(collection(db,'jewelry_items'),{
+      name,category,weight,making,stone,purity,description,
+      imageUrl:uploadedImageUrl,
+      createdAt:serverTimestamp()
+    });
+    msg.className='auth-msg success';msg.textContent='✅ Item added successfully!';
+    ['item-name','item-weight','item-making','item-stone','item-desc'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('item-category').value='';
+    document.getElementById('upload-text').textContent='📸 Click to upload image';
+    document.getElementById('upload-preview').style.display='none';
+    uploadedImageUrl='';
+    await loadItems();
+    renderAdminItems();
+  } catch(e){
+    msg.className='auth-msg error';msg.textContent='Error: '+e.message;
+  }
+};
+
+async function renderAdminItems(){
+  const container = document.getElementById('admin-items-container');
+  if(allItems.length===0){container.innerHTML='<p style="color:var(--gray)">No items yet. Add your first item above!</p>';return;}
+  container.innerHTML = allItems.map(item=>{
+    const price = calcPrice(item);
+    return `<div class="admin-item-row">
+      <div class="item-thumb">${item.imageUrl?`<img src="${item.imageUrl}"/>`:'💎'}</div>
+      <div class="item-details">
+        <div class="item-name">${item.name}</div>
+        <div class="item-meta">${item.category} · ${item.weight}g · ${item.purity}K · ₹${price.toLocaleString('en-IN')}</div>
+      </div>
+      <button class="btn-delete" onclick="deleteItem('${item.id}')">Delete</button>
+    </div>`;
+  }).join('');
+}
+
+window.deleteItem = async function(id){
+  if(!confirm('Delete this item?')) return;
+  await deleteDoc(doc(db,'jewelry_items',id));
+  await loadItems();
+  renderAdminItems();
+  showNotif('Item deleted');
+};
+
+// NOTIFICATION
+window.showNotif = function(text, type=''){
+  const n = document.getElementById('notif');
+  n.textContent=text;n.className='notif show '+(type==='gold'?'gold':'');
+  setTimeout(()=>n.classList.remove('show'),3000);
+};
+
+</script>
+</body>
+</html>
