@@ -1,2920 +1,934 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sample Jewellery Store — AI Powered</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap"
-    rel="stylesheet" />
-  <style>
-    :root {
-      --g1: #D4AF37;
-      --g2: #B8860B;
-      --g3: #8B6914;
-      --g4: rgba(212, 175, 55, 0.12);
-      --g5: rgba(212, 175, 55, 0.06);
-      --b0: #050505;
-      --b1: #0A0A0A;
-      --b2: #0F0F0F;
-      --b3: #161616;
-      --b4: #1E1E1E;
-      --b5: #282828;
-      --b6: #333333;
-      --w1: #F8F3E8;
-      --w2: #EDE5D0;
-      --w3: #C8BFA8;
-      --w4: #8A8070;
-      --w5: #4A4438;
-      --red: #C0392B;
-      --green: #27AE60;
-      --radius: 12px;
-      --fd: 'Cormorant Garamond', serif;
-      --fb: 'Jost', sans-serif;
-      --shadow-gold: 0 0 40px rgba(212, 175, 55, 0.08);
-      --shadow-deep: 0 24px 64px rgba(0, 0, 0, 0.8);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      height: 100%;
-      overflow: hidden;
-    }
-
-    body {
-      background: var(--b0);
-      color: var(--w1);
-      font-family: var(--fb);
-    }
-
-    /* SCROLLBAR */
-    ::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--b5);
-      border-radius: 4px;
-    }
-
-    /* ═══════════════════════════════════════
-   AUTH SCREEN
-═══════════════════════════════════════ */
-    #auth {
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      display: flex;
-      background: var(--b0);
-    }
-
-    .auth-left {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #0A0A0A 0%, #111008 50%, #0A0A0A 100%);
-    }
-
-    .auth-left-bg {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 30% 40%, rgba(212, 175, 55, 0.06) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 80% at 70% 60%, rgba(212, 175, 55, 0.04) 0%, transparent 70%);
-    }
-
-    .auth-left-pattern {
-      position: absolute;
-      inset: 0;
-      opacity: 0.03;
-      background-image: repeating-linear-gradient(45deg, var(--g1) 0, var(--g1) 1px, transparent 0, transparent 50%);
-      background-size: 30px 30px;
-    }
-
-    .auth-brand {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 40px;
-    }
-
-    .auth-brand-gem {
-      font-size: 64px;
-      margin-bottom: 24px;
-      display: block;
-      filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
-      animation: float 4s ease-in-out infinite;
-    }
-
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-10px);
-      }
-    }
-
-    .auth-brand h1 {
-      font-family: var(--fd);
-      font-size: 42px;
-      font-weight: 300;
-      letter-spacing: 6px;
-      color: var(--g1);
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      text-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
-    }
-
-    .auth-brand p {
-      font-size: 11px;
-      letter-spacing: 5px;
-      text-transform: uppercase;
-      color: var(--w4);
-      font-weight: 300;
-    }
-
-    .auth-brand-line {
-      width: 60px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--g1), transparent);
-      margin: 20px auto;
-    }
-
-    .auth-brand-tagline {
-      font-family: var(--fd);
-      font-style: italic;
-      font-size: 16px;
-      color: var(--w3);
-      margin-top: 16px;
-      opacity: 0.7;
-    }
-
-    .auth-right {
-      width: 460px;
-      background: var(--b1);
-      border-left: 1px solid rgba(212, 175, 55, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 44px;
-      overflow-y: auto;
-    }
-
-    .auth-box {
-      width: 100%;
-    }
-
-    .auth-box-title {
-      font-family: var(--fd);
-      font-size: 28px;
-      font-weight: 300;
-      color: var(--w1);
-      margin-bottom: 6px;
-      letter-spacing: 1px;
-    }
-
-    .auth-box-sub {
-      font-size: 13px;
-      color: var(--w4);
-      margin-bottom: 28px;
-      font-weight: 300;
-    }
-
-    /* TABS */
-    .auth-tabs {
-      display: flex;
-      background: var(--b3);
-      border-radius: 10px;
-      padding: 4px;
-      margin-bottom: 28px;
-      border: 1px solid rgba(212, 175, 55, 0.06);
-    }
-
-    .atab {
-      flex: 1;
-      padding: 10px;
-      text-align: center;
-      font-size: 13px;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: all .25s;
-      color: var(--w4);
-      font-family: var(--fb);
-      border: none;
-      background: none;
-      letter-spacing: .5px;
-    }
-
-    .atab.on {
-      background: var(--b5);
-      color: var(--g1);
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
-    }
-
-    /* FORM ELEMENTS */
-    .fg {
-      margin-bottom: 14px;
-    }
-
-    .fg label {
-      display: block;
-      font-size: 11px;
-      color: var(--w4);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-
-    .fg input {
-      width: 100%;
-      background: var(--b3);
-      border: 1px solid var(--b6);
-      border-radius: 10px;
-      padding: 13px 16px;
-      font-size: 14px;
-      color: var(--w1);
-      font-family: var(--fb);
-      outline: none;
-      transition: all .2s;
-      font-weight: 300;
-    }
-
-    .fg input:focus {
-      border-color: var(--g3);
-      background: var(--b4);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.04);
-    }
-
-    .fg input::placeholder {
-      color: var(--w5);
-    }
-
-    .fr2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    /* BUTTONS */
-    .btn-main {
-      width: 100%;
-      background: linear-gradient(135deg, var(--g1), var(--g2));
-      border: none;
-      border-radius: 10px;
-      padding: 14px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #000;
-      cursor: pointer;
-      font-family: var(--fb);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      transition: all .25s;
-      margin-bottom: 12px;
-      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
-    }
-
-    .btn-main:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 28px rgba(212, 175, 55, 0.3);
-    }
-
-    .btn-main:active {
-      transform: translateY(0);
-    }
-
-    .btn-google {
-      width: 100%;
-      background: var(--b3);
-      border: 1px solid var(--b6);
-      border-radius: 10px;
-      padding: 13px;
-      font-size: 13px;
-      color: var(--w2);
-      cursor: pointer;
-      font-family: var(--fb);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: all .2s;
-      letter-spacing: .5px;
-      font-weight: 400;
-    }
-
-    .btn-google:hover {
-      border-color: var(--g3);
-      background: var(--b4);
-    }
-
-    .btn-text {
-      background: none;
-      border: none;
-      color: var(--g1);
-      cursor: pointer;
-      font-size: 12px;
-      font-family: var(--fb);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      padding: 0;
-    }
-
-    .btn-text:hover {
-      color: var(--g2);
-    }
-
-    /* DIVIDER */
-    .div {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 16px 0;
-    }
-
-    .div span {
-      flex: 1;
-      height: 1px;
-      background: var(--b6);
-    }
-
-    .div p {
-      font-size: 11px;
-      color: var(--w5);
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-
-    /* MESSAGES */
-    .amsg {
-      font-size: 12px;
-      text-align: center;
-      margin-top: 10px;
-      min-height: 16px;
-      padding: 8px;
-      border-radius: 8px;
-      transition: all .2s;
-    }
-
-    .amsg.err {
-      color: #ff6b6b;
-      background: rgba(192, 57, 43, 0.1);
-      border: 1px solid rgba(192, 57, 43, 0.2);
-    }
-
-    .amsg.ok {
-      color: #55efc4;
-      background: rgba(39, 174, 96, 0.1);
-      border: 1px solid rgba(39, 174, 96, 0.2);
-    }
-
-    .amsg:empty {
-      padding: 0;
-      background: none;
-      border: none;
-    }
-
-    /* FORGOT PASSWORD LINK */
-    .forgot-row {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: -6px;
-      margin-bottom: 14px;
-    }
-
-    /* ═══════════════════════════════════════
-   MAIN APP
-═══════════════════════════════════════ */
-    #app {
-      display: none;
-      height: 100vh;
-      flex-direction: row;
-    }
-
-    #app.on {
-      display: flex;
-    }
-
-    /* ═══════════════════════════════════════
-   SIDEBAR
-═══════════════════════════════════════ */
-    .sidebar {
-      width: 260px;
-      background: var(--b1);
-      border-right: 1px solid rgba(212, 175, 55, 0.07);
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-    }
-
-    .sb-top {
-      padding: 22px 20px 16px;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.06);
-    }
-
-    .sb-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .sb-gem {
-      font-size: 22px;
-      filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.4));
-    }
-
-    .sb-name {
-      font-family: var(--fd);
-      font-size: 16px;
-      color: var(--g1);
-      letter-spacing: 2px;
-      font-weight: 400;
-    }
-
-    .sb-sub {
-      font-size: 9px;
-      color: var(--w4);
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-top: 1px;
-    }
-
-    /* GOLD RATE */
-    .gold-rate {
-      margin: 14px 14px 0;
-      border-radius: 12px;
-      padding: 14px 16px;
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.03));
-      border: 1px solid rgba(212, 175, 55, 0.15);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .gold-rate::before {
-      content: '';
-      position: absolute;
-      top: -20px;
-      right: -20px;
-      width: 80px;
-      height: 80px;
-      background: radial-gradient(circle, rgba(212, 175, 55, 0.08), transparent);
-      border-radius: 50%;
-    }
-
-    .gr-label {
-      font-size: 9px;
-      color: var(--w4);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-
-    .gr-price {
-      font-family: var(--fd);
-      font-size: 22px;
-      color: var(--g1);
-      font-weight: 400;
-      letter-spacing: 1px;
-    }
-
-    .gr-sub {
-      font-size: 10px;
-      color: var(--w5);
-      margin-top: 2px;
-    }
-
-    .gr-live {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 4px;
-    }
-
-    .gr-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--green);
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: .4;
-      }
-    }
-
-    .gr-live-text {
-      font-size: 10px;
-      color: var(--green);
-    }
-
-    /* NAV */
-    .sb-nav {
-      padding: 10px;
-      flex: 1;
-      overflow-y: auto;
-    }
-
-    .nl {
-      font-size: 9px;
-      color: var(--w5);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      padding: 12px 10px 5px;
-      font-weight: 500;
-    }
-
-    .ni {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      padding: 11px 14px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all .18s;
-      color: var(--w4);
-      font-size: 13px;
-      margin-bottom: 2px;
-      border: none;
-      background: none;
-      width: 100%;
-      text-align: left;
-      font-family: var(--fb);
-      font-weight: 400;
-      letter-spacing: .3px;
-      position: relative;
-    }
-
-    .ni:hover {
-      background: var(--b3);
-      color: var(--w2);
-    }
-
-    .ni.on {
-      background: rgba(212, 175, 55, 0.08);
-      color: var(--g1);
-    }
-
-    .ni.on::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 3px;
-      height: 60%;
-      background: var(--g1);
-      border-radius: 0 3px 3px 0;
-    }
-
-    .ni-ic {
-      font-size: 16px;
-      width: 20px;
-      text-align: center;
-    }
-
-    .ni-badge {
-      margin-left: auto;
-      background: var(--g1);
-      color: #000;
-      font-size: 10px;
-      font-weight: 700;
-      border-radius: 20px;
-      padding: 2px 7px;
-      min-width: 20px;
-      text-align: center;
-    }
-
-    /* USER */
-    .sb-user {
-      padding: 14px 16px;
-      border-top: 1px solid rgba(212, 175, 55, 0.06);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .u-av {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      background: linear-gradient(135deg, var(--g1), var(--g2));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 700;
-      color: #000;
-      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
-    }
-
-    .u-info {
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .u-name {
-      font-size: 13px;
-      color: var(--w1);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-weight: 500;
-    }
-
-    .u-email {
-      font-size: 10px;
-      color: var(--w5);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-top: 1px;
-    }
-
-    .lo-btn {
-      background: none;
-      border: 1px solid var(--b6);
-      color: var(--w4);
-      cursor: pointer;
-      font-size: 13px;
-      padding: 6px;
-      border-radius: 8px;
-      transition: all .2s;
-      line-height: 1;
-    }
-
-    .lo-btn:hover {
-      border-color: var(--red);
-      color: var(--red);
-    }
-
-    /* ═══════════════════════════════════════
-   MAIN CONTENT
-═══════════════════════════════════════ */
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      background: var(--b0);
-    }
-
-    /* ═══════════════════════════════════════
-   CHAT VIEW
-═══════════════════════════════════════ */
-    #vc {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .chat-hdr {
-      padding: 18px 28px;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.06);
-      background: var(--b1);
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      backdrop-filter: blur(10px);
-    }
-
-    .chat-hdr-info h2 {
-      font-family: var(--fd);
-      font-size: 20px;
-      color: var(--w1);
-      font-weight: 400;
-      letter-spacing: 1px;
-    }
-
-    .chat-hdr-info p {
-      font-size: 12px;
-      color: var(--w4);
-      margin-top: 2px;
-      font-weight: 300;
-    }
-
-    .ai-pill {
-      margin-left: auto;
-      background: rgba(212, 175, 55, 0.07);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      color: var(--g1);
-      font-size: 11px;
-      padding: 5px 14px;
-      border-radius: 20px;
-      letter-spacing: 1px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .ai-pill::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      background: var(--g1);
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-
-    /* MESSAGES */
-    .msgs {
-      flex: 1;
-      overflow-y: auto;
-      padding: 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      scroll-behavior: smooth;
-    }
-
-    .msg {
-      display: flex;
-      gap: 14px;
-      animation: fu .35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .msg.u {
-      flex-direction: row-reverse;
-    }
-
-    @keyframes fu {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .mav {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
-      margin-top: 2px;
-    }
-
-    .msg.ai .mav {
-      background: linear-gradient(135deg, var(--g1), var(--g2));
-      color: #000;
-    }
-
-    .msg.u .mav {
-      background: var(--b4);
-      color: var(--w2);
-      border: 1px solid var(--b6);
-    }
-
-    .msg-inner {
-      max-width: 78%;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .mb {
-      padding: 16px 20px;
-      border-radius: 16px;
-      font-size: 14px;
-      line-height: 1.7;
-      font-weight: 300;
-    }
-
-    .msg.ai .mb {
-      background: var(--b3);
-      color: var(--w1);
-      border-radius: 4px 16px 16px 16px;
-      border: 1px solid rgba(212, 175, 55, 0.08);
-    }
-
-    .msg.u .mb {
-      background: linear-gradient(135deg, var(--g1), var(--g2));
-      color: #000;
-      border-radius: 16px 4px 16px 16px;
-      font-weight: 500;
-    }
-
-    /* TYPING */
-    .typing {
-      display: flex;
-      gap: 5px;
-      align-items: center;
-      height: 20px;
-    }
-
-    .typing span {
-      width: 7px;
-      height: 7px;
-      background: var(--g3);
-      border-radius: 50%;
-      animation: bl 1.4s infinite;
-    }
-
-    .typing span:nth-child(2) {
-      animation-delay: .2s;
-    }
-
-    .typing span:nth-child(3) {
-      animation-delay: .4s;
-    }
-
-    @keyframes bl {
-
-      0%,
-      80%,
-      100% {
-        opacity: .2;
-        transform: scale(0.8);
-      }
-
-      40% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    /* PRODUCT CARDS IN CHAT */
-    .pgrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-      gap: 14px;
-      margin-top: 4px;
-    }
-
-    .pcard {
-      background: var(--b4);
-      border: 1px solid rgba(212, 175, 55, 0.12);
-      border-radius: 14px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all .25s;
-    }
-
-    .pcard:hover {
-      border-color: var(--g1);
-      transform: translateY(-4px);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), var(--shadow-gold);
-    }
-
-    .pc-img {
-      width: 100%;
-      height: 150px;
-      background: var(--b5);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 36px;
-    }
-
-    .pc-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform .3s;
-    }
-
-    .pcard:hover .pc-img img {
-      transform: scale(1.06);
-    }
-
-    .pc-wb {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 12px;
-      transition: all .2s;
-      z-index: 2;
-    }
-
-    .pc-wb:hover,
-    .pc-wb.on {
-      background: rgba(212, 175, 55, 0.2);
-      border-color: var(--g1);
-    }
-
-    .pc-body {
-      padding: 12px 14px 14px;
-    }
-
-    .pc-cat {
-      font-size: 9px;
-      color: var(--g1);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 5px;
-      font-weight: 500;
-    }
-
-    .pc-name {
-      font-family: var(--fd);
-      font-size: 15px;
-      color: var(--w1);
-      margin-bottom: 5px;
-      font-weight: 400;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .pc-price {
-      font-family: var(--fd);
-      font-size: 19px;
-      color: var(--g1);
-      font-weight: 400;
-      margin-bottom: 3px;
-    }
-
-    .pc-meta {
-      font-size: 11px;
-      color: var(--w4);
-      font-weight: 300;
-    }
-
-    .pc-desc {
-      font-size: 12px;
-      color: var(--w5);
-      margin-top: 7px;
-      line-height: 1.5;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .pc-acts {
-      display: flex;
-      gap: 7px;
-      margin-top: 10px;
-    }
-
-    .pc-btn-w {
-      flex: 1;
-      background: none;
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      border-radius: 8px;
-      padding: 7px;
-      font-size: 11px;
-      cursor: pointer;
-      transition: all .2s;
-      color: var(--w4);
-      font-family: var(--fb);
-      font-weight: 400;
-    }
-
-    .pc-btn-w:hover,
-    .pc-btn-w.on {
-      background: rgba(212, 175, 55, 0.1);
-      color: var(--g1);
-      border-color: var(--g1);
-    }
-
-    .pc-btn-v {
-      flex: 1;
-      background: rgba(212, 175, 55, 0.08);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      border-radius: 8px;
-      padding: 7px;
-      font-size: 11px;
-      cursor: pointer;
-      transition: all .2s;
-      color: var(--g1);
-      font-family: var(--fb);
-    }
-
-    .pc-btn-v:hover {
-      background: rgba(212, 175, 55, 0.16);
-    }
-
-    /* FOLLOW-UPS */
-    .fu-wrap {
-      margin-top: 4px;
-    }
-
-    .fu-label {
-      font-size: 11px;
-      color: var(--w4);
-      margin-bottom: 8px;
-      letter-spacing: .5px;
-    }
-
-    .fu-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .fc {
-      background: var(--b4);
-      border: 1px solid rgba(212, 175, 55, 0.15);
-      border-radius: 20px;
-      padding: 8px 16px;
-      font-size: 12px;
-      color: var(--w3);
-      cursor: pointer;
-      transition: all .2s;
-      font-family: var(--fb);
-      font-weight: 300;
-    }
-
-    .fc:hover {
-      background: rgba(212, 175, 55, 0.1);
-      border-color: var(--g1);
-      color: var(--g1);
-      transform: translateY(-1px);
-    }
-
-    /* WELCOME QUERIES */
-    .wq-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .wq {
-      background: var(--b4);
-      border: 1px solid rgba(212, 175, 55, 0.15);
-      border-radius: 20px;
-      padding: 9px 16px;
-      font-size: 13px;
-      color: var(--w3);
-      cursor: pointer;
-      transition: all .2s;
-      font-family: var(--fb);
-      font-weight: 300;
-    }
-
-    .wq:hover {
-      background: rgba(212, 175, 55, 0.1);
-      border-color: var(--g1);
-      color: var(--g1);
-    }
-
-    /* EMPTY CATALOGUE MSG */
-    .no-items-msg {
-      padding: 18px 22px;
-      background: rgba(212, 175, 55, 0.04);
-      border: 1px solid rgba(212, 175, 55, 0.1);
-      border-radius: 12px;
-      margin-top: 12px;
-      text-align: center;
-    }
-
-    .no-items-msg p {
-      font-size: 13px;
-      color: var(--w4);
-      font-weight: 300;
-      line-height: 1.6;
-    }
-
-    /* CHAT HEADER COUNT */
-    .chat-item-count {
-      font-size: 11px;
-      color: var(--w5);
-      background: var(--b3);
-      border: 1px solid var(--b5);
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-weight: 400;
-      letter-spacing: .3px;
-      white-space: nowrap;
-    }
-
-    /* INPUT */
-    .input-area {
-      padding: 16px 28px 22px;
-      border-top: 1px solid rgba(212, 175, 55, 0.06);
-      background: var(--b1);
-    }
-
-    .input-wrap {
-      display: flex;
-      align-items: flex-end;
-      gap: 12px;
-      background: var(--b3);
-      border: 1px solid rgba(212, 175, 55, 0.15);
-      border-radius: 16px;
-      padding: 12px 16px;
-      transition: all .2s;
-    }
-
-    .input-wrap:focus-within {
-      border-color: var(--g3);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.04);
-    }
-
-    #ci {
-      flex: 1;
-      background: none;
-      border: none;
-      outline: none;
-      color: var(--w1);
-      font-size: 14px;
-      font-family: var(--fb);
-      resize: none;
-      max-height: 120px;
-      line-height: 1.6;
-      font-weight: 300;
-    }
-
-    #ci::placeholder {
-      color: var(--w5);
-    }
-
-    .send-btn {
-      background: linear-gradient(135deg, var(--g1), var(--g2));
-      border: none;
-      border-radius: 10px;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: all .2s;
-      font-size: 16px;
-      color: #000;
-      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
-    }
-
-    .send-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
-    }
-
-    .send-btn:disabled {
-      opacity: .3;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .input-hint {
-      font-size: 11px;
-      color: var(--w5);
-      text-align: center;
-      margin-top: 8px;
-      font-weight: 300;
-    }
-
-    /* CLEAR CHAT BUTTON */
-    .clear-chat-btn {
-      background: none;
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      border-radius: 8px;
-      padding: 7px 14px;
-      font-size: 12px;
-      color: var(--w4);
-      cursor: pointer;
-      font-family: var(--fb);
-      font-weight: 400;
-      letter-spacing: .5px;
-      transition: all .2s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-    }
-
-    .clear-chat-btn:hover {
-      border-color: rgba(192, 57, 43, 0.5);
-      color: #ff6b6b;
-      background: rgba(192, 57, 43, 0.06);
-    }
-
-    /* ═══════════════════════════════════════
-   CATALOGUE VIEW
-═══════════════════════════════════════ */
-    #vcat {
-      display: none;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .cat-hdr {
-      padding: 18px 28px;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.06);
-      background: var(--b1);
-    }
-
-    .cat-hdr h2 {
-      font-family: var(--fd);
-      font-size: 20px;
-      color: var(--w1);
-      font-weight: 400;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-
-    .cat-chips {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .chip {
-      background: var(--b3);
-      border: 1px solid var(--b6);
-      border-radius: 20px;
-      padding: 7px 16px;
-      font-size: 12px;
-      color: var(--w4);
-      cursor: pointer;
-      transition: all .2s;
-      font-family: var(--fb);
-      font-weight: 400;
-    }
-
-    .chip:hover {
-      border-color: var(--g3);
-      color: var(--w2);
-    }
-
-    .chip.on {
-      background: rgba(212, 175, 55, 0.1);
-      border-color: var(--g1);
-      color: var(--g1);
-    }
-
-    .cat-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px 28px;
-    }
-
-    .cat-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
-    }
-
-    /* CATALOGUE CARDS */
-    .cc {
-      background: var(--b2);
-      border: 1px solid rgba(212, 175, 55, 0.08);
-      border-radius: 16px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all .25s;
-    }
-
-    .cc:hover {
-      border-color: var(--g1);
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-deep), var(--shadow-gold);
-    }
-
-    .cc-img {
-      width: 100%;
-      height: 200px;
-      background: var(--b4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 54px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cc-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform .35s;
-    }
-
-    .cc:hover .cc-img img {
-      transform: scale(1.06);
-    }
-
-    .cc-wb {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 50%;
-      width: 34px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all .2s;
-    }
-
-    .cc-wb:hover,
-    .cc-wb.on {
-      background: rgba(212, 175, 55, 0.2);
-      border-color: var(--g1);
-    }
-
-    .cc-body {
-      padding: 16px 18px;
-    }
-
-    .cc-cat {
-      font-size: 9px;
-      color: var(--g1);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-
-    .cc-name {
-      font-family: var(--fd);
-      font-size: 17px;
-      color: var(--w1);
-      margin-bottom: 8px;
-      font-weight: 400;
-    }
-
-    .cc-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-
-    .cc-price {
-      font-family: var(--fd);
-      font-size: 19px;
-      color: var(--g1);
-      font-weight: 400;
-    }
-
-    .cc-wt {
-      font-size: 11px;
-      color: var(--w4);
-      font-weight: 300;
-    }
-
-    /* ═══════════════════════════════════════
-   WISHLIST VIEW
-═══════════════════════════════════════ */
-    #vwl {
-      display: none;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .wl-hdr {
-      padding: 18px 28px;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.06);
-      background: var(--b1);
-    }
-
-    .wl-hdr h2 {
-      font-family: var(--fd);
-      font-size: 20px;
-      color: var(--w1);
-      font-weight: 400;
-      letter-spacing: 1px;
-    }
-
-    .wl-hdr p {
-      font-size: 12px;
-      color: var(--w4);
-      margin-top: 3px;
-      font-weight: 300;
-    }
-
-    .wl-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px 28px;
-    }
-
-    .wl-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
-    }
-
-    /* ═══════════════════════════════════════
-   ADMIN VIEW
-═══════════════════════════════════════ */
-    #vadm {
-      display: none;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .adm-hdr {
-      padding: 18px 28px;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.06);
-      background: var(--b1);
-    }
-
-    .adm-hdr h2 {
-      font-family: var(--fd);
-      font-size: 20px;
-      color: var(--g1);
-      font-weight: 400;
-      letter-spacing: 1px;
-    }
-
-    .adm-hdr p {
-      font-size: 12px;
-      color: var(--w4);
-      margin-top: 3px;
-      font-weight: 300;
-    }
-
-    .adm-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px 28px;
-    }
-
-    .adm-form {
-      background: var(--b2);
-      border: 1px solid rgba(212, 175, 55, 0.1);
-      border-radius: 16px;
-      padding: 28px;
-      max-width: 640px;
-    }
-
-    .adm-form-title {
-      font-family: var(--fd);
-      font-size: 18px;
-      color: var(--g1);
-      font-weight: 400;
-      margin-bottom: 22px;
-      letter-spacing: .5px;
-    }
-
-    .fg2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .adm-form .fg {
-      margin-bottom: 14px;
-    }
-
-    .adm-form .fg label {
-      font-size: 10px;
-      color: var(--w4);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      display: block;
-      font-weight: 500;
-    }
-
-    .adm-form .fg input,
-    .adm-form .fg select,
-    .adm-form .fg textarea {
-      width: 100%;
-      background: var(--b4);
-      border: 1px solid var(--b6);
-      border-radius: 10px;
-      padding: 11px 14px;
-      font-size: 13px;
-      color: var(--w1);
-      font-family: var(--fb);
-      outline: none;
-      transition: all .2s;
-      font-weight: 300;
-    }
-
-    .adm-form .fg input:focus,
-    .adm-form .fg select:focus,
-    .adm-form .fg textarea:focus {
-      border-color: var(--g3);
-    }
-
-    .adm-form .fg select option {
-      background: var(--b3);
-    }
-
-    .adm-form .fg textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    .adm-form .fg small {
-      display: block;
-      font-size: 10px;
-      color: var(--w5);
-      margin-top: 5px;
-      line-height: 1.4;
-    }
-
-    .adm-items {
-      margin-top: 32px;
-      max-width: 640px;
-    }
-
-    .adm-items-title {
-      font-family: var(--fd);
-      font-size: 18px;
-      color: var(--g1);
-      font-weight: 400;
-      margin-bottom: 18px;
-      letter-spacing: .5px;
-    }
-
-    .air {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: var(--b2);
-      border: 1px solid rgba(212, 175, 55, 0.08);
-      border-radius: 12px;
-      padding: 14px 18px;
-      margin-bottom: 10px;
-      transition: border .2s;
-    }
-
-    .air:hover {
-      border-color: rgba(212, 175, 55, 0.18);
-    }
-
-    .air-thumb {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
-      background: var(--b4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-      overflow: hidden;
-      border: 1px solid var(--b6);
-    }
-
-    .air-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .air-d {
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .air-n {
-      font-size: 14px;
-      color: var(--w1);
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .air-m {
-      font-size: 11px;
-      color: var(--w4);
-      margin-top: 2px;
-      font-weight: 300;
-    }
-
-    .del-btn {
-      background: none;
-      border: 1px solid rgba(192, 57, 43, 0.3);
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 11px;
-      color: var(--red);
-      cursor: pointer;
-      transition: all .2s;
-      font-family: var(--fb);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .del-btn:hover {
-      background: rgba(192, 57, 43, 0.1);
-    }
-
-    /* ═══════════════════════════════════════
-   MODAL
-═══════════════════════════════════════ */
-    .modal-ov {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.88);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 300;
-      backdrop-filter: blur(6px);
-    }
-
-    .modal-ov.open {
-      display: flex;
-    }
-
-    .modal {
-      background: var(--b2);
-      border: 1px solid rgba(212, 175, 55, 0.15);
-      border-radius: 20px;
-      width: 520px;
-      max-width: 95vw;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: var(--shadow-deep);
-      animation: mopen .3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    @keyframes mopen {
-      from {
-        opacity: 0;
-        transform: scale(0.95);
-      }
-
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    .modal-img-wrap {
-      width: 100%;
-      height: 280px;
-      overflow: hidden;
-      border-radius: 20px 20px 0 0;
-      position: relative;
-    }
-
-    .modal-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .modal-img-emoji {
-      width: 100%;
-      height: 100%;
-      background: var(--b4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 80px;
-    }
-
-    .modal-body {
-      padding: 28px 32px;
-    }
-
-    .modal-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 4px;
-    }
-
-    .modal-price {
-      font-family: var(--fd);
-      font-size: 30px;
-      color: var(--g1);
-      font-weight: 400;
-    }
-
-    .m-cls {
-      background: none;
-      border: none;
-      color: var(--w4);
-      font-size: 22px;
-      cursor: pointer;
-      padding: 0 4px;
-      transition: color .2s;
-      line-height: 1;
-    }
-
-    .m-cls:hover {
-      color: var(--w1);
-    }
-
-    .modal-name {
-      font-family: var(--fd);
-      font-size: 22px;
-      color: var(--w1);
-      font-weight: 400;
-      margin-bottom: 4px;
-    }
-
-    .modal-cat {
-      font-size: 10px;
-      color: var(--g1);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      font-weight: 500;
-    }
-
-    .modal-specs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .spec {
-      background: var(--b4);
-      border-radius: 10px;
-      padding: 12px 16px;
-      border: 1px solid var(--b6);
-    }
-
-    .spec-l {
-      font-size: 9px;
-      color: var(--w4);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-      font-weight: 500;
-    }
-
-    .spec-v {
-      font-size: 15px;
-      color: var(--w1);
-      font-weight: 500;
-    }
-
-    .modal-desc {
-      font-size: 14px;
-      color: var(--w3);
-      line-height: 1.75;
-      margin-bottom: 22px;
-      font-weight: 300;
-    }
-
-    .modal-acts {
-      display: flex;
-      gap: 10px;
-    }
-
-    .m-wish-btn {
-      flex: 1;
-      background: none;
-      border: 1px solid rgba(212, 175, 55, 0.25);
-      border-radius: 10px;
-      padding: 13px;
-      font-size: 13px;
-      color: var(--g1);
-      cursor: pointer;
-      font-family: var(--fb);
-      transition: all .2s;
-      font-weight: 400;
-    }
-
-    .m-wish-btn:hover,
-    .m-wish-btn.on {
-      background: rgba(212, 175, 55, 0.1);
-    }
-
-    /* ═══════════════════════════════════════
-   NOTIFICATION
-═══════════════════════════════════════ */
-    .notif {
-      position: fixed;
-      bottom: 28px;
-      right: 28px;
-      z-index: 999;
-      background: var(--b3);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      border-radius: 12px;
-      padding: 14px 20px;
-      font-size: 13px;
-      color: var(--w1);
-      box-shadow: var(--shadow-deep);
-      transform: translateY(80px);
-      opacity: 0;
-      transition: all .3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      max-width: 300px;
-      font-weight: 400;
-    }
-
-    .notif.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .notif.gold {
-      border-color: var(--g1);
-      color: var(--g1);
-    }
-
-    .notif.ok {
-      border-color: var(--green);
-      color: #55efc4;
-    }
-
-    /* EMPTY STATE */
-    .empty {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--w4);
-    }
-
-    .empty .ei {
-      font-size: 52px;
-      margin-bottom: 18px;
-      opacity: .5;
-    }
-
-    .empty p {
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 1.6;
-    }
-
-    /* FORGOT PWD SCREEN */
-    #forgot-screen {
-      display: none;
-    }
-
-    /* RESPONSIVE */
-    @media(max-width:700px) {
-      .auth-left {
-        display: none;
-      }
-
-      .auth-right {
-        width: 100%;
-        padding: 32px 24px;
-      }
-
-      .sidebar {
-        width: 56px;
-      }
-
-      .sb-top .sb-name,
-      .sb-top .sb-sub,
-      .gold-rate,
-      .ni span:not(.ni-ic),
-      .u-info,
-      .lo-btn,
-      .nl,
-      .ni-badge {
-        display: none;
-      }
-
-      .ni {
-        justify-content: center;
-        padding: 14px;
-      }
-
-      .sb-user {
-        justify-content: center;
-      }
-
-      .cat-grid,
-      .wl-grid,
-      .pgrid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      }
-
-      .fg2 {
-        grid-template-columns: 1fr;
-      }
-
-      .fr2 {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sample Jewellery Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --g1:#D4AF37;--g2:#B8860B;--g3:rgba(212,175,55,0.15);--g4:rgba(212,175,55,0.07);
+  --b0:#060606;--b1:#0D0D0D;--b2:#141414;--b3:#1C1C1C;--b4:#242424;--b5:#2E2E2E;
+  --w1:#F5EFE0;--w2:#E0D5C0;--w3:#B8AFA0;--w4:#7A7060;--w5:#3E3830;
+  --wa:#25D366;--fd:'Cormorant Garamond',serif;--fb:'Jost',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--b0);color:var(--w1);font-family:var(--fb);min-height:100vh;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--b5);border-radius:4px;}
+img{display:block;}
+button{cursor:pointer;}
+
+/* ── HEADER ── */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(6,6,6,0.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(212,175,55,0.12);
+  padding:0 40px;height:70px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.logo-gem{font-size:24px;filter:drop-shadow(0 0 10px rgba(212,175,55,0.5));}
+.logo-text{font-family:var(--fd);font-size:20px;color:var(--g1);letter-spacing:3px;font-weight:400;}
+.logo-sub{font-size:9px;color:var(--w4);letter-spacing:3px;text-transform:uppercase;margin-top:2px;}
+.header-right{display:flex;align-items:center;gap:20px;}
+.gold-live{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.15);
+  border-radius:20px;padding:7px 14px;
+}
+.gold-dot{width:6px;height:6px;background:#4CAF50;border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.gold-text{font-size:12px;color:var(--g1);font-weight:500;}
+.wish-btn{
+  display:flex;align-items:center;gap:7px;
+  background:none;border:1px solid rgba(212,175,55,0.2);border-radius:20px;
+  padding:8px 16px;color:var(--w2);font-size:13px;font-family:var(--fb);
+  transition:all .2s;
+}
+.wish-btn:hover{border-color:var(--g1);color:var(--g1);}
+.wish-count{
+  background:var(--g1);color:#000;font-size:10px;font-weight:700;
+  border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;
+}
+
+/* ── HERO ── */
+.hero{
+  padding:80px 40px 60px;text-align:center;position:relative;overflow:hidden;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%,rgba(212,175,55,0.06) 0%,transparent 70%);
+}
+.hero-kicker{
+  font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--g1);
+  margin-bottom:16px;font-weight:500;
+}
+.hero h1{
+  font-family:var(--fd);font-size:clamp(36px,6vw,72px);font-weight:300;
+  color:var(--w1);line-height:1.1;margin-bottom:16px;letter-spacing:2px;
+}
+.hero h1 em{color:var(--g1);font-style:italic;}
+.hero-sub{font-size:15px;color:var(--w3);font-weight:300;max-width:500px;margin:0 auto 32px;line-height:1.7;}
+.hero-divider{
+  width:80px;height:1px;margin:0 auto 48px;
+  background:linear-gradient(90deg,transparent,var(--g1),transparent);
+}
+
+/* ── GOLD RATE BAR ── */
+.rate-bar{
+  background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(212,175,55,0.03));
+  border-top:1px solid rgba(212,175,55,0.12);border-bottom:1px solid rgba(212,175,55,0.12);
+  padding:14px 40px;display:flex;align-items:center;justify-content:center;gap:32px;
+  flex-wrap:wrap;
+}
+.rate-item{display:flex;align-items:center;gap:10px;}
+.rate-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--w4);}
+.rate-value{font-family:var(--fd);font-size:18px;color:var(--g1);font-weight:400;}
+.rate-sep{width:1px;height:24px;background:rgba(212,175,55,0.15);}
+
+/* ── CATEGORIES ── */
+.section{padding:50px 40px;}
+.section-title{
+  font-family:var(--fd);font-size:28px;font-weight:300;color:var(--w1);
+  letter-spacing:2px;margin-bottom:6px;
+}
+.section-line{width:40px;height:2px;background:var(--g1);margin-bottom:30px;}
+
+.cat-tabs{
+  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px;
+}
+.cat-tab{
+  background:var(--b3);border:1px solid var(--b5);border-radius:24px;
+  padding:9px 20px;font-size:13px;color:var(--w4);font-family:var(--fb);
+  transition:all .22s;font-weight:400;
+}
+.cat-tab:hover{border-color:rgba(212,175,55,0.3);color:var(--w2);}
+.cat-tab.on{
+  background:rgba(212,175,55,0.1);border-color:var(--g1);color:var(--g1);
+}
+
+/* ── PRODUCT GRID ── */
+.products-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:22px;
+}
+.prod-card{
+  background:var(--b2);border:1px solid rgba(212,175,55,0.08);border-radius:16px;
+  overflow:hidden;cursor:pointer;transition:all .28s;
+  position:relative;
+}
+.prod-card:hover{
+  border-color:var(--g1);transform:translateY(-5px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.7),0 0 30px rgba(212,175,55,0.06);
+}
+.prod-img{
+  width:100%;aspect-ratio:1;background:var(--b3);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative;
+}
+.prod-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.prod-card:hover .prod-img img{transform:scale(1.07);}
+.prod-img-placeholder{font-size:56px;opacity:.4;}
+.wish-toggle{
+  position:absolute;top:12px;right:12px;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.1);border-radius:50%;
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  font-size:15px;transition:all .2s;z-index:2;
+}
+.wish-toggle:hover,.wish-toggle.on{background:rgba(212,175,55,0.2);border-color:var(--g1);}
+.prod-body{padding:16px 18px 18px;}
+.prod-cat{font-size:9px;color:var(--g1);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-weight:500;}
+.prod-name{font-family:var(--fd);font-size:17px;color:var(--w1);margin-bottom:8px;font-weight:400;line-height:1.3;}
+.prod-price{font-family:var(--fd);font-size:20px;color:var(--g1);margin-bottom:4px;}
+.prod-meta{font-size:11px;color:var(--w4);font-weight:300;margin-bottom:12px;}
+.prod-desc{font-size:12px;color:var(--w4);line-height:1.55;font-weight:300;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.prod-actions{display:flex;gap:8px;}
+.btn-wish-sm{
+  flex:1;background:none;border:1px solid rgba(212,175,55,0.2);border-radius:8px;
+  padding:8px;font-size:12px;color:var(--w4);font-family:var(--fb);transition:all .2s;
+}
+.btn-wish-sm:hover,.btn-wish-sm.on{background:rgba(212,175,55,0.1);color:var(--g1);border-color:var(--g1);}
+.btn-detail{
+  flex:1;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);
+  border-radius:8px;padding:8px;font-size:12px;color:var(--g1);font-family:var(--fb);transition:all .2s;
+}
+.btn-detail:hover{background:rgba(212,175,55,0.18);}
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--w4);
+}
+.empty-icon{font-size:56px;margin-bottom:16px;opacity:.4;}
+.empty-state p{font-size:15px;font-weight:300;line-height:1.7;}
+
+/* ── MODAL ── */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,0.9);
+  display:none;align-items:center;justify-content:center;z-index:500;
+  backdrop-filter:blur(8px);padding:20px;
+}
+.modal-bg.open{display:flex;}
+.modal-box{
+  background:var(--b2);border:1px solid rgba(212,175,55,0.15);
+  border-radius:20px;width:560px;max-width:100%;max-height:90vh;
+  overflow-y:auto;box-shadow:0 40px 100px rgba(0,0,0,0.9);
+  animation:mopen .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes mopen{from{opacity:0;transform:scale(.94);}to{opacity:1;transform:scale(1);}}
+.modal-img{width:100%;aspect-ratio:4/3;background:var(--b3);border-radius:20px 20px 0 0;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.modal-img img{width:100%;height:100%;object-fit:cover;}
+.modal-img-ph{font-size:80px;opacity:.3;}
+.modal-content{padding:28px 32px 32px;}
+.modal-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.modal-price{font-family:var(--fd);font-size:32px;color:var(--g1);}
+.modal-close{background:none;border:none;color:var(--w4);font-size:24px;line-height:1;transition:color .2s;padding:0;}
+.modal-close:hover{color:var(--w1);}
+.modal-name{font-family:var(--fd);font-size:24px;color:var(--w1);font-weight:400;margin-bottom:4px;}
+.modal-cat-badge{
+  display:inline-block;font-size:9px;color:var(--g1);letter-spacing:2px;
+  text-transform:uppercase;font-weight:500;margin-bottom:20px;
+  background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.15);
+  border-radius:20px;padding:4px 12px;
+}
+.modal-specs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.spec-box{background:var(--b3);border-radius:10px;padding:12px 16px;border:1px solid var(--b5);}
+.spec-l{font-size:9px;color:var(--w4);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;font-weight:500;}
+.spec-v{font-size:15px;color:var(--w1);font-weight:500;}
+.modal-desc{font-size:14px;color:var(--w3);line-height:1.8;margin-bottom:24px;font-weight:300;}
+.modal-acts{display:flex;gap:10px;}
+.btn-wish-lg{
+  flex:1;background:none;border:1px solid rgba(212,175,55,0.25);border-radius:10px;
+  padding:13px;font-size:14px;color:var(--g1);font-family:var(--fb);transition:all .2s;
+}
+.btn-wish-lg:hover,.btn-wish-lg.on{background:rgba(212,175,55,0.1);}
+.btn-wa-modal{
+  flex:1;background:var(--wa);border:none;border-radius:10px;
+  padding:13px;font-size:13px;font-weight:600;color:#fff;font-family:var(--fb);
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;
+}
+.btn-wa-modal:hover{opacity:.88;transform:translateY(-1px);}
+
+/* ── WISHLIST PANEL ── */
+.wl-panel{
+  position:fixed;top:0;right:-480px;width:440px;height:100vh;
+  background:var(--b1);border-left:1px solid rgba(212,175,55,0.1);
+  z-index:400;transition:right .35s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+  box-shadow:-20px 0 60px rgba(0,0,0,0.5);
+}
+.wl-panel.open{right:0;}
+.wl-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:399;display:none;}
+.wl-overlay.open{display:block;}
+.wl-header{
+  padding:24px 24px 20px;border-bottom:1px solid rgba(212,175,55,0.08);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.wl-header h3{font-family:var(--fd);font-size:22px;color:var(--w1);font-weight:400;letter-spacing:1px;}
+.wl-close{background:none;border:1px solid var(--b5);color:var(--w4);font-size:18px;padding:6px 10px;border-radius:8px;transition:all .2s;}
+.wl-close:hover{border-color:var(--w4);color:var(--w1);}
+.wl-body{flex:1;overflow-y:auto;padding:16px;}
+.wl-item{
+  display:flex;align-items:center;gap:14px;
+  background:var(--b3);border:1px solid rgba(212,175,55,0.08);border-radius:12px;
+  padding:14px;margin-bottom:10px;transition:border .2s;
+}
+.wl-item:hover{border-color:rgba(212,175,55,0.18);}
+.wl-thumb{
+  width:60px;height:60px;border-radius:10px;background:var(--b4);
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  overflow:hidden;flex-shrink:0;
+}
+.wl-thumb img{width:100%;height:100%;object-fit:cover;}
+.wl-info{flex:1;overflow:hidden;}
+.wl-name{font-size:14px;color:var(--w1);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wl-price{font-family:var(--fd);font-size:16px;color:var(--g1);margin-top:3px;}
+.wl-meta{font-size:11px;color:var(--w4);font-weight:300;margin-top:2px;}
+.wl-remove{background:none;border:none;color:var(--w4);font-size:18px;padding:4px;transition:color .2s;flex-shrink:0;}
+.wl-remove:hover{color:#ff6b6b;}
+.wl-empty{text-align:center;padding:60px 20px;color:var(--w4);}
+.wl-empty .icon{font-size:48px;margin-bottom:14px;opacity:.3;}
+.wl-empty p{font-size:14px;font-weight:300;line-height:1.6;}
+.wl-footer{padding:16px;border-top:1px solid rgba(212,175,55,0.08);flex-shrink:0;}
+.wl-wa-btn{
+  width:100%;background:var(--wa);border:none;border-radius:10px;
+  padding:14px;font-size:14px;font-weight:600;color:#fff;font-family:var(--fb);
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;
+}
+.wl-wa-btn:hover{opacity:.88;}
+
+/* ── WHATSAPP FLOAT ── */
+.wa-float{
+  position:fixed;bottom:28px;right:28px;z-index:300;
+  width:56px;height:56px;border-radius:50%;
+  background:var(--wa);border:none;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(37,211,102,0.35);
+  transition:all .2s;
+}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 12px 32px rgba(37,211,102,0.5);}
+.wa-float svg{width:28px;height:28px;fill:#fff;}
+.wa-tooltip{
+  position:absolute;right:68px;background:#000;color:#fff;
+  font-size:12px;padding:6px 12px;border-radius:8px;white-space:nowrap;
+  opacity:0;transition:opacity .2s;pointer-events:none;font-family:var(--fb);
+}
+.wa-float:hover .wa-tooltip{opacity:1;}
+
+/* ── CONTACT SECTION ── */
+.contact-section{
+  padding:60px 40px;text-align:center;
+  border-top:1px solid rgba(212,175,55,0.08);
+  background:linear-gradient(0deg,rgba(212,175,55,0.03),transparent);
+}
+.contact-section h2{font-family:var(--fd);font-size:32px;font-weight:300;color:var(--w1);margin-bottom:10px;letter-spacing:1px;}
+.contact-section p{font-size:14px;color:var(--w3);font-weight:300;margin-bottom:28px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.7;}
+.btn-wa-big{
+  display:inline-flex;align-items:center;gap:12px;
+  background:var(--wa);border:none;border-radius:50px;
+  padding:16px 36px;font-size:15px;font-weight:600;color:#fff;
+  font-family:var(--fb);letter-spacing:.5px;transition:all .2s;
+  box-shadow:0 8px 28px rgba(37,211,102,0.3);
+}
+.btn-wa-big:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(37,211,102,0.4);}
+.wa-number{font-size:13px;color:var(--w4);margin-top:14px;font-weight:300;}
+
+/* ── FOOTER ── */
+footer{
+  padding:24px 40px;border-top:1px solid rgba(212,175,55,0.08);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+}
+.footer-logo{font-family:var(--fd);font-size:16px;color:var(--g1);letter-spacing:2px;}
+.footer-copy{font-size:12px;color:var(--w5);font-weight:300;}
+
+/* ── ADMIN PANEL ── */
+.admin-btn{
+  position:fixed;bottom:28px;left:28px;z-index:300;
+  background:var(--b3);border:1px solid var(--b5);border-radius:20px;
+  padding:8px 14px;font-size:11px;color:var(--w4);font-family:var(--fb);
+  transition:all .2s;letter-spacing:.5px;
+}
+.admin-btn:hover{border-color:var(--g1);color:var(--g1);}
+.admin-panel{
+  position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:600;
+  display:none;flex-direction:column;overflow-y:auto;
+  backdrop-filter:blur(10px);
+}
+.admin-panel.open{display:flex;}
+.admin-inner{max-width:680px;margin:0 auto;padding:40px 24px;width:100%;}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;}
+.admin-header h2{font-family:var(--fd);font-size:26px;color:var(--g1);font-weight:400;letter-spacing:1px;}
+.admin-close{background:none;border:1px solid var(--b5);color:var(--w3);padding:8px 14px;border-radius:8px;font-size:13px;font-family:var(--fb);transition:all .2s;}
+.admin-close:hover{border-color:var(--w3);}
+.admin-form{background:var(--b2);border:1px solid rgba(212,175,55,0.1);border-radius:16px;padding:28px;margin-bottom:28px;}
+.admin-form h3{font-family:var(--fd);font-size:18px;color:var(--g1);font-weight:400;margin-bottom:20px;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--w4);margin-bottom:6px;font-weight:500;}
+.fg input,.fg select,.fg textarea{
+  width:100%;background:var(--b3);border:1px solid var(--b5);border-radius:8px;
+  padding:11px 14px;font-size:13px;color:var(--w1);font-family:var(--fb);
+  outline:none;transition:border .2s;font-weight:300;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:rgba(212,175,55,0.4);}
+.fg select option{background:var(--b2);}
+.fg textarea{resize:vertical;min-height:80px;}
+.fg small{display:block;font-size:10px;color:var(--w5);margin-top:5px;line-height:1.5;}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn-admin-add{
+  width:100%;background:linear-gradient(135deg,var(--g1),var(--g2));
+  border:none;border-radius:10px;padding:13px;font-size:13px;font-weight:600;
+  color:#000;font-family:var(--fb);letter-spacing:1px;text-transform:uppercase;
+  transition:all .2s;margin-top:6px;
+}
+.btn-admin-add:hover{opacity:.88;}
+.admin-msg{font-size:12px;margin-top:10px;min-height:16px;}
+.admin-msg.ok{color:#55efc4;}
+.admin-msg.err{color:#ff7675;}
+.admin-pwd{background:var(--b2);border:1px solid rgba(212,175,55,0.1);border-radius:16px;padding:28px;margin-bottom:28px;}
+.admin-pwd h3{font-family:var(--fd);font-size:18px;color:var(--g1);margin-bottom:16px;font-weight:400;}
+.admin-list{background:var(--b2);border:1px solid rgba(212,175,55,0.1);border-radius:16px;padding:28px;}
+.admin-list h3{font-family:var(--fd);font-size:18px;color:var(--g1);margin-bottom:18px;font-weight:400;}
+.admin-item-row{
+  display:flex;align-items:center;gap:14px;
+  background:var(--b3);border:1px solid rgba(212,175,55,0.06);border-radius:10px;
+  padding:12px 16px;margin-bottom:10px;
+}
+.ait-thumb{width:44px;height:44px;border-radius:8px;background:var(--b4);display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden;flex-shrink:0;}
+.ait-thumb img{width:100%;height:100%;object-fit:cover;}
+.ait-d{flex:1;overflow:hidden;}
+.ait-name{font-size:13px;color:var(--w1);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ait-meta{font-size:11px;color:var(--w4);font-weight:300;margin-top:2px;}
+.del-btn{background:none;border:1px solid rgba(255,118,117,0.3);border-radius:6px;padding:5px 10px;font-size:11px;color:#ff7675;transition:all .2s;flex-shrink:0;}
+.del-btn:hover{background:rgba(255,118,117,0.1);}
+
+/* ── NOTIFICATION ── */
+.notif{
+  position:fixed;top:88px;right:24px;z-index:999;
+  background:var(--b3);border:1px solid rgba(212,175,55,0.2);border-radius:10px;
+  padding:12px 18px;font-size:13px;color:var(--w1);font-weight:400;
+  box-shadow:0 10px 40px rgba(0,0,0,.6);
+  transform:translateY(-16px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);
+}
+.notif.show{transform:translateY(0);opacity:1;}
+.notif.gold{border-color:var(--g1);color:var(--g1);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  header{padding:0 16px;}
+  .logo-sub{display:none;}
+  .gold-live{display:none;}
+  .hero{padding:50px 16px 40px;}
+  .section{padding:36px 16px;}
+  .rate-bar{padding:12px 16px;gap:16px;}
+  .products-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;}
+  .contact-section{padding:40px 16px;}
+  footer{padding:20px 16px;}
+  .wl-panel{width:100%;}
+  .modal-content{padding:20px 20px 24px;}
+  .modal-specs{grid-template-columns:1fr 1fr;}
+  .admin-inner{padding:20px 16px;}
+  .fg2{grid-template-columns:1fr;}
+}
+</style>
 </head>
-
 <body>
 
-  <!-- ═══════════════════════════════════
-     AUTH SCREEN
-═══════════════════════════════════════ -->
-  <div id="auth">
-    <!-- LEFT BRANDING -->
-    <div class="auth-left">
-      <div class="auth-left-bg"></div>
-      <div class="auth-left-pattern"></div>
-      <div class="auth-brand">
-        <span class="auth-brand-gem">💎</span>
-        <div class="auth-brand-line"></div>
-        <h1>Sample Jewellery</h1>
-        <p>Est. 2024 · Hyderabad</p>
-        <div class="auth-brand-line"></div>
-        <p class="auth-brand-tagline">"Where every piece tells a story"</p>
-      </div>
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#">
+    <span class="logo-gem">💎</span>
+    <div>
+      <div class="logo-text">SAMPLE JEWELLERY</div>
+      <div class="logo-sub">Hyderabad · Est. 2024</div>
     </div>
+  </a>
+  <div class="header-right">
+    <div class="gold-live">
+      <div class="gold-dot"></div>
+      <span class="gold-text" id="hdr-gold">24K: ₹ —/g</span>
+    </div>
+    <button class="wish-btn" onclick="toggleWLPanel()">
+      ❤️ Wishlist
+      <span class="wish-count" id="wl-count" style="display:none">0</span>
+    </button>
+  </div>
+</header>
 
-    <!-- RIGHT FORM -->
-    <div class="auth-right">
-      <div class="auth-box">
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-kicker">✦ Crafted With Passion ✦</div>
+  <h1>Timeless <em>Gold</em><br/>Jewellery</h1>
+  <p class="hero-sub">Discover our exclusive collection of handcrafted gold jewellery — designed for every occasion and every budget.</p>
+  <div class="hero-divider"></div>
+</section>
 
-        <!-- SIGN IN FORM -->
-        <div id="login-section">
-          <div class="auth-box-title">Welcome Back</div>
-          <div class="auth-box-sub">Sign in to your account to continue</div>
-          <div class="auth-tabs">
-            <button class="atab on" onclick="switchTab('login')">Sign In</button>
-            <button class="atab" onclick="switchTab('signup')">Create Account</button>
-          </div>
-          <div class="fg"><label>Email Address</label><input type="email" id="l-email" placeholder="your@email.com"
-              autocomplete="email" /></div>
-          <div class="fg"><label>Password</label><input type="password" id="l-pass" placeholder="Enter your password"
-              autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()" /></div>
-          <div class="forgot-row"><button class="btn-text" onclick="showForgot()">Forgot password?</button></div>
-          <button class="btn-main" onclick="doLogin()">Sign In</button>
-          <div class="div"><span></span>
-            <p>OR CONTINUE WITH</p><span></span>
-          </div>
-          <button class="btn-google" onclick="doGoogle()">
-            <svg width="18" height="18" viewBox="0 0 18 18">
-              <path fill="#4285F4"
-                d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z" />
-              <path fill="#34A853"
-                d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z" />
-              <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z" />
-              <path fill="#EA4335"
-                d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z" />
-            </svg>
-            Continue with Google
-          </button>
-          <div class="amsg" id="l-msg"></div>
-        </div>
+<!-- GOLD RATE BAR -->
+<div class="rate-bar">
+  <div class="rate-item">
+    <span class="rate-label">24K Gold Rate</span>
+    <span class="rate-value" id="rate-24k">Loading...</span>
+  </div>
+  <div class="rate-sep"></div>
+  <div class="rate-item">
+    <span class="rate-label">22K Gold Rate</span>
+    <span class="rate-value" id="rate-22k">Loading...</span>
+  </div>
+  <div class="rate-sep"></div>
+  <div class="rate-item">
+    <span class="rate-label">18K Gold Rate</span>
+    <span class="rate-value" id="rate-18k">Loading...</span>
+  </div>
+  <div class="rate-sep"></div>
+  <div class="rate-item">
+    <span class="rate-label">Last Updated</span>
+    <span class="rate-value" id="rate-time" style="font-size:13px">—</span>
+  </div>
+</div>
 
-        <!-- SIGN UP FORM -->
-        <div id="signup-section" style="display:none">
-          <div class="auth-box-title">Create Account</div>
-          <div class="auth-box-sub">Join us for a personalised jewellery experience</div>
-          <div class="auth-tabs">
-            <button class="atab" onclick="switchTab('login')">Sign In</button>
-            <button class="atab on" onclick="switchTab('signup')">Create Account</button>
-          </div>
-          <div class="fr2">
-            <div class="fg"><label>First Name</label><input type="text" id="s-fname" placeholder="Priya"
-                autocomplete="given-name" /></div>
-            <div class="fg"><label>Last Name</label><input type="text" id="s-lname" placeholder="Sharma"
-                autocomplete="family-name" /></div>
-          </div>
-          <div class="fg"><label>Phone Number</label><input type="tel" id="s-phone" placeholder="+91 98765 43210"
-              autocomplete="tel" /></div>
-          <div class="fg"><label>Email Address</label><input type="email" id="s-email" placeholder="your@email.com"
-              autocomplete="email" /></div>
-          <div class="fg"><label>Password</label><input type="password" id="s-pass" placeholder="Minimum 6 characters"
-              autocomplete="new-password" /></div>
-          <div class="fg"><label>Confirm Password</label><input type="password" id="s-cpass"
-              placeholder="Re-enter password" autocomplete="new-password"
-              onkeydown="if(event.key==='Enter')doSignup()" /></div>
-          <button class="btn-main" onclick="doSignup()">Create My Account</button>
-          <div class="div"><span></span>
-            <p>OR CONTINUE WITH</p><span></span>
-          </div>
-          <button class="btn-google" onclick="doGoogle()">
-            <svg width="18" height="18" viewBox="0 0 18 18">
-              <path fill="#4285F4"
-                d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z" />
-              <path fill="#34A853"
-                d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z" />
-              <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z" />
-              <path fill="#EA4335"
-                d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z" />
-            </svg>
-            Continue with Google
-          </button>
-          <div class="amsg" id="s-msg"></div>
-        </div>
+<!-- CATALOGUE SECTION -->
+<section class="section" id="catalogue">
+  <div class="section-title">Our Collection</div>
+  <div class="section-line"></div>
 
-        <!-- FORGOT PASSWORD FORM -->
-        <div id="forgot-section" style="display:none">
-          <div class="auth-box-title">Reset Password</div>
-          <div class="auth-box-sub">Enter your email and we'll send a reset link</div>
-          <div class="fg"><label>Email Address</label><input type="email" id="f-email" placeholder="your@email.com"
-              onkeydown="if(event.key==='Enter')doReset()" /></div>
-          <button class="btn-main" onclick="doReset()">Send Reset Link</button>
-          <div style="text-align:center;margin-top:12px;">
-            <button class="btn-text" onclick="showLogin()">← Back to Sign In</button>
-          </div>
-          <div class="amsg" id="f-msg"></div>
-        </div>
+  <div class="cat-tabs" id="cat-tabs">
+    <button class="cat-tab on" onclick="filterProducts('all',this)">All Jewellery</button>
+    <button class="cat-tab" onclick="filterProducts('ring',this)">Rings</button>
+    <button class="cat-tab" onclick="filterProducts('necklace',this)">Necklaces</button>
+    <button class="cat-tab" onclick="filterProducts('earring',this)">Earrings</button>
+    <button class="cat-tab" onclick="filterProducts('bracelet',this)">Bracelets</button>
+    <button class="cat-tab" onclick="filterProducts('bangle',this)">Bangles</button>
+    <button class="cat-tab" onclick="filterProducts('set',this)">Bridal Sets</button>
+    <button class="cat-tab" onclick="filterProducts('pendant',this)">Pendants</button>
+    <button class="cat-tab" onclick="filterProducts('mangalsutra',this)">Mangalsutra</button>
+  </div>
 
+  <div class="products-grid" id="products-grid">
+    <div class="empty-state"><div class="empty-icon">✨</div><p>Loading our collection...</p></div>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="contact-section">
+  <h2>Visit Us or Chat With Us</h2>
+  <p>Have a question about a piece? Want a custom design? We're just a WhatsApp message away — reach out anytime!</p>
+  <button class="btn-wa-big" onclick="openWA()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.128.558 4.122 1.528 5.855L0 24l6.335-1.652A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.366l-.36-.214-3.726.977.994-3.632-.234-.373A9.818 9.818 0 1112 21.818z"/></svg>
+    Chat on WhatsApp
+  </button>
+  <div class="wa-number">📞 +91 79937 17619</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">💎 SAMPLE JEWELLERY</div>
+  <div class="footer-copy">© 2024 Sample Jewellery Store, Hyderabad. All rights reserved.</div>
+</footer>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-bg" id="prod-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-img" id="m-img"><div class="modal-img-ph">💎</div></div>
+    <div class="modal-content">
+      <div class="modal-top">
+        <div class="modal-price" id="m-price">—</div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-name" id="m-name">—</div>
+      <div class="modal-cat-badge" id="m-cat">—</div>
+      <div class="modal-specs" id="m-specs"></div>
+      <div class="modal-desc" id="m-desc"></div>
+      <div class="modal-acts">
+        <button class="btn-wish-lg" id="m-wish-btn" onclick="wishFromModal()">🤍 Add to Wishlist</button>
+        <button class="btn-wa-modal" onclick="enquireWA()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.128.558 4.122 1.528 5.855L0 24l6.335-1.652A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.366l-.36-.214-3.726.977.994-3.632-.234-.373A9.818 9.818 0 1112 21.818z"/></svg>
+          Enquire on WhatsApp
+        </button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- ═══════════════════════════════════
-     MAIN APP
-═══════════════════════════════════════ -->
-  <div id="app">
-
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <div class="sb-top">
-        <div class="sb-brand">
-          <span class="sb-gem">💎</span>
-          <div>
-            <div class="sb-name">SAMPLE JEWELLERY</div>
-            <div class="sb-sub">AI Assistant</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="gold-rate">
-        <div class="gr-label">24K Gold Rate</div>
-        <div class="gr-price" id="gold-display">₹ —</div>
-        <div class="gr-sub">per gram</div>
-        <div class="gr-live">
-          <div class="gr-dot"></div><span class="gr-live-text">Live</span>
-        </div>
-      </div>
-
-      <div class="sb-nav">
-        <div class="nl">Navigation</div>
-        <button class="ni on" id="n-chat" onclick="showView('chat')">
-          <span class="ni-ic">💬</span><span>AI Assistant</span>
-        </button>
-        <button class="ni" id="n-cat" onclick="showView('cat')">
-          <span class="ni-ic">🏛️</span><span>Catalogue</span>
-        </button>
-        <button class="ni" id="n-wl" onclick="showView('wl')">
-          <span class="ni-ic">❤️</span><span>My Wishlist</span>
-          <span class="ni-badge" id="wl-badge" style="display:none">0</span>
-        </button>
-        <div class="nl" id="adm-nl" style="display:none">Admin</div>
-        <button class="ni" id="n-adm" onclick="showView('adm')" style="display:none">
-          <span class="ni-ic">⚙️</span><span>Manage Items</span>
-        </button>
-      </div>
-
-      <div class="sb-user">
-        <div class="u-av" id="u-av">?</div>
-        <div class="u-info">
-          <div class="u-name" id="u-name">—</div>
-          <div class="u-email" id="u-email">—</div>
-        </div>
-        <button class="lo-btn" onclick="doLogout()" title="Logout">⏻</button>
-      </div>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div class="main">
-
-      <!-- CHAT VIEW -->
-      <div id="vc">
-        <div class="chat-hdr">
-          <div class="chat-hdr-info">
-            <h2>Jewellery AI Assistant</h2>
-            <p>Ask by budget, occasion, style or category</p>
-          </div>
-          <span class="chat-item-count" id="chat-item-count" style="display:none"></span>
-          <button class="clear-chat-btn" onclick="clearChat()" title="Clear conversation">
-            ↺ Clear Chat
-          </button>
-          <div class="ai-pill">Gemini AI</div>
-        </div>
-        <div class="msgs" id="msgs">
-          <div class="msg ai">
-            <div class="mav">💎</div>
-            <div class="msg-inner">
-              <div class="mb">
-                Namaste! 🙏 Welcome to <strong>Sample Jewellery Store</strong>.<br /><br />
-                I'm your personal jewellery stylist. Tell me your <strong>budget</strong>, <strong>occasion</strong>, or
-                <strong>preferred style</strong> — and I'll find the perfect pieces with today's live gold prices
-                calculated instantly! ✨
-              </div>
-              <div class="wq-wrap" id="welcome-queries">
-                <button class="wq" onclick="useWQ(this)">Show all jewellery</button>
-                <button class="wq" onclick="useWQ(this)">Rings below ₹5,000</button>
-                <button class="wq" onclick="useWQ(this)">Bridal jewellery sets</button>
-                <button class="wq" onclick="useWQ(this)">Light weight earrings</button>
-                <button class="wq" onclick="useWQ(this)">Necklaces under ₹20,000</button>
-                <button class="wq" onclick="useWQ(this)">Daily wear jewellery</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="input-area">
-          <div class="input-wrap">
-            <textarea id="ci" rows="1" placeholder="Ask me anything about jewellery..." onkeydown="enterKey(event)"
-              oninput="autoH(this)"></textarea>
-            <button class="send-btn" id="sbtn" onclick="sendMsg()">➤</button>
-          </div>
-          <div class="input-hint">Press Enter to send · Shift+Enter for new line</div>
-        </div>
-      </div>
-
-      <!-- CATALOGUE VIEW -->
-      <div id="vcat">
-        <div class="cat-hdr">
-          <h2>Full Catalogue</h2>
-          <div class="cat-chips">
-            <button class="chip on" onclick="filterCat('all',this)">All</button>
-            <button class="chip" onclick="filterCat('ring',this)">Rings</button>
-            <button class="chip" onclick="filterCat('necklace',this)">Necklaces</button>
-            <button class="chip" onclick="filterCat('earring',this)">Earrings</button>
-            <button class="chip" onclick="filterCat('bracelet',this)">Bracelets</button>
-            <button class="chip" onclick="filterCat('bangle',this)">Bangles</button>
-            <button class="chip" onclick="filterCat('set',this)">Sets</button>
-            <button class="chip" onclick="filterCat('pendant',this)">Pendants</button>
-          </div>
-        </div>
-        <div class="cat-body">
-          <div class="cat-grid" id="cat-grid">
-            <div class="empty">
-              <div class="ei">🏛️</div>
-              <p>Loading catalogue...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- WISHLIST VIEW -->
-      <div id="vwl">
-        <div class="wl-hdr">
-          <h2>❤️ My Wishlist</h2>
-          <p id="wl-count-text">Your saved jewellery pieces</p>
-        </div>
-        <div class="wl-body">
-          <div class="wl-grid" id="wl-grid"></div>
-        </div>
-      </div>
-
-      <!-- ADMIN VIEW -->
-      <div id="vadm">
-        <div class="adm-hdr">
-          <h2>⚙️ Manage Catalogue</h2>
-          <p>Add, update or remove jewellery items</p>
-        </div>
-        <div class="adm-body">
-          <div class="adm-form">
-            <div class="adm-form-title">Add New Item</div>
-            <div class="fg2">
-              <div class="fg"><label>Item Name *</label><input id="a-name" placeholder="e.g. Bridal Gold Necklace" />
-              </div>
-              <div class="fg"><label>Category *</label>
-                <select id="a-cat">
-                  <option value="">Select category</option>
-                  <option value="ring">Ring</option>
-                  <option value="necklace">Necklace</option>
-                  <option value="earring">Earring</option>
-                  <option value="bracelet">Bracelet</option>
-                  <option value="bangle">Bangle</option>
-                  <option value="set">Bridal Set</option>
-                  <option value="pendant">Pendant</option>
-                  <option value="chain">Chain</option>
-                  <option value="anklet">Anklet</option>
-                  <option value="mangalsutra">Mangalsutra</option>
-                </select>
-              </div>
-            </div>
-            <div class="fg2">
-              <div class="fg"><label>Gold Weight (grams) *</label><input type="number" id="a-weight"
-                  placeholder="e.g. 5.5" step="0.1" min="0" /></div>
-              <div class="fg"><label>Making Charges (₹) *</label><input type="number" id="a-making"
-                  placeholder="e.g. 500" min="0" /></div>
-            </div>
-            <div class="fg2">
-              <div class="fg"><label>Stone / Diamond Cost (₹)</label><input type="number" id="a-stone" placeholder="0"
-                  min="0" /></div>
-              <div class="fg"><label>Gold Purity</label>
-                <select id="a-purity">
-                  <option value="24">24K — Pure Gold (99.9%)</option>
-                  <option value="22" selected>22K — Standard (91.6%)</option>
-                  <option value="18">18K — Light (75%)</option>
-                  <option value="14">14K — Mixed (58.5%)</option>
-                </select>
-              </div>
-            </div>
-            <div class="fg"><label>Description</label><textarea id="a-desc"
-                placeholder="Describe the jewellery piece — style, occasion, features, craftsmanship..."></textarea>
-            </div>
-            <div class="fg">
-              <label>Image URL (from GitHub)</label>
-              <input id="a-img" placeholder="https://raw.githubusercontent.com/your-repo/main/images/item.jpg" />
-              <small>Upload photo to GitHub images folder → click file → copy Raw URL → paste here</small>
-            </div>
-            <div class="fg"><label>Occasion / Tags</label><input id="a-tags"
-                placeholder="e.g. bridal, daily wear, gifting, festive, office" /></div>
-            <button class="btn-main" style="margin-top:8px" onclick="addItem()">✦ Add to Catalogue</button>
-            <div class="amsg" id="a-msg" style="text-align:left"></div>
-          </div>
-
-          <div class="adm-items">
-            <div class="adm-items-title">Current Catalogue</div>
-            <div id="adm-list">
-              <p style="color:var(--w4);font-weight:300">Loading...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
+<!-- WISHLIST PANEL -->
+<div class="wl-overlay" id="wl-overlay" onclick="toggleWLPanel()"></div>
+<div class="wl-panel" id="wl-panel">
+  <div class="wl-header">
+    <h3>❤️ My Wishlist</h3>
+    <button class="wl-close" onclick="toggleWLPanel()">✕ Close</button>
   </div>
+  <div class="wl-body" id="wl-body"></div>
+  <div class="wl-footer">
+    <button class="wl-wa-btn" onclick="shareWishlistWA()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.128.558 4.122 1.528 5.855L0 24l6.335-1.652A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.366l-.36-.214-3.726.977.994-3.632-.234-.373A9.818 9.818 0 1112 21.818z"/></svg>
+      Share Wishlist on WhatsApp
+    </button>
+  </div>
+</div>
 
-  <!-- ITEM MODAL -->
-  <div class="modal-ov" id="modal">
-    <div class="modal">
-      <div class="modal-img-wrap" id="m-img-wrap">
-        <div class="modal-img-emoji" id="m-emoji">💎</div>
+<!-- WHATSAPP FLOAT -->
+<button class="wa-float" onclick="openWA()">
+  <span class="wa-tooltip">Chat with us</span>
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.128.558 4.122 1.528 5.855L0 24l6.335-1.652A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.366l-.36-.214-3.726.977.994-3.632-.234-.373A9.818 9.818 0 1112 21.818z"/></svg>
+</button>
+
+<!-- ADMIN BUTTON (hidden, double-click logo to access) -->
+<button class="admin-btn" id="admin-btn" style="display:none" onclick="openAdmin()">⚙ Admin</button>
+
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="admin-panel">
+  <div class="admin-inner">
+    <div class="admin-header">
+      <h2>⚙️ Admin Panel</h2>
+      <button class="admin-close" onclick="closeAdmin()">✕ Close</button>
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="admin-pwd" id="admin-pwd-section">
+      <h3>Enter Admin Password</h3>
+      <div class="fg"><label>Password</label><input type="password" id="admin-pwd" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkAdminPwd()"/></div>
+      <button class="btn-admin-add" onclick="checkAdminPwd()">Unlock Admin</button>
+      <div class="admin-msg" id="pwd-msg"></div>
+    </div>
+
+    <!-- ADMIN FORM (hidden until password) -->
+    <div id="admin-content" style="display:none">
+      <div class="admin-form">
+        <h3>Add New Jewellery Item</h3>
+        <div class="fg2">
+          <div class="fg"><label>Item Name *</label><input id="a-name" placeholder="e.g. Gold Bridal Necklace"/></div>
+          <div class="fg"><label>Category *</label>
+            <select id="a-cat">
+              <option value="">Select</option>
+              <option value="ring">Ring</option>
+              <option value="necklace">Necklace</option>
+              <option value="earring">Earring</option>
+              <option value="bracelet">Bracelet</option>
+              <option value="bangle">Bangle</option>
+              <option value="set">Bridal Set</option>
+              <option value="pendant">Pendant</option>
+              <option value="chain">Chain</option>
+              <option value="anklet">Anklet</option>
+              <option value="mangalsutra">Mangalsutra</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg2">
+          <div class="fg"><label>Gold Weight (grams) *</label><input type="number" id="a-wt" placeholder="e.g. 5.5" step="0.1" min="0.1"/></div>
+          <div class="fg"><label>Making Charges (₹) *</label><input type="number" id="a-mk" placeholder="e.g. 500" min="0"/></div>
+        </div>
+        <div class="fg2">
+          <div class="fg"><label>Stone/Diamond Cost (₹)</label><input type="number" id="a-st" placeholder="0" min="0"/></div>
+          <div class="fg"><label>Gold Purity</label>
+            <select id="a-pu">
+              <option value="24">24K — Pure Gold</option>
+              <option value="22" selected>22K — Standard</option>
+              <option value="18">18K — Light</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Description</label>
+          <textarea id="a-desc" placeholder="Describe the jewellery — occasion, style, design features..."></textarea>
+        </div>
+        <div class="fg">
+          <label>Image (Google Drive Link)</label>
+          <input id="a-img" placeholder="https://drive.google.com/uc?export=view&id=YOUR_FILE_ID"/>
+          <small>
+            How to get link: Upload photo to Google Drive → Right click → Share → Anyone with link → Copy link<br/>
+            Then convert: drive.google.com/file/d/<strong>FILE_ID</strong>/view → use: drive.google.com/uc?export=view&id=<strong>FILE_ID</strong>
+          </small>
+        </div>
+        <button class="btn-admin-add" onclick="addItem()">✦ Add to Catalogue</button>
+        <div class="admin-msg" id="a-msg"></div>
       </div>
-      <div class="modal-body">
-        <div class="modal-top">
-          <div class="modal-price" id="m-price">₹ —</div>
-          <button class="m-cls" onclick="closeModal()">✕</button>
-        </div>
-        <div class="modal-name" id="m-name">—</div>
-        <div class="modal-cat" id="m-cat">—</div>
-        <div class="modal-specs" id="m-specs"></div>
-        <div class="modal-desc" id="m-desc"></div>
-        <div class="modal-acts">
-          <button class="m-wish-btn" id="m-wish" onclick="wishFromModal()">🤍 Add to Wishlist</button>
-          <button class="btn-main" style="flex:1;margin-bottom:0" onclick="closeModal()">Close</button>
-        </div>
+
+      <div class="admin-list">
+        <h3>Current Items</h3>
+        <div id="admin-items-list"><p style="color:var(--w4);font-weight:300">Loading...</p></div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- NOTIFICATION -->
-  <div class="notif" id="notif"></div>
+<!-- NOTIFICATION -->
+<div class="notif" id="notif"></div>
 
-  <!-- ═══════════════════════════════════
-     FIREBASE + APP LOGIC
-═══════════════════════════════════════ -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<!-- FIREBASE -->
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getFirestore,collection,addDoc,getDocs,deleteDoc,doc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // ─── CONFIG ───────────────────────────
-    const FC = {
-      apiKey: "AIzaSyAzzyQVLP1kNv62L5zdDUjYJH5fm0aUYBA",
-      authDomain: "jewelry-ai-chat.firebaseapp.com",
-      projectId: "jewelry-ai-chat",
-      storageBucket: "jewelry-ai-chat.firebasestorage.app",
-      messagingSenderId: "941334368131",
-      appId: "1:941334368131:web:1354c4cb7f5700bf26f0b6"
-    };
-    const GEMINI = "AIzaSyAMqXPX8vhpkwvIbeIs2O1-XPKVZWQYILw";
-    const ADMIN_EMAIL = "suryateja7396997056@gmail.com";
+const FC={
+  apiKey:"AIzaSyAzzyQVLP1kNv62L5zdDUjYJH5fm0aUYBA",
+  authDomain:"jewelry-ai-chat.firebaseapp.com",
+  projectId:"jewelry-ai-chat",
+  storageBucket:"jewelry-ai-chat.firebasestorage.app",
+  messagingSenderId:"941334368131",
+  appId:"1:941334368131:web:1354c4cb7f5700bf26f0b6"
+};
+const ADMIN_PWD="sjewels2024";
+const WA_NUMBER="917993717619";
 
-    // ─── INIT ─────────────────────────────
-    const FB = initializeApp(FC);
-    const auth = getAuth(FB);
-    const db = getFirestore(FB);
-    const GP = new GoogleAuthProvider();
+const fb=initializeApp(FC);
+const db=getFirestore(fb);
 
-    // ─── STATE ────────────────────────────
-    let CU = null, goldRate = 7500, allItems = [], wishIds = new Set(), modalItemId = null, curFilter = 'all';
+let allItems=[],wishlist=[],goldRate=7500,curFilter='all',curModalId=null;
 
-    // ─── HELPERS ──────────────────────────
-    function calcPrice(item) {
-      const pf = item.purity == 24 ? 1 : item.purity == 22 ? .916 : item.purity == 18 ? .75 : .585;
-      return Math.round(item.weight * goldRate * pf + (item.making || 0) + (item.stone || 0));
-    }
-    function catEmoji(c) {
-      const m = { ring: '💍', necklace: '📿', earring: '✨', bracelet: '⚜️', bangle: '🔮', set: '👑', pendant: '💠', chain: '⛓️', anklet: '🌸', mangalsutra: '🔴' };
-      return m[c] || '💎';
-    }
-    function fmtPrice(n) { return '₹' + n.toLocaleString('en-IN'); }
-    function notify(txt, type = '') {
-      const n = document.getElementById('notif');
-      n.textContent = txt; n.className = 'notif show' + (type ? ' ' + type : '');
-      setTimeout(() => n.classList.remove('show'), 3200);
-    }
+// ── GOLD PRICE ──────────────────────────
+async function fetchGold(){
+  try{
+    const r=await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+    const d=await r.json();
+    goldRate=Math.round(64.3*(d.rates?.INR||83));
+  }catch(e){goldRate=7500;}
+  const r22=Math.round(goldRate*.916);
+  const r18=Math.round(goldRate*.75);
+  document.getElementById('rate-24k').textContent='₹'+goldRate.toLocaleString('en-IN');
+  document.getElementById('rate-22k').textContent='₹'+r22.toLocaleString('en-IN');
+  document.getElementById('rate-18k').textContent='₹'+r18.toLocaleString('en-IN');
+  document.getElementById('hdr-gold').textContent='24K: ₹'+goldRate.toLocaleString('en-IN')+'/g';
+  const now=new Date();
+  document.getElementById('rate-time').textContent=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+}
 
-    // ─── GOLD PRICE ───────────────────────
-    async function fetchGold() {
-      try {
-        const r = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-        const d = await r.json();
-        goldRate = Math.round(64.3 * (d.rates?.INR || 83));
-      } catch (e) { goldRate = 7500; }
-      document.getElementById('gold-display').textContent = fmtPrice(goldRate);
-    }
+// ── CALC PRICE ──────────────────────────
+function calcP(item){
+  const pf=item.purity==24?1:item.purity==22?.916:item.purity==18?.75:.585;
+  return Math.round(item.weight*goldRate*pf+(item.making||0)+(item.stone||0));
+}
+function fmtP(n){return'₹'+n.toLocaleString('en-IN');}
+function catEmoji(c){
+  return{ring:'💍',necklace:'📿',earring:'✨',bracelet:'⚜️',bangle:'🔮',set:'👑',pendant:'💠',chain:'⛓️',anklet:'🌸',mangalsutra:'🔴'}[c]||'💎';
+}
+function fmtCat(c){
+  return{ring:'Ring',necklace:'Necklace',earring:'Earring',bracelet:'Bracelet',bangle:'Bangle',set:'Bridal Set',pendant:'Pendant',chain:'Chain',anklet:'Anklet',mangalsutra:'Mangalsutra'}[c]||c||'Jewellery';
+}
 
-    // ─── AUTH STATE ───────────────────────
-    onAuthStateChanged(auth, async u => {
-      CU = u;
-      if (u) {
-        document.getElementById('auth').style.display = 'none';
-        document.getElementById('app').classList.add('on');
-        const nm = u.displayName || u.email.split('@')[0];
-        document.getElementById('u-name').textContent = nm;
-        document.getElementById('u-email').textContent = u.email;
-        document.getElementById('u-av').textContent = nm[0].toUpperCase();
-        if (u.email === ADMIN_EMAIL) {
-          document.getElementById('n-adm').style.display = 'flex';
-          document.getElementById('adm-nl').style.display = 'block';
-        }
-        fetchGold();
-        await loadItems();
-        await loadWishlist();
-      } else {
-        document.getElementById('auth').style.display = 'flex';
-        document.getElementById('app').classList.remove('on');
-      }
-    });
+// ── WISHLIST ─────────────────────────────
+function loadWL(){wishlist=JSON.parse(localStorage.getItem('sj_wishlist')||'[]');}
+function saveWL(){localStorage.setItem('sj_wishlist',JSON.stringify(wishlist));}
+function updateWLBadge(){
+  const c=document.getElementById('wl-count');
+  if(wishlist.length>0){c.style.display='flex';c.textContent=wishlist.length;}
+  else c.style.display='none';
+}
 
-    // ─── AUTH FUNCTIONS ───────────────────
-    window.switchTab = function (tab) {
-      document.querySelectorAll('.atab').forEach(t => t.classList.remove('on'));
-      event.target.classList.add('on');
-      document.getElementById('login-section').style.display = tab === 'login' ? 'block' : 'none';
-      document.getElementById('signup-section').style.display = tab === 'signup' ? 'block' : 'none';
-      document.getElementById('forgot-section').style.display = 'none';
-    };
+window.toggleWLPanel=function(){
+  document.getElementById('wl-panel').classList.toggle('open');
+  document.getElementById('wl-overlay').classList.toggle('open');
+  renderWLPanel();
+};
 
-    window.showForgot = function () {
-      document.getElementById('login-section').style.display = 'none';
-      document.getElementById('signup-section').style.display = 'none';
-      document.getElementById('forgot-section').style.display = 'block';
-    };
+function renderWLPanel(){
+  const body=document.getElementById('wl-body');
+  if(!wishlist.length){
+    body.innerHTML='<div class="wl-empty"><div class="icon">🤍</div><p>No saved items yet.<br/>Browse and tap ❤️ to save pieces you love.</p></div>';
+    return;
+  }
+  const wlItems=allItems.filter(i=>wishlist.includes(i.id));
+  if(!wlItems.length){
+    body.innerHTML='<div class="wl-empty"><div class="icon">🤍</div><p>Your wishlist items will appear here.</p></div>';
+    return;
+  }
+  body.innerHTML=wlItems.map(it=>{
+    const price=calcP(it);
+    const thumb=it.imageUrl?`<img src="${it.imageUrl}" alt="${it.name}" onerror="this.style.display='none';this.parentElement.textContent='${catEmoji(it.category)}'"/ loading="lazy">`:`${catEmoji(it.category)}`;
+    return`<div class="wl-item">
+      <div class="wl-thumb">${thumb}</div>
+      <div class="wl-info">
+        <div class="wl-name">${it.name}</div>
+        <div class="wl-price">${fmtP(price)}</div>
+        <div class="wl-meta">${it.weight}g · ${it.purity}K Gold</div>
+      </div>
+      <button class="wl-remove" onclick="removeFromWL('${it.id}')" title="Remove">✕</button>
+    </div>`;
+  }).join('');
+}
 
-    window.showLogin = function () {
-      document.getElementById('login-section').style.display = 'block';
-      document.getElementById('signup-section').style.display = 'none';
-      document.getElementById('forgot-section').style.display = 'none';
-    };
+window.removeFromWL=function(id){
+  wishlist=wishlist.filter(x=>x!==id);saveWL();updateWLBadge();
+  renderWLPanel();renderProducts(curFilter);
+  // Update wish buttons
+  updateAllWishBtns();
+  notify('Removed from wishlist');
+};
 
-    window.doLogin = async function () {
-      const e = document.getElementById('l-email').value.trim();
-      const p = document.getElementById('l-pass').value;
-      const msg = document.getElementById('l-msg');
-      if (!e || !p) { msg.className = 'amsg err'; msg.textContent = 'Please enter email and password'; return; }
-      msg.className = 'amsg'; msg.textContent = 'Signing in...';
-      try { await signInWithEmailAndPassword(auth, e, p); }
-      catch (err) {
-        msg.className = 'amsg err';
-        if (err.code === 'auth/invalid-credential') msg.textContent = 'Incorrect email or password';
-        else if (err.code === 'auth/too-many-requests') msg.textContent = 'Too many attempts. Please try again later.';
-        else msg.textContent = err.message;
-      }
-    };
+function isInWL(id){return wishlist.includes(id);}
 
-    window.doSignup = async function () {
-      const fn = document.getElementById('s-fname').value.trim();
-      const ln = document.getElementById('s-lname').value.trim();
-      const ph = document.getElementById('s-phone').value.trim();
-      const e = document.getElementById('s-email').value.trim();
-      const p = document.getElementById('s-pass').value;
-      const cp = document.getElementById('s-cpass').value;
-      const msg = document.getElementById('s-msg');
-      if (!fn || !ln || !e || !p) { msg.className = 'amsg err'; msg.textContent = 'Please fill all required fields'; return; }
-      if (p.length < 6) { msg.className = 'amsg err'; msg.textContent = 'Password must be at least 6 characters'; return; }
-      if (p !== cp) { msg.className = 'amsg err'; msg.textContent = 'Passwords do not match'; return; }
-      msg.className = 'amsg'; msg.textContent = 'Creating your account...';
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, e, p);
-        await updateProfile(cred.user, { displayName: fn + ' ' + ln });
-        await sendEmailVerification(cred.user);
-        // Save phone to Firestore
-        if (ph) { await setDoc(doc(db, 'users', cred.user.uid, 'profile', 'info'), { phone: ph, firstName: fn, lastName: ln, createdAt: serverTimestamp() }); }
-        msg.className = 'amsg ok'; msg.textContent = '✅ Account created! Check your email to verify.';
-      } catch (err) {
-        msg.className = 'amsg err';
-        if (err.code === 'auth/email-already-in-use') msg.textContent = 'This email is already registered. Try signing in.';
-        else msg.textContent = err.message;
-      }
-    };
+window.toggleWish=function(id,event){
+  if(event)event.stopPropagation();
+  if(isInWL(id)){
+    wishlist=wishlist.filter(x=>x!==id);notify('Removed from wishlist');
+  }else{
+    wishlist.push(id);notify('❤️ Added to wishlist!','gold');
+  }
+  saveWL();updateWLBadge();updateAllWishBtns();
+  renderWLPanel();
+};
 
-    window.doGoogle = async function () {
-      try { await signInWithPopup(auth, GP); }
-      catch (e) { notify('Google sign-in failed. Please try again.'); }
-    };
+function updateAllWishBtns(){
+  document.querySelectorAll('[data-wid]').forEach(btn=>{
+    const id=btn.dataset.wid;
+    const inWL=isInWL(id);
+    btn.classList.toggle('on',inWL);
+    btn.textContent=inWL?'❤️':'🤍';
+  });
+  document.querySelectorAll('[data-wbid]').forEach(btn=>{
+    const id=btn.dataset.wbid;
+    const inWL=isInWL(id);
+    btn.classList.toggle('on',inWL);
+    btn.textContent=inWL?'❤️ Saved':'🤍 Save';
+  });
+  if(curModalId){
+    const wb=document.getElementById('m-wish-btn');
+    if(wb){const inWL=isInWL(curModalId);wb.textContent=inWL?'❤️ Saved to Wishlist':'🤍 Add to Wishlist';wb.classList.toggle('on',inWL);}
+  }
+}
 
-    window.doReset = async function () {
-      const e = document.getElementById('f-email').value.trim();
-      const msg = document.getElementById('f-msg');
-      if (!e) { msg.className = 'amsg err'; msg.textContent = 'Please enter your email address'; return; }
-      msg.className = 'amsg'; msg.textContent = 'Sending reset link...';
-      try {
-        await sendPasswordResetEmail(auth, e);
-        msg.className = 'amsg ok'; msg.textContent = '✅ Password reset link sent! Check your email.';
-      } catch (err) {
-        msg.className = 'amsg err';
-        if (err.code === 'auth/user-not-found') msg.textContent = 'No account found with this email.';
-        else msg.textContent = err.message;
-      }
-    };
+// ── PRODUCTS ─────────────────────────────
+async function loadItems(){
+  try{
+    const snap=await getDocs(collection(db,'jewelry_items'));
+    allItems=snap.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){allItems=[];}
+  renderProducts('all');
+}
 
-    window.doLogout = async function () { await signOut(auth); };
+window.filterProducts=function(f,el){
+  curFilter=f;
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  renderProducts(f);
+};
 
-    // ─── NAVIGATION ───────────────────────
-    window.showView = function (v) {
-      // Hide all
-      document.getElementById('vc').style.display = 'none';
-      document.getElementById('vcat').style.display = 'none';
-      document.getElementById('vwl').style.display = 'none';
-      document.getElementById('vadm').style.display = 'none';
-      // Show selected
-      const map = { chat: 'vc', cat: 'vcat', wl: 'vwl', adm: 'vadm' };
-      const el = document.getElementById(map[v]);
-      if (el) el.style.display = 'flex';
-      // Nav highlight
-      document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
-      const ni = document.getElementById('n-' + v);
-      if (ni) ni.classList.add('on');
-      // Load data
-      if (v === 'cat') renderCatalog(curFilter);
-      if (v === 'wl') renderWishlist();
-      if (v === 'adm') renderAdminList();
-    };
+function renderProducts(f){
+  const grid=document.getElementById('products-grid');
+  const list=f==='all'?allItems:allItems.filter(i=>i.category===f);
+  if(!list.length){
+    grid.innerHTML=`<div class="empty-state"><div class="empty-icon">${f==='all'?'✨':catEmoji(f)}</div><p>${f==='all'?'Our collection is being updated. Check back soon!':'No '+fmtCat(f)+' items currently. Browse other categories!'}</p></div>`;
+    return;
+  }
+  grid.innerHTML=list.map(item=>prodCardHTML(item)).join('');
+}
 
-    // ─── DATA ────────────────────────────
-    async function loadItems() {
-      try {
-        const snap = await getDocs(collection(db, 'jewelry_items'));
-        allItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      } catch (e) { allItems = []; }
-      // Update item count indicator in chat header
-      const countEl = document.getElementById('chat-item-count');
-      if (countEl) {
-        if (allItems.length > 0) {
-          countEl.textContent = allItems.length + ' items in catalogue';
-          countEl.style.display = 'inline';
-        } else {
-          countEl.style.display = 'none';
-        }
-      }
-    }
-
-    async function loadWishlist() {
-      if (!CU) return;
-      try {
-        const snap = await getDocs(collection(db, 'users', CU.uid, 'wishlist'));
-        wishIds = new Set(snap.docs.map(d => d.id));
-        updateWishBadge();
-      } catch (e) { wishIds = new Set(); }
-    }
-
-    function updateWishBadge() {
-      const b = document.getElementById('wl-badge');
-      if (wishIds.size > 0) { b.style.display = 'inline'; b.textContent = wishIds.size; }
-      else b.style.display = 'none';
-    }
-
-    // ─── WISHLIST TOGGLE ─────────────────
-    window.toggleWish = async function (id, rerender) {
-      if (!CU) { notify('Please sign in first'); return; }
-      const ref = doc(db, 'users', CU.uid, 'wishlist', id);
-      if (wishIds.has(id)) {
-        await deleteDoc(ref); wishIds.delete(id); notify('Removed from wishlist');
-      } else {
-        const it = allItems.find(i => i.id === id);
-        if (it) { await setDoc(ref, { ...it, savedAt: serverTimestamp() }); }
-        wishIds.add(id); notify('❤️ Saved to wishlist!', 'gold');
-      }
-      updateWishBadge();
-      // Update all wish buttons for this item
-      document.querySelectorAll(`[data-wid="${id}"]`).forEach(b => {
-        const isIn = wishIds.has(id);
-        b.classList.toggle('on', isIn);
-        b.textContent = isIn ? '❤️ Saved' : '🤍 Save';
-      });
-      document.querySelectorAll(`[data-wib="${id}"]`).forEach(b => {
-        b.classList.toggle('on', wishIds.has(id));
-        b.textContent = wishIds.has(id) ? '❤️' : '🤍';
-      });
-      if (rerender === 'wl') renderWishlist();
-    };
-
-    // ─── CATALOG RENDER ──────────────────
-    window.filterCat = function (f, el) {
-      curFilter = f;
-      document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
-      el.classList.add('on');
-      renderCatalog(f);
-    };
-
-    function renderCatalog(f) {
-      const grid = document.getElementById('cat-grid');
-      // Strictly use only admin-uploaded items from Firestore — no external data
-      const list = f === 'all' ? allItems : allItems.filter(i => i.category === f);
-      if (!allItems.length) {
-        grid.innerHTML = '<div class="empty"><div class="ei">🏛️</div><p>No items in the catalogue yet.<br/>Admin can add jewellery pieces from the Manage Items panel.</p></div>';
-        return;
-      }
-      if (!list.length) {
-        grid.innerHTML = '<div class="empty"><div class="ei">🔍</div><p>No items in this category yet.<br/>Try a different filter or check back later.</p></div>';
-        return;
-      }
-      grid.innerHTML = list.map(item => catalogCardHTML(item)).join('');
-    }
-
-    function catalogCardHTML(item) {
-      const price = calcPrice(item); const w = wishIds.has(item.id);
-      const imgHTML = item.imageUrl
-        ? `<img src="${item.imageUrl}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML+='<span style=font-size:54px>${catEmoji(item.category)}</span>'"/>`
-        : `<span style="font-size:54px">${catEmoji(item.category)}</span>`;
-      return `<div class="cc" onclick="openModal('${item.id}')">
-    <div class="cc-img">
+function prodCardHTML(item){
+  const price=calcP(item);const w=isInWL(item.id);
+  const imgHTML=item.imageUrl
+    ?`<img src="${item.imageUrl}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML+='<div class=prod-img-placeholder>${catEmoji(item.category)}</div>'">`
+    :`<div class="prod-img-placeholder">${catEmoji(item.category)}</div>`;
+  return`<div class="prod-card" onclick="openModal('${item.id}')">
+    <div class="prod-img">
       ${imgHTML}
-      <button class="cc-wb ${w ? 'on' : ''}" data-wib="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}')">${w ? '❤️' : '🤍'}</button>
+      <button class="wish-toggle ${w?'on':''}" data-wid="${item.id}" onclick="toggleWish('${item.id}',event)">${w?'❤️':'🤍'}</button>
     </div>
-    <div class="cc-body">
-      <div class="cc-cat">${item.category || 'jewellery'}</div>
-      <div class="cc-name">${item.name}</div>
-      <div class="cc-row">
-        <div class="cc-price">${fmtPrice(price)}</div>
-        <div class="cc-wt">${item.weight}g · ${item.purity}K</div>
+    <div class="prod-body">
+      <div class="prod-cat">${fmtCat(item.category)}</div>
+      <div class="prod-name">${item.name}</div>
+      <div class="prod-price">${fmtP(price)}</div>
+      <div class="prod-meta">${item.weight}g · ${item.purity}K Gold</div>
+      ${item.description?`<div class="prod-desc">${item.description}</div>`:''}
+      <div class="prod-actions">
+        <button class="btn-wish-sm ${w?'on':''}" data-wbid="${item.id}" onclick="toggleWish('${item.id}',event)">${w?'❤️ Saved':'🤍 Save'}</button>
+        <button class="btn-detail" onclick="event.stopPropagation();openModal('${item.id}')">View Details</button>
       </div>
     </div>
   </div>`;
-    }
+}
 
-    // ─── WISHLIST RENDER ─────────────────
-    function renderWishlist() {
-      const grid = document.getElementById('wl-grid');
-      const list = allItems.filter(i => wishIds.has(i.id));
-      document.getElementById('wl-count-text').textContent = list.length + ' saved piece' + (list.length !== 1 ? 's' : '');
-      if (!list.length) {
-        grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="ei">🤍</div><p>No saved items yet.<br/>Browse the catalogue and tap ❤️ to save pieces you love.</p></div>';
-        return;
-      }
-      grid.innerHTML = list.map(item => {
-        const price = calcPrice(item);
-        const imgHTML = item.imageUrl
-          ? `<img src="${item.imageUrl}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML+='<span style=font-size:54px>${catEmoji(item.category)}</span>'"/>`
-          : `<span style="font-size:54px">${catEmoji(item.category)}</span>`;
-        return `<div class="cc" onclick="openModal('${item.id}')">
-      <div class="cc-img">
-        ${imgHTML}
-        <button class="cc-wb on" data-wib="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}','wl')">❤️</button>
-      </div>
-      <div class="cc-body">
-        <div class="cc-cat">${item.category || 'jewellery'}</div>
-        <div class="cc-name">${item.name}</div>
-        <div class="cc-row">
-          <div class="cc-price">${fmtPrice(price)}</div>
-          <div class="cc-wt">${item.weight}g · ${item.purity}K</div>
-        </div>
-      </div>
-    </div>`;
-      }).join('');
-    }
-
-    // ─── MODAL ────────────────────────────
-    window.openModal = function (id) {
-      modalItemId = id;
-      const it = allItems.find(i => i.id === id); if (!it) return;
-      const price = calcPrice(it); const w = wishIds.has(id);
-      document.getElementById('m-price').textContent = fmtPrice(price);
-      document.getElementById('m-name').textContent = it.name;
-      document.getElementById('m-cat').textContent = (it.category || 'Jewellery').toUpperCase() + ' · ' + it.purity + 'K GOLD';
-      document.getElementById('m-desc').textContent = it.description || 'A stunning piece from our exclusive collection, crafted with the finest gold.';
-      document.getElementById('m-specs').innerHTML = `
-    <div class="spec"><div class="spec-l">Gold Weight</div><div class="spec-v">${it.weight}g</div></div>
-    <div class="spec"><div class="spec-l">Purity</div><div class="spec-v">${it.purity}K Gold</div></div>
-    <div class="spec"><div class="spec-l">Making Charges</div><div class="spec-v">${fmtPrice(it.making || 0)}</div></div>
-    <div class="spec"><div class="spec-l">Stone Cost</div><div class="spec-v">${fmtPrice(it.stone || 0)}</div></div>
+// ── MODAL ─────────────────────────────
+window.openModal=function(id){
+  curModalId=id;
+  const it=allItems.find(i=>i.id===id);if(!it)return;
+  const price=calcP(it);const w=isInWL(id);
+  document.getElementById('m-price').textContent=fmtP(price);
+  document.getElementById('m-name').textContent=it.name;
+  document.getElementById('m-cat').textContent=fmtCat(it.category)+' · '+it.purity+'K Gold';
+  document.getElementById('m-desc').textContent=it.description||'A stunning piece from our exclusive collection, crafted with the finest quality gold.';
+  document.getElementById('m-specs').innerHTML=`
+    <div class="spec-box"><div class="spec-l">Weight</div><div class="spec-v">${it.weight}g</div></div>
+    <div class="spec-box"><div class="spec-l">Purity</div><div class="spec-v">${it.purity}K Gold</div></div>
+    <div class="spec-box"><div class="spec-l">Making Charges</div><div class="spec-v">${fmtP(it.making||0)}</div></div>
+    <div class="spec-box"><div class="spec-l">Stone Cost</div><div class="spec-v">${fmtP(it.stone||0)}</div></div>
   `;
-      const iw = document.getElementById('m-img-wrap');
-      if (it.imageUrl) {
-        iw.innerHTML = `<img src="${it.imageUrl}" alt="${it.name}" onerror="this.parentElement.innerHTML='<div class=modal-img-emoji>${catEmoji(it.category)}</div>'"/>`;
-      } else {
-        iw.innerHTML = `<div class="modal-img-emoji">${catEmoji(it.category)}</div>`;
-      }
-      const wb = document.getElementById('m-wish');
-      wb.textContent = w ? '❤️ Saved to Wishlist' : '🤍 Add to Wishlist';
-      wb.classList.toggle('on', w);
-      document.getElementById('modal').classList.add('open');
-    };
-    window.closeModal = function () { document.getElementById('modal').classList.remove('open'); modalItemId = null; };
-    window.wishFromModal = async function () {
-      if (!modalItemId) return;
-      await toggleWish(modalItemId);
-      const w = wishIds.has(modalItemId);
-      const wb = document.getElementById('m-wish');
-      wb.textContent = w ? '❤️ Saved to Wishlist' : '🤍 Add to Wishlist';
-      wb.classList.toggle('on', w);
-    };
-    // Close modal on overlay click
-    document.getElementById('modal').addEventListener('click', function (e) { if (e.target === this) closeModal(); });
+  const mi=document.getElementById('m-img');
+  if(it.imageUrl){mi.innerHTML=`<img src="${it.imageUrl}" alt="${it.name}" onerror="this.innerHTML='<div class=modal-img-ph>💎</div>'">`;}
+  else{mi.innerHTML='<div class="modal-img-ph">💎</div>';}
+  const wb=document.getElementById('m-wish-btn');
+  wb.textContent=w?'❤️ Saved to Wishlist':'🤍 Add to Wishlist';wb.classList.toggle('on',w);
+  document.getElementById('prod-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+};
+window.closeModal=function(){
+  document.getElementById('prod-modal').classList.remove('open');
+  document.body.style.overflow='';curModalId=null;
+};
+window.wishFromModal=function(){
+  if(!curModalId)return;
+  toggleWish(curModalId,null);
+  const wb=document.getElementById('m-wish-btn');
+  const w=isInWL(curModalId);
+  wb.textContent=w?'❤️ Saved to Wishlist':'🤍 Add to Wishlist';wb.classList.toggle('on',w);
+};
 
-    // ─── CHAT ─────────────────────────────
-    window.clearChat = function () {
-      const msgs = document.getElementById('msgs');
-      const nm = CU?.displayName || CU?.email?.split('@')[0] || 'there';
-      msgs.innerHTML = `<div class="msg ai">
-        <div class="mav">💎</div>
-        <div class="msg-inner">
-          <div class="mb">
-            Namaste! 🙏 Welcome to <strong>Sample Jewellery Store</strong>.<br /><br />
-            I'm your personal jewellery stylist. Tell me your <strong>budget</strong>, <strong>occasion</strong>, or
-            <strong>preferred style</strong> — and I'll find the perfect pieces with today's live gold prices calculated instantly! ✨
-          </div>
-          <div class="wq-wrap" id="welcome-queries">
-            <button class="wq" onclick="useWQ(this)">Show all jewellery</button>
-            <button class="wq" onclick="useWQ(this)">Rings below ₹5,000</button>
-            <button class="wq" onclick="useWQ(this)">Bridal jewellery sets</button>
-            <button class="wq" onclick="useWQ(this)">Light weight earrings</button>
-            <button class="wq" onclick="useWQ(this)">Necklaces under ₹20,000</button>
-            <button class="wq" onclick="useWQ(this)">Daily wear jewellery</button>
-          </div>
-        </div>
-      </div>`;
-      document.getElementById('ci').value = '';
-      document.getElementById('ci').style.height = 'auto';
-      notify('Chat cleared', 'ok');
-    };
+// ── WHATSAPP ──────────────────────────
+window.openWA=function(){window.open('https://wa.me/'+WA_NUMBER,'_blank');};
+window.enquireWA=function(){
+  if(!curModalId)return;
+  const it=allItems.find(i=>i.id===curModalId);
+  const price=calcP(it);
+  const msg=`Hi! I'm interested in *${it.name}*\nPrice: ${fmtP(price)}\nWeight: ${it.weight}g · ${it.purity}K Gold\n\nCould you please share more details?`;
+  window.open('https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(msg),'_blank');
+};
+window.shareWishlistWA=function(){
+  const items=allItems.filter(i=>wishlist.includes(i.id));
+  if(!items.length){notify('Your wishlist is empty!');return;}
+  const msg='Hi! I'm interested in these jewellery pieces:\n\n'+
+    items.map((it,i)=>`${i+1}. *${it.name}* — ${fmtP(calcP(it))} (${it.weight}g ${it.purity}K)`).join('\n')+
+    '\n\nCould you please help me with more details and availability?';
+  window.open('https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(msg),'_blank');
+};
 
-    window.enterKey = function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } };
-    window.autoH = function (el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; };
-    window.useWQ = function (el) {
-      document.getElementById('ci').value = el.textContent;
-      document.getElementById('welcome-queries')?.remove();
-      sendMsg();
-    };
-    window.useFC = function (el) { document.getElementById('ci').value = el.textContent; sendMsg(); };
-
-    window.sendMsg = async function () {
-      const inp = document.getElementById('ci');
-      const txt = inp.value.trim(); if (!txt) return;
-      inp.value = ''; inp.style.height = 'auto';
-      document.getElementById('sbtn').disabled = true;
-      addUserBubble(txt);
-      const tid = addTyping();
-
-      // Build item context
-      const ctx = allItems.length ? allItems.map(i =>
-        `[ID:${i.id}] ${i.name} | ${i.category} | ${i.weight}g ${i.purity}K | Price:${fmtPrice(calcPrice(i))} | Tags:${i.tags || ''} | Desc:${(i.description || '').slice(0, 80)}`
-      ).join('\n') : 'No items added to catalogue yet.';
-
-      const prompt = `You are a warm and knowledgeable jewellery assistant at "Sample Jewellery Store", Hyderabad. Current 24K gold rate: ₹${goldRate}/gram.
-
-CATALOGUE (${allItems.length} items):
-${ctx}
-
-CUSTOMER MESSAGE: "${txt}"
-
-TASK: Help the customer find jewellery. Respond ONLY in valid JSON — no markdown, no extra text.
-
-Rules:
-- matchedIds: array of item IDs that match the customer's request (budget/category/occasion/style). Empty array [] if no match or no items.
-- followups: exactly 5 short follow-up options the customer might want next
-- If customer asks to "show all" or similar, include ALL item IDs
-- For budget queries like "below ₹5000", include items whose price is less than that budget
-
-{"reply":"warm 1-2 sentence response","matchedIds":["id1","id2"],"followups":["option1","option2","option3","option4","option5"]}`;
-
-      try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI}`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.4, responseMimeType: 'application/json' } })
-        });
-        const data = await res.json();
-        let raw = (data.candidates?.[0]?.content?.parts?.[0]?.text || '{}').trim();
-        raw = raw.replace(/```json|```/g, '').trim();
-        const jm = raw.match(/\{[\s\S]*\}/);
-        if (jm) raw = jm[0];
-        let parsed = { reply: '', matchedIds: [], followups: [] };
-        try { parsed = JSON.parse(raw); } catch (e) { parsed.reply = raw.slice(0, 200); }
-        removeTyping(tid);
-
-        // Get matched items from AI
-        let matched = allItems.filter(i => parsed.matchedIds?.includes(i.id));
-
-        // Smart fallback matching if AI matched nothing but items exist
-        if (matched.length === 0 && allItems.length > 0) {
-          const q = txt.toLowerCase();
-          // Check for "all" / "show everything" type requests
-          const showAll = /\b(all|everything|entire|full catalogue|show me everything|what do you have|what's available)\b/i.test(q);
-          if (showAll) {
-            matched = [...allItems];
-          } else {
-            // Budget matching — detect "below/under/less than ₹X" or "within ₹X"
-            const budgetBelow = /(below|under|less than|within|upto|up to|max|maximum|₹|rs\.?)\s*(\d[\d,]*)\s*(k|thousand)?/i.exec(q);
-            const budgetAbove = /(above|over|more than|minimum|min)\s*(\d[\d,]*)\s*(k|thousand)?/i.exec(q);
-            let maxBudget = 0, minBudget = 0;
-            if (budgetBelow) {
-              maxBudget = parseInt(budgetBelow[2].replace(/,/g, ''));
-              if (budgetBelow[3]) maxBudget *= 1000;
-            }
-            if (budgetAbove) {
-              minBudget = parseInt(budgetAbove[2].replace(/,/g, ''));
-              if (budgetAbove[3]) minBudget *= 1000;
-            }
-
-            // Category & keyword matching
-            const cats = ['ring', 'necklace', 'earring', 'bracelet', 'bangle', 'set', 'pendant', 'chain', 'anklet', 'mangalsutra'];
-            const catMatch = cats.find(c => q.includes(c));
-
-            matched = allItems.filter(i => {
-              const price = calcPrice(i);
-              const nm = (i.name || '').toLowerCase();
-              const cat = (i.category || '').toLowerCase();
-              const tags = (i.tags || '').toLowerCase();
-
-              // Budget filter takes priority — must be strictly within budget
-              if (maxBudget > 0 && price > maxBudget) return false;
-              if (minBudget > 0 && price < minBudget) return false;
-
-              // If only a budget was specified (no category), match all within budget
-              if (maxBudget > 0 || minBudget > 0) return true;
-
-              // Category keyword match
-              if (catMatch && cat === catMatch) return true;
-
-              // Name keyword match
-              if (nm.split(' ').some(w => w.length > 3 && q.includes(w))) return true;
-
-              // Tag match
-              if (tags.split(',').some(t => t.trim().length > 2 && q.includes(t.trim()))) return true;
-
-              return false;
-            });
-
-            // Only show "no results" message — never silently fall back to all items
-            // (matched will remain empty if nothing fits, which triggers the no-items-msg below)
-          }
-        }
-
-        const followups = parsed.followups?.length === 5 ? parsed.followups :
-          ['Show bridal jewellery', 'Rings below ₹5,000', 'Light weight pieces', 'With diamond stones', 'Daily wear items'];
-        let replyText = parsed.reply || '';
-        if (!replyText) {
-          replyText = matched.length > 0
-            ? `Found ${matched.length} matching piece${matched.length !== 1 ? 's' : ''} for you! ✨`
-            : `I couldn't find items matching your request in our catalogue.`;
-        }
-        addAIBubble(replyText, matched, followups, txt);
-
-      } catch (e) {
-        removeTyping(tid);
-        // On API error, show friendly message and let user retry
-        const followups = ['Show all jewellery', 'Rings below ₹5,000', 'Necklaces', 'Earrings', 'Bridal sets'];
-        addAIBubble('I had trouble connecting. Please try again or browse the Catalogue section directly. ✨', [], followups, txt);
-      }
-      document.getElementById('sbtn').disabled = false;
-    };
-
-    function addUserBubble(txt) {
-      const msgs = document.getElementById('msgs');
-      const nm = CU?.displayName || 'U';
-      const d = document.createElement('div'); d.className = 'msg u';
-      d.innerHTML = `<div class="mav">${nm[0].toUpperCase()}</div><div class="msg-inner"><div class="mb">${escHtml(txt)}</div></div>`;
-      msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
-    }
-
-    function addAIBubble(txt, matched, followups, origQuery) {
-      const msgs = document.getElementById('msgs');
-      const d = document.createElement('div'); d.className = 'msg ai';
-
-      // Build items HTML
-      let itemsHTML = '';
-      if (matched.length > 0) {
-        itemsHTML = `<div class="pgrid">` + matched.map(item => {
-          const price = calcPrice(item); const w = wishIds.has(item.id);
-          const imgHTML = item.imageUrl
-            ? `<img src="${item.imageUrl}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML+='<span style=font-size:36px>${catEmoji(item.category)}</span>'"/>`
-            : `<span style="font-size:36px">${catEmoji(item.category)}</span>`;
-          return `<div class="pcard" onclick="openModal('${item.id}')">
-        <div class="pc-img">
-          ${imgHTML}
-          <button class="pc-wb ${w ? 'on' : ''}" data-wib="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}')">${w ? '❤️' : '🤍'}</button>
-        </div>
-        <div class="pc-body">
-          <div class="pc-cat">${item.category || 'jewellery'}</div>
-          <div class="pc-name">${item.name}</div>
-          <div class="pc-price">${fmtPrice(price)}</div>
-          <div class="pc-meta">${item.weight}g · ${item.purity}K Gold</div>
-          <div class="pc-desc">${item.description || 'Premium quality jewellery from our exclusive collection.'}</div>
-          <div class="pc-acts">
-            <button class="pc-btn-w ${w ? 'on' : ''}" data-wid="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}')">${w ? '❤️ Saved' : '🤍 Save'}</button>
-            <button class="pc-btn-v" onclick="event.stopPropagation();openModal('${item.id}')">View Details</button>
-          </div>
-        </div>
-      </div>`;
-        }).join('') + `</div>`;
-      } else if (allItems.length === 0) {
-        itemsHTML = `<div class="no-items-msg"><p>No items added to catalogue yet. The admin will add jewellery pieces soon!</p></div>`;
-      } else {
-        // Items exist but none matched the query
-        itemsHTML = `<div class="no-items-msg"><p>No matching items found for your request. Try a different budget, category, or ask to <strong>show all jewellery</strong>.</p></div>`;
-      }
-
-      // Follow-up chips
-      const fuHTML = followups.length ? `<div class="fu-wrap">
-    <div class="fu-label">What would you like to explore?</div>
-    <div class="fu-chips">${followups.map(f => `<button class="fc" onclick="useFC(this)">${f}</button>`).join('')}</div>
-  </div>`: '';
-
-      d.innerHTML = `<div class="mav">💎</div><div class="msg-inner"><div class="mb">${txt.replace(/\n/g, '<br/>')}${itemsHTML}</div>${fuHTML}</div>`;
-      msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
-    }
-
-    function addTyping() {
-      const msgs = document.getElementById('msgs');
-      const id = 't' + Date.now();
-      const d = document.createElement('div'); d.className = 'msg ai'; d.id = id;
-      d.innerHTML = '<div class="mav">💎</div><div class="msg-inner"><div class="mb"><div class="typing"><span></span><span></span><span></span></div></div></div>';
-      msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight; return id;
-    }
-    function removeTyping(id) { document.getElementById(id)?.remove(); }
-    function escHtml(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-
-    // ─── ADMIN ────────────────────────────
-    window.addItem = async function () {
-      const name = document.getElementById('a-name').value.trim();
-      const cat = document.getElementById('a-cat').value;
-      const wt = parseFloat(document.getElementById('a-weight').value);
-      const mk = parseFloat(document.getElementById('a-making').value) || 0;
-      const st = parseFloat(document.getElementById('a-stone').value) || 0;
-      const pu = parseInt(document.getElementById('a-purity').value);
-      const desc = document.getElementById('a-desc').value.trim();
-      const img = document.getElementById('a-img').value.trim();
-      const tags = document.getElementById('a-tags').value.trim();
-      const msg = document.getElementById('a-msg');
-      if (!name || !cat || !wt) { msg.className = 'amsg err'; msg.textContent = 'Please fill Name, Category and Weight'; return; }
-      msg.className = 'amsg'; msg.textContent = 'Adding item...';
-      try {
-        await addDoc(collection(db, 'jewelry_items'), {
-          name, category: cat, weight: wt, making: mk, stone: st, purity: pu,
-          description: desc, imageUrl: img, tags, createdAt: serverTimestamp()
-        });
-        msg.className = 'amsg ok'; msg.textContent = '✅ Item added to catalogue!';
-        ['a-name', 'a-weight', 'a-making', 'a-stone', 'a-desc', 'a-img', 'a-tags'].forEach(id => { document.getElementById(id).value = ''; });
-        document.getElementById('a-cat').value = '';
-        await loadItems(); renderAdminList();
-        setTimeout(() => msg.textContent = '', 4000);
-      } catch (e) { msg.className = 'amsg err'; msg.textContent = 'Error: ' + e.message; }
-    };
-
-    function renderAdminList() {
-      const c = document.getElementById('adm-list');
-      if (!allItems.length) {
-        c.innerHTML = '<p style="color:var(--w4);font-weight:300;font-size:14px">No items yet. Add your first jewellery item above!</p>';
-        return;
-      }
-      c.innerHTML = allItems.map(it => {
-        const price = calcPrice(it);
-        const thumb = it.imageUrl ? `<img src="${it.imageUrl}" alt="${it.name}" onerror="this.style.display='none';this.parentElement.textContent='${catEmoji(it.category)}'"/>` : `${catEmoji(it.category)}`;
-        return `<div class="air">
-      <div class="air-thumb">${thumb}</div>
-      <div class="air-d">
-        <div class="air-n">${it.name}</div>
-        <div class="air-m">${it.category} · ${it.weight}g · ${it.purity}K · ${fmtPrice(price)}</div>
-      </div>
+// ── ADMIN ─────────────────────────────
+let adminUnlocked=false;
+// Double-click logo to show admin button
+document.querySelector('.logo').addEventListener('dblclick',()=>{
+  document.getElementById('admin-btn').style.display='block';
+});
+window.openAdmin=function(){
+  document.getElementById('admin-panel').classList.add('open');
+  document.body.style.overflow='hidden';
+  if(!adminUnlocked){document.getElementById('admin-content').style.display='none';document.getElementById('admin-pwd-section').style.display='block';}
+};
+window.closeAdmin=function(){
+  document.getElementById('admin-panel').classList.remove('open');
+  document.body.style.overflow='';
+};
+window.checkAdminPwd=function(){
+  const pwd=document.getElementById('admin-pwd').value;
+  const msg=document.getElementById('pwd-msg');
+  if(pwd===ADMIN_PWD){
+    adminUnlocked=true;
+    document.getElementById('admin-pwd-section').style.display='none';
+    document.getElementById('admin-content').style.display='block';
+    renderAdminList();
+  }else{
+    msg.className='admin-msg err';msg.textContent='Incorrect password';
+  }
+};
+window.addItem=async function(){
+  const name=document.getElementById('a-name').value.trim();
+  const cat=document.getElementById('a-cat').value;
+  const wt=parseFloat(document.getElementById('a-wt').value);
+  const mk=parseFloat(document.getElementById('a-mk').value)||0;
+  const st=parseFloat(document.getElementById('a-st').value)||0;
+  const pu=parseInt(document.getElementById('a-pu').value);
+  const desc=document.getElementById('a-desc').value.trim();
+  const img=document.getElementById('a-img').value.trim();
+  const msg=document.getElementById('a-msg');
+  if(!name||!cat||!wt){msg.className='admin-msg err';msg.textContent='Please fill Name, Category and Weight';return;}
+  msg.className='admin-msg';msg.textContent='Adding...';
+  try{
+    await addDoc(collection(db,'jewelry_items'),{name,category:cat,weight:wt,making:mk,stone:st,purity:pu,description:desc,imageUrl:img,createdAt:serverTimestamp()});
+    msg.className='admin-msg ok';msg.textContent='✅ Item added successfully!';
+    ['a-name','a-wt','a-mk','a-st','a-desc','a-img'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('a-cat').value='';
+    await loadItems();renderAdminList();
+    setTimeout(()=>msg.textContent='',4000);
+  }catch(e){msg.className='admin-msg err';msg.textContent='Error: '+e.message;}
+};
+function renderAdminList(){
+  const c=document.getElementById('admin-items-list');
+  if(!allItems.length){c.innerHTML='<p style="color:var(--w4);font-weight:300">No items yet.</p>';return;}
+  c.innerHTML=allItems.map(it=>{
+    const price=calcP(it);
+    const thumb=it.imageUrl?`<img src="${it.imageUrl}" alt="${it.name}" onerror="this.style.display='none'" loading="lazy">`:`${catEmoji(it.category)}`;
+    return`<div class="admin-item-row">
+      <div class="ait-thumb">${thumb}</div>
+      <div class="ait-d"><div class="ait-name">${it.name}</div><div class="ait-meta">${fmtCat(it.category)} · ${it.weight}g · ${it.purity}K · ${fmtP(price)}</div></div>
       <button class="del-btn" onclick="delItem('${it.id}')">Delete</button>
     </div>`;
-      }).join('');
-    }
+  }).join('');
+}
+window.delItem=async function(id){
+  if(!confirm('Delete this item?'))return;
+  await deleteDoc(doc(db,'jewelry_items',id));
+  await loadItems();renderAdminList();notify('Item deleted');
+};
 
-    window.delItem = async function (id) {
-      if (!confirm('Delete this item from catalogue?')) return;
-      await deleteDoc(doc(db, 'jewelry_items', id));
-      await loadItems(); renderAdminList(); notify('Item deleted');
-    };
+// ── NOTIFICATION ──────────────────────
+window.notify=function(txt,type=''){
+  const n=document.getElementById('notif');
+  n.textContent=txt;n.className='notif show'+(type?' '+type:'');
+  clearTimeout(window._nt);window._nt=setTimeout(()=>n.classList.remove('show'),3000);
+};
 
-    // Make notify global
-    window.notify = notify;
-  </script>
+// ── INIT ──────────────────────────────
+loadWL();updateWLBadge();
+fetchGold();
+loadItems();
+setInterval(fetchGold,300000); // refresh gold every 5 mins
+</script>
 </body>
-
 </html>
