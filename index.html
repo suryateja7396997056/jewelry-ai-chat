@@ -522,10 +522,9 @@ window.doLogout=async function(){await signOut(auth);};
 
 // NAVIGATION
 window.showV=function(v){
-  ['chat','cat','wl','adm'].forEach(x=>{
-    document.getElementById('v'+x).style.display=x===v?'flex':'none';
-    document.getElementById('v'+x).classList.toggle('on',x===v);
-  });
+  const ids={chat:'vc',cat:'vcat',wl:'vwl',adm:'vadm'};
+  Object.values(ids).forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  const show=document.getElementById(ids[v]);if(show)show.style.display='flex';
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
   const nel=document.getElementById('n-'+v);if(nel)nel.classList.add('on');
   if(v==='cat')renderCat(curFilter);
