@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sample Jewellery Store — AI Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --gold: #C9A84C;--gold-light: #E8C96A;--gold-dim: #8B6914;--gold-pale: rgba(201,168,76,0.08);
+  --black: #090909;--black2: #111111;--black3: #1A1A1A;--black4: #222222;--black5: #2C2C2C;
+  --white: #F5F0E8;--white2: #E8E0D0;--gray: #888880;--gray2: #555550;
+  --red: #E05555;--green: #55AA77;
+  --font-d: 'Playfair Display', serif;--font-b: 'DM Sans', sans-serif;
+  --radius: 14px;--shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--white);font-family:var(--font-b);height:100vh;overflow:hidden;}
+
+/* AUTH */
+#auth-screen{
+  position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;z-index:100;
+  background-image:radial-gradient(ellipse at 20% 50%,rgba(201,168,76,0.07) 0%,transparent 60%),
+                   radial-gradient(ellipse at 80% 20%,rgba(201,168,76,0.04) 0%,transparent 50%);
+}
+.auth-box{
+  background:var(--black3);border:1px solid rgba(201,168,76,0.18);border-radius:22px;
+  padding:48px 44px;width:420px;max-width:95vw;
+  box-shadow:0 40px 80px rgba(0,0,0,0.8),inset 0 1px 0 rgba(201,168,76,0.12);
+}
+.auth-logo{text-align:center;margin-bottom:32px;}
+.auth-logo .gem{font-size:36px;display:block;margin-bottom:10px;}
+.auth-logo h1{font-family:var(--font-d);font-size:22px;color:var(--gold);letter-spacing:3px;font-weight:500;}
+.auth-logo p{font-size:10px;color:var(--gray);letter-spacing:4px;text-transform:uppercase;margin-top:4px;}
+.auth-tabs{display:flex;background:var(--black4);border-radius:10px;padding:4px;margin-bottom:28px;}
+.auth-tab{flex:1;padding:10px;text-align:center;font-size:14px;cursor:pointer;border-radius:8px;transition:all .2s;color:var(--gray);font-family:var(--font-b);border:none;background:none;}
+.auth-tab.active{background:var(--black3);color:var(--gold);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
+.auth-form input{width:100%;background:var(--black4);border:1px solid var(--black5);border-radius:10px;padding:14px 16px;font-size:14px;color:var(--white);font-family:var(--font-b);margin-bottom:12px;outline:none;transition:border .2s;}
+.auth-form input:focus{border-color:var(--gold-dim);}
+.auth-form input::placeholder{color:var(--gray2);}
+.btn-gold{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:600;color:var(--black);cursor:pointer;font-family:var(--font-b);letter-spacing:.5px;transition:all .2s;margin-bottom:12px;}
+.btn-gold:hover{opacity:.88;transform:translateY(-1px);}
+.btn-google{width:100%;background:var(--black4);border:1px solid var(--black5);border-radius:10px;padding:13px;font-size:14px;color:var(--white);cursor:pointer;font-family:var(--font-b);display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;}
+.btn-google:hover{border-color:var(--gray2);}
+.divider{text-align:center;margin:14px 0;color:var(--gray2);font-size:12px;position:relative;}
+.divider::before,.divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--black5);}
+.divider::before{left:0;}.divider::after{right:0;}
+.auth-msg{font-size:12px;text-align:center;margin-top:8px;min-height:18px;}
+.auth-msg.err{color:var(--red);}.auth-msg.ok{color:var(--green);}
+
+/* APP */
+#app{display:none;height:100vh;flex-direction:row;}
+#app.on{display:flex;}
+
+/* SIDEBAR */
+.sidebar{width:256px;background:var(--black2);border-right:1px solid rgba(201,168,76,0.1);display:flex;flex-direction:column;flex-shrink:0;}
+.sb-logo{padding:22px 20px 16px;border-bottom:1px solid rgba(201,168,76,0.08);}
+.sb-logo .brand{font-family:var(--font-d);font-size:15px;color:var(--gold);letter-spacing:1.5px;}
+.sb-logo .sub{font-size:10px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+.gold-bar{margin:14px 14px 0;background:var(--black3);border:1px solid rgba(201,168,76,0.18);border-radius:12px;padding:12px 16px;}
+.gold-bar .gl{font-size:10px;color:var(--gray);letter-spacing:1px;text-transform:uppercase;}
+.gold-bar .gp{font-size:20px;font-family:var(--font-d);color:var(--gold);margin-top:3px;}
+.gold-bar .gs{font-size:10px;color:var(--gray2);}
+.sb-nav{padding:8px 10px;flex:1;overflow-y:auto;}
+.nl{font-size:10px;color:var(--gray2);letter-spacing:2px;text-transform:uppercase;padding:12px 10px 5px;}
+.ni{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:all .15s;color:var(--gray);font-size:14px;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;font-family:var(--font-b);}
+.ni:hover{background:var(--black4);color:var(--white);}
+.ni.on{background:rgba(201,168,76,0.09);color:var(--gold);}
+.ni .ic{font-size:16px;width:20px;text-align:center;}
+.badge{margin-left:auto;background:var(--gold);color:var(--black);font-size:10px;font-weight:700;border-radius:10px;padding:2px 6px;}
+.sb-user{padding:14px 16px;border-top:1px solid rgba(201,168,76,0.08);display:flex;align-items:center;gap:10px;}
+.av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--black);flex-shrink:0;}
+.ui{flex:1;overflow:hidden;}
+.un{font-size:13px;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ue{font-size:10px;color:var(--gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lo-btn{background:none;border:none;color:var(--gray);cursor:pointer;font-size:16px;padding:4px;border-radius:6px;transition:color .2s;}
+.lo-btn:hover{color:var(--red);}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* CHAT */
+#vc{display:flex;flex-direction:column;height:100%;}
+.ch{padding:16px 22px;border-bottom:1px solid rgba(201,168,76,0.08);background:var(--black2);display:flex;align-items:center;gap:12px;}
+.ch h2{font-family:var(--font-d);font-size:17px;color:var(--white);}
+.ch p{font-size:12px;color:var(--gray);margin-top:1px;}
+.ai-badge{margin-left:auto;background:rgba(201,168,76,0.09);border:1px solid rgba(201,168,76,0.25);color:var(--gold);font-size:11px;padding:4px 12px;border-radius:20px;letter-spacing:.5px;}
+.msgs{flex:1;overflow-y:auto;padding:22px;display:flex;flex-direction:column;gap:22px;scroll-behavior:smooth;}
+.msgs::-webkit-scrollbar{width:3px;}
+.msgs::-webkit-scrollbar-thumb{background:var(--black5);border-radius:3px;}
+.msg{display:flex;gap:12px;animation:fu .3s ease;}
+.msg.u{flex-direction:row-reverse;}
+@keyframes fu{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.mav{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;}
+.msg.ai .mav{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--black);}
+.msg.u .mav{background:var(--black5);color:var(--white);}
+.msg-inner{max-width:75%;}
+.mb{padding:14px 18px;border-radius:16px;font-size:14px;line-height:1.65;}
+.msg.ai .mb{background:var(--black3);color:var(--white);border-radius:4px 16px 16px 16px;border:1px solid rgba(201,168,76,0.1);}
+.msg.u .mb{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--black);border-radius:16px 4px 16px 16px;font-weight:500;}
+.typing{display:flex;gap:5px;align-items:center;padding:4px 0;}
+.typing span{width:7px;height:7px;background:var(--gray);border-radius:50%;animation:bl 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:.2s;}.typing span:nth-child(3){animation-delay:.4s;}
+@keyframes bl{0%,80%,100%{opacity:.25;}40%{opacity:1;}}
+
+/* PRODUCT CARDS IN CHAT */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:14px;}
+.pcard{background:var(--black4);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .22s;}
+.pcard:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.5);}
+.pcard-img{width:100%;height:160px;background:var(--black5);display:flex;align-items:center;justify-content:center;font-size:40px;position:relative;overflow:hidden;}
+.pcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+.pcard:hover .pcard-img img{transform:scale(1.04);}
+.pcard-wish{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);border:none;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:all .2s;}
+.pcard-wish:hover,.pcard-wish.sv{background:rgba(201,168,76,0.25);color:var(--gold);}
+.pcard-body{padding:12px 14px 14px;}
+.pcard-cat{font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+.pcard-name{font-family:var(--font-d);font-size:14px;color:var(--white);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pcard-price{font-family:var(--font-d);font-size:18px;color:var(--gold);margin-bottom:3px;}
+.pcard-meta{font-size:11px;color:var(--gray);}
+.pcard-desc{font-size:12px;color:var(--gray2);margin-top:6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.pcard-actions{display:flex;gap:8px;margin-top:10px;}
+.btn-wish-sm{flex:1;background:none;border:1px solid rgba(201,168,76,0.25);border-radius:7px;padding:7px;font-size:12px;cursor:pointer;transition:all .2s;color:var(--gray);font-family:var(--font-b);}
+.btn-wish-sm:hover,.btn-wish-sm.sv{background:rgba(201,168,76,0.12);color:var(--gold);border-color:var(--gold);}
+.btn-view-sm{flex:1;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:7px;padding:7px;font-size:12px;cursor:pointer;transition:all .2s;color:var(--gold);font-family:var(--font-b);}
+.btn-view-sm:hover{background:rgba(201,168,76,0.2);}
+
+/* FOLLOW-UP OPTIONS */
+.followup-wrap{margin-top:14px;}
+.followup-label{font-size:11px;color:var(--gray);margin-bottom:8px;letter-spacing:.5px;}
+.followup-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.fc{background:var(--black4);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:8px 14px;font-size:12px;color:var(--gold-light);cursor:pointer;transition:all .2s;font-family:var(--font-b);}
+.fc:hover{background:rgba(201,168,76,0.12);border-color:var(--gold);transform:translateY(-1px);}
+
+/* SHOW MORE */
+.show-more-btn{margin-top:12px;background:none;border:1px dashed rgba(201,168,76,0.3);border-radius:10px;padding:10px 18px;font-size:13px;color:var(--gray);cursor:pointer;width:100%;text-align:center;transition:all .2s;font-family:var(--font-b);}
+.show-more-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* SUGGESTED QUERIES */
+.sq-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.sq{background:var(--black4);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:9px 16px;font-size:13px;color:var(--gold-light);cursor:pointer;transition:all .2s;font-family:var(--font-b);}
+.sq:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);}
+
+/* INPUT */
+.input-area{padding:16px 22px 20px;border-top:1px solid rgba(201,168,76,0.08);background:var(--black2);}
+.input-wrap{display:flex;align-items:flex-end;gap:10px;background:var(--black4);border:1px solid rgba(201,168,76,0.18);border-radius:14px;padding:10px 14px;transition:border .2s;}
+.input-wrap:focus-within{border-color:var(--gold-dim);}
+#ci{flex:1;background:none;border:none;outline:none;color:var(--white);font-size:14px;font-family:var(--font-b);resize:none;max-height:120px;line-height:1.5;}
+#ci::placeholder{color:var(--gray2);}
+.send-btn{background:linear-gradient(135deg,var(--gold),var(--gold-dim));border:none;border-radius:9px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s;font-size:15px;}
+.send-btn:hover{opacity:.85;transform:scale(1.05);}
+.send-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+.hint{font-size:11px;color:var(--gray2);text-align:center;margin-top:8px;}
+
+/* CATALOG */
+#vcat{display:none;flex-direction:column;height:100%;}
+#vcat.on{display:flex;}
+.cat-hdr{padding:16px 22px;border-bottom:1px solid rgba(201,168,76,0.08);background:var(--black2);display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.cat-hdr h2{font-family:var(--font-d);font-size:17px;}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto;}
+.chip{background:var(--black4);border:1px solid var(--black5);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--gray);cursor:pointer;transition:all .2s;font-family:var(--font-b);}
+.chip:hover{border-color:var(--gold-dim);color:var(--white);}
+.chip.on{background:rgba(201,168,76,0.1);border-color:var(--gold);color:var(--gold);}
+.cat-body{flex:1;overflow-y:auto;padding:22px;}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;}
+
+/* CATALOG CARD */
+.cc{background:var(--black3);border:1px solid rgba(201,168,76,0.1);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .22s;}
+.cc:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:var(--shadow);}
+.cc-img{width:100%;height:190px;background:var(--black5);display:flex;align-items:center;justify-content:center;font-size:50px;position:relative;overflow:hidden;}
+.cc-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+.cc:hover .cc-img img{transform:scale(1.05);}
+.cc-wb{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .2s;}
+.cc-wb:hover,.cc-wb.sv{background:rgba(201,168,76,0.3);color:var(--gold);}
+.cc-body{padding:14px 16px;}
+.cc-cat{font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+.cc-name{font-family:var(--font-d);font-size:15px;color:var(--white);margin-bottom:8px;}
+.cc-row{display:flex;justify-content:space-between;align-items:flex-end;}
+.cc-price{font-family:var(--font-d);font-size:17px;color:var(--gold);}
+.cc-wt{font-size:11px;color:var(--gray);}
+
+/* WISHLIST */
+#vwl{display:none;flex-direction:column;height:100%;}
+#vwl.on{display:flex;}
+.wl-hdr{padding:16px 22px;border-bottom:1px solid rgba(201,168,76,0.08);background:var(--black2);}
+.wl-hdr h2{font-family:var(--font-d);font-size:17px;}
+.wl-hdr p{font-size:12px;color:var(--gray);margin-top:2px;}
+.wl-body{flex:1;overflow-y:auto;padding:22px;}
+.wl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;}
+
+/* ADMIN */
+#vadm{display:none;flex-direction:column;height:100%;}
+#vadm.on{display:flex;}
+.adm-hdr{padding:16px 22px;border-bottom:1px solid rgba(201,168,76,0.08);background:var(--black2);}
+.adm-hdr h2{font-family:var(--font-d);font-size:17px;color:var(--gold);}
+.adm-hdr p{font-size:12px;color:var(--gray);margin-top:2px;}
+.adm-body{flex:1;overflow-y:auto;padding:22px;}
+.adm-form{background:var(--black3);border:1px solid rgba(201,168,76,0.12);border-radius:var(--radius);padding:26px;max-width:600px;}
+.adm-form h3{font-family:var(--font-d);font-size:16px;color:var(--gold);margin-bottom:20px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.fg label{font-size:11px;color:var(--gray);letter-spacing:.5px;text-transform:uppercase;}
+.fg input,.fg select,.fg textarea{background:var(--black4);border:1px solid var(--black5);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:var(--font-b);outline:none;transition:border .2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold-dim);}
+.fg select option{background:var(--black3);}
+.fg textarea{resize:vertical;min-height:80px;}
+.adm-items{margin-top:28px;}
+.adm-items h3{font-family:var(--font-d);font-size:16px;color:var(--gold);margin-bottom:16px;}
+.air{display:flex;align-items:center;gap:14px;background:var(--black3);border:1px solid rgba(201,168,76,0.08);border-radius:10px;padding:12px 16px;margin-bottom:10px;}
+.air-thumb{width:46px;height:46px;border-radius:8px;background:var(--black5);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden;}
+.air-thumb img{width:100%;height:100%;object-fit:cover;}
+.air-d{flex:1;}
+.air-n{font-size:14px;color:var(--white);}
+.air-m{font-size:11px;color:var(--gray);}
+.del-btn{background:none;border:1px solid rgba(224,85,85,0.3);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--red);cursor:pointer;transition:all .2s;}
+.del-btn:hover{background:rgba(224,85,85,0.1);}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px);}
+.modal-ov.open{display:flex;}
+.modal{background:var(--black3);border:1px solid rgba(201,168,76,0.18);border-radius:22px;width:520px;max-width:95vw;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow);}
+.modal-img-wrap{width:100%;height:280px;background:var(--black5);overflow:hidden;border-radius:22px 22px 0 0;position:relative;}
+.modal-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.modal-img-emoji{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:72px;}
+.modal-content{padding:28px;}
+.modal-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.modal-price{font-family:var(--font-d);font-size:28px;color:var(--gold);}
+.btn-cls{background:none;border:none;color:var(--gray);font-size:20px;cursor:pointer;padding:4px;transition:color .2s;}
+.btn-cls:hover{color:var(--white);}
+.modal-name{font-family:var(--font-d);font-size:20px;color:var(--white);margin-bottom:6px;}
+.modal-cat{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
+.modal-specs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.spec{background:var(--black4);border-radius:10px;padding:12px 16px;}
+.spec-l{font-size:10px;color:var(--gray);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;}
+.spec-v{font-size:15px;color:var(--white);font-weight:500;}
+.modal-desc{font-size:14px;color:var(--gray);line-height:1.7;margin-bottom:20px;}
+.modal-acts{display:flex;gap:10px;}
+.btn-wish-lg{flex:1;background:none;border:1px solid rgba(201,168,76,0.3);border-radius:10px;padding:13px;font-size:14px;color:var(--gold);cursor:pointer;font-family:var(--font-b);transition:all .2s;}
+.btn-wish-lg:hover,.btn-wish-lg.sv{background:rgba(201,168,76,0.1);}
+
+/* NOTIF */
+.notif{position:fixed;bottom:24px;right:24px;background:var(--black3);border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--white);z-index:999;box-shadow:var(--shadow);transform:translateY(80px);opacity:0;transition:all .3s;max-width:280px;}
+.notif.show{transform:translateY(0);opacity:1;}
+.notif.gold{border-color:var(--gold);color:var(--gold-light);}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px;color:var(--gray);}
+.empty .e-icon{font-size:48px;margin-bottom:16px;}
+
+/* SCROLLBAR */
+.cat-body::-webkit-scrollbar,.wl-body::-webkit-scrollbar,.adm-body::-webkit-scrollbar{width:3px;}
+.cat-body::-webkit-scrollbar-thumb,.wl-body::-webkit-scrollbar-thumb,.adm-body::-webkit-scrollbar-thumb{background:var(--black5);border-radius:3px;}
+
+@media(max-width:640px){
+  .sidebar{width:58px;}
+  .sb-logo .brand,.sb-logo .sub,.gold-bar,.ni span:not(.ic),.ui,.lo-btn,.nl{display:none;}
+  .ni{justify-content:center;padding:14px;}
+  .sb-user{justify-content:center;}
+  .fr{grid-template-columns:1fr;}
+  .cat-grid,.wl-grid,.products-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <span class="gem">💎</span>
+      <h1>SAMPLE JEWELLERY</h1>
+      <p>AI-Powered Discovery</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" onclick="switchTab('signup')">Create Account</button>
+    </div>
+    <div id="lf" class="auth-form">
+      <input type="email" id="le" placeholder="Email address"/>
+      <input type="password" id="lp" placeholder="Password"/>
+      <button class="btn-gold" onclick="doLogin()">Sign In</button>
+      <div class="divider">or continue with</div>
+      <button class="btn-google" onclick="doGoogle()"><svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>Continue with Google</button>
+      <div class="auth-msg" id="lm"></div>
+    </div>
+    <div id="sf" class="auth-form" style="display:none">
+      <input type="text" id="sn" placeholder="Full name"/>
+      <input type="email" id="se" placeholder="Email address"/>
+      <input type="password" id="sp" placeholder="Password (min 6 characters)"/>
+      <button class="btn-gold" onclick="doSignup()">Create Account</button>
+      <div class="divider">or continue with</div>
+      <button class="btn-google" onclick="doGoogle()"><svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>Continue with Google</button>
+      <div class="auth-msg" id="sm"></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="brand">💎 SAMPLE JEWELLERY</div>
+      <div class="sub">AI Assistant</div>
+    </div>
+    <div class="gold-bar">
+      <div class="gl">24K Gold Rate</div>
+      <div class="gp" id="grd">₹ —</div>
+      <div class="gs">per gram · live</div>
+    </div>
+    <div class="sb-nav">
+      <div class="nl">Menu</div>
+      <button class="ni on" onclick="showV('chat')" id="n-chat"><span class="ic">💬</span><span>AI Assistant</span></button>
+      <button class="ni" onclick="showV('cat')" id="n-cat"><span class="ic">🪙</span><span>Catalogue</span></button>
+      <button class="ni" onclick="showV('wl')" id="n-wl"><span class="ic">❤️</span><span>My Wishlist</span><span class="badge" id="wbadge" style="display:none">0</span></button>
+      <div class="nl" id="adm-nl" style="display:none">Admin</div>
+      <button class="ni" onclick="showV('adm')" id="n-adm" style="display:none"><span class="ic">⚙️</span><span>Manage Items</span></button>
+    </div>
+    <div class="sb-user">
+      <div class="av" id="uav">?</div>
+      <div class="ui"><div class="un" id="uname">—</div><div class="ue" id="uemail">—</div></div>
+      <button class="lo-btn" onclick="doLogout()" title="Logout">⏻</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- CHAT VIEW -->
+    <div id="vc">
+      <div class="ch">
+        <div><h2>Jewellery AI Assistant</h2><p>Ask by budget, occasion, style or category</p></div>
+        <div class="ai-badge">✦ Gemini AI</div>
+      </div>
+      <div class="msgs" id="msgs">
+        <div class="msg ai">
+          <div class="mav">💎</div>
+          <div class="msg-inner">
+            <div class="mb">
+              Namaste! 🙏 Welcome to <strong>Sample Jewellery Store</strong>.<br/><br/>
+              I'm your personal jewellery stylist. Tell me your <strong>budget</strong>, <strong>occasion</strong>, or <strong>style preference</strong> — and I'll find the perfect pieces for you with today's live gold prices! ✨
+            </div>
+            <div class="sq-wrap">
+              <button class="sq" onclick="useSQ(this)">Rings below ₹5,000</button>
+              <button class="sq" onclick="useSQ(this)">Bridal jewellery</button>
+              <button class="sq" onclick="useSQ(this)">Light weight earrings</button>
+              <button class="sq" onclick="useSQ(this)">Necklaces under ₹20,000</button>
+              <button class="sq" onclick="useSQ(this)">Show all items</button>
+              <button class="sq" onclick="useSQ(this)">Daily wear jewellery</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="input-area">
+        <div class="input-wrap">
+          <textarea id="ci" rows="1" placeholder="Ask me anything about jewellery..." onkeydown="enterKey(event)" oninput="autoH(this)"></textarea>
+          <button class="send-btn" id="sbtn" onclick="sendMsg()">➤</button>
+        </div>
+        <div class="hint">Enter to send · Shift+Enter for new line</div>
+      </div>
+    </div>
+
+    <!-- CATALOG -->
+    <div id="vcat">
+      <div class="cat-hdr">
+        <div><h2>Full Catalogue</h2></div>
+        <div class="chips" id="cat-chips">
+          <button class="chip on" onclick="filterCat('all',this)">All</button>
+          <button class="chip" onclick="filterCat('ring',this)">Rings</button>
+          <button class="chip" onclick="filterCat('necklace',this)">Necklaces</button>
+          <button class="chip" onclick="filterCat('earring',this)">Earrings</button>
+          <button class="chip" onclick="filterCat('bracelet',this)">Bracelets</button>
+          <button class="chip" onclick="filterCat('bangle',this)">Bangles</button>
+          <button class="chip" onclick="filterCat('set',this)">Sets</button>
+        </div>
+      </div>
+      <div class="cat-body">
+        <div class="cat-grid" id="cat-grid"><div class="empty"><div class="e-icon">🔄</div><p>Loading...</p></div></div>
+      </div>
+    </div>
+
+    <!-- WISHLIST -->
+    <div id="vwl">
+      <div class="wl-hdr"><h2>❤️ My Wishlist</h2><p id="wl-ct">Your saved pieces</p></div>
+      <div class="wl-body"><div class="wl-grid" id="wl-grid"></div></div>
+    </div>
+
+    <!-- ADMIN -->
+    <div id="vadm">
+      <div class="adm-hdr"><h2>⚙️ Manage Items</h2><p>Add or remove jewellery items from the catalogue</p></div>
+      <div class="adm-body">
+        <div class="adm-form">
+          <h3>Add New Item</h3>
+          <div class="fr">
+            <div class="fg"><label>Item Name *</label><input id="in" placeholder="e.g. Gold Necklace"/></div>
+            <div class="fg"><label>Category *</label>
+              <select id="ic"><option value="">Select</option><option value="ring">Ring</option><option value="necklace">Necklace</option><option value="earring">Earring</option><option value="bracelet">Bracelet</option><option value="bangle">Bangle</option><option value="set">Set</option><option value="pendant">Pendant</option><option value="chain">Chain</option></select>
+            </div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>Gold Weight (grams) *</label><input type="number" id="iw" placeholder="e.g. 5.5" step="0.1"/></div>
+            <div class="fg"><label>Making Charges (₹) *</label><input type="number" id="im" placeholder="e.g. 500"/></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>Stone / Diamond Cost (₹)</label><input type="number" id="ist" placeholder="0"/></div>
+            <div class="fg"><label>Gold Purity</label>
+              <select id="ip"><option value="24">24K (99.9%)</option><option value="22" selected>22K (91.6%)</option><option value="18">18K (75%)</option></select>
+            </div>
+          </div>
+          <div class="fg"><label>Description</label><textarea id="id" placeholder="Describe the piece — occasion, style, features..."></textarea></div>
+          <div class="fg">
+            <label>Image URL (Upload to GitHub, paste link here)</label>
+            <input id="iurl" placeholder="https://raw.githubusercontent.com/your-repo/main/images/item.jpg"/>
+            <small style="color:var(--gray);font-size:11px;margin-top:4px;">Upload image to your GitHub repo → copy raw link → paste above</small>
+          </div>
+          <div class="fg">
+            <label>Occasion Tags</label>
+            <input id="itags" placeholder="e.g. bridal, daily wear, gifting, festive"/>
+          </div>
+          <button class="btn-gold" onclick="addItem()" style="margin-top:6px">✦ Add to Catalogue</button>
+          <div class="auth-msg" id="adm-msg" style="text-align:left;margin-top:8px;"></div>
+        </div>
+        <div class="adm-items">
+          <h3>Current Catalogue</h3>
+          <div id="adm-list"><p style="color:var(--gray)">Loading...</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="modal">
+  <div class="modal">
+    <div class="modal-img-wrap" id="modal-img"><div class="modal-img-emoji" id="modal-emoji">💎</div></div>
+    <div class="modal-content">
+      <div class="modal-top">
+        <div class="modal-price" id="m-price">₹ —</div>
+        <button class="btn-cls" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-name" id="m-name">—</div>
+      <div class="modal-cat" id="m-cat">—</div>
+      <div class="modal-specs" id="m-specs"></div>
+      <div class="modal-desc" id="m-desc"></div>
+      <div class="modal-acts">
+        <button class="btn-wish-lg" id="m-wish" onclick="wishFromModal()">🤍 Add to Wishlist</button>
+        <button class="btn-gold" style="flex:1;margin-bottom:0" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="notif" id="notif"></div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged,updateProfile,sendEmailVerification}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getFirestore,collection,addDoc,getDocs,deleteDoc,doc,setDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const FC={apiKey:"AIzaSyAzzyQVLP1kNv62L5zdDUjYJH5fm0aUYBA",authDomain:"jewelry-ai-chat.firebaseapp.com",projectId:"jewelry-ai-chat",storageBucket:"jewelry-ai-chat.firebasestorage.app",messagingSenderId:"941334368131",appId:"1:941334368131:web:1354c4cb7f5700bf26f0b6"};
+const GKEY="AIzaSyAMqXPX8vhpkwvIbeIs2O1-XPKVZWQYILw";
+const ADMIN="suryateja7396997056@gmail.com";
+
+const app=initializeApp(FC);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const gp=new GoogleAuthProvider();
+
+let CU=null,goldRate=7500,items=[],wishIds=new Set(),modalItemId=null,curFilter='all';
+
+// GOLD PRICE
+async function fetchGold(){
+  try{const r=await fetch('https://api.exchangerate-api.com/v4/latest/USD');const d=await r.json();goldRate=Math.round(64.3*(d.rates.INR||83));}catch(e){goldRate=7500;}
+  document.getElementById('grd').textContent='₹ '+goldRate.toLocaleString('en-IN');
+}
+
+function calcP(item){
+  const pf=item.purity==24?1:item.purity==22?0.916:0.75;
+  return Math.round(item.weight*goldRate*pf+(item.making||0)+(item.stone||0));
+}
+
+function catEmoji(c){return{ring:'💍',necklace:'📿',earring:'✨',bracelet:'⚜️',bangle:'🔮',set:'💠',pendant:'🌟',chain:'⛓️'}[c]||'💎';}
+
+// AUTH STATE
+onAuthStateChanged(auth,u=>{
+  CU=u;
+  if(u){
+    document.getElementById('auth-screen').style.display='none';
+    document.getElementById('app').classList.add('on');
+    const nm=u.displayName||u.email.split('@')[0];
+    document.getElementById('uname').textContent=nm;
+    document.getElementById('uemail').textContent=u.email;
+    document.getElementById('uav').textContent=nm[0].toUpperCase();
+    if(u.email===ADMIN){document.getElementById('n-adm').style.display='flex';document.getElementById('adm-nl').style.display='block';}
+    fetchGold();loadItems();loadWish();
+  }else{document.getElementById('auth-screen').style.display='flex';document.getElementById('app').classList.remove('on');}
+});
+
+// AUTH
+window.switchTab=function(t){
+  document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active'));event.target.classList.add('active');
+  document.getElementById('lf').style.display=t==='login'?'block':'none';
+  document.getElementById('sf').style.display=t==='signup'?'block':'none';
+};
+window.doLogin=async function(){
+  const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value,m=document.getElementById('lm');
+  if(!e||!p){m.className='auth-msg err';m.textContent='Fill all fields';return;}
+  m.className='auth-msg';m.textContent='Signing in...';
+  try{await signInWithEmailAndPassword(auth,e,p);}
+  catch(err){m.className='auth-msg err';m.textContent=err.code==='auth/invalid-credential'?'Invalid email or password':err.message;}
+};
+window.doSignup=async function(){
+  const n=document.getElementById('sn').value.trim(),e=document.getElementById('se').value.trim(),p=document.getElementById('sp').value,m=document.getElementById('sm');
+  if(!n||!e||!p){m.className='auth-msg err';m.textContent='Fill all fields';return;}
+  if(p.length<6){m.className='auth-msg err';m.textContent='Password min 6 characters';return;}
+  m.className='auth-msg';m.textContent='Creating account...';
+  try{const c=await createUserWithEmailAndPassword(auth,e,p);await updateProfile(c.user,{displayName:n});await sendEmailVerification(c.user);m.className='auth-msg ok';m.textContent='✅ Account created! Check email to verify.';}
+  catch(err){m.className='auth-msg err';m.textContent=err.code==='auth/email-already-in-use'?'Email already registered':err.message;}
+};
+window.doGoogle=async function(){try{await signInWithPopup(auth,gp);}catch(e){notify('Google login failed');}};
+window.doLogout=async function(){await signOut(auth);};
+
+// NAVIGATION
+window.showV=function(v){
+  ['chat','cat','wl','adm'].forEach(x=>{
+    document.getElementById('v'+x).style.display=x===v?'flex':'none';
+    document.getElementById('v'+x).classList.toggle('on',x===v);
+  });
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  const nel=document.getElementById('n-'+v);if(nel)nel.classList.add('on');
+  if(v==='cat')renderCat(curFilter);
+  if(v==='wl')renderWL();
+  if(v==='adm')renderAdmList();
+};
+
+// ITEMS
+async function loadItems(){
+  const s=await getDocs(collection(db,'jewelry_items'));
+  items=s.docs.map(d=>({id:d.id,...d.data()}));
+  renderCat(curFilter);
+}
+async function loadWish(){
+  if(!CU)return;
+  const s=await getDocs(collection(db,'users',CU.uid,'wishlist'));
+  wishIds=new Set(s.docs.map(d=>d.id));
+  updateBadge();
+}
+function updateBadge(){
+  const b=document.getElementById('wbadge');
+  wishIds.size>0?(b.style.display='inline',b.textContent=wishIds.size):b.style.display='none';
+}
+
+// TOGGLE WISH
+window.toggleWish=async function(id,rerender){
+  if(!CU){notify('Please login first');return;}
+  const ref=doc(db,'users',CU.uid,'wishlist',id);
+  if(wishIds.has(id)){await deleteDoc(ref);wishIds.delete(id);notify('Removed from wishlist');}
+  else{const it=items.find(i=>i.id===id);await setDoc(ref,{...it,savedAt:serverTimestamp()});wishIds.add(id);notify('❤️ Added to wishlist!','gold');}
+  updateBadge();
+  if(rerender==='wl')renderWL();
+  // update all wish buttons
+  document.querySelectorAll('[data-wid="'+id+'"]').forEach(b=>{
+    b.classList.toggle('sv',wishIds.has(id));
+    b.textContent=wishIds.has(id)?'❤️ Saved':'🤍 Save';
+  });
+  document.querySelectorAll('[data-wib="'+id+'"]').forEach(b=>{
+    b.classList.toggle('sv',wishIds.has(id));
+    b.textContent=wishIds.has(id)?'❤️':'🤍';
+  });
+};
+
+// CATALOG RENDER
+window.filterCat=function(f,el){
+  curFilter=f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');
+  renderCat(f);
+};
+function renderCat(f){
+  const g=document.getElementById('cat-grid');
+  const list=f==='all'?items:items.filter(i=>i.category===f);
+  if(!list.length){g.innerHTML='<div class="empty"><div class="e-icon">🔍</div><p>No items in this category yet</p></div>';return;}
+  g.innerHTML=list.map(item=>ccHTML(item)).join('');
+}
+function ccHTML(item){
+  const price=calcP(item);const w=wishIds.has(item.id);
+  return`<div class="cc" onclick="openModal('${item.id}')">
+    <div class="cc-img">
+      ${item.imageUrl?`<img src="${item.imageUrl}" alt="${item.name}" onerror="this.parentElement.innerHTML='${catEmoji(item.category)}'"/>`:`<span style="font-size:50px">${catEmoji(item.category)}</span>`}
+      <button class="cc-wb ${w?'sv':''}" data-wib="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}')">${w?'❤️':'🤍'}</button>
+    </div>
+    <div class="cc-body">
+      <div class="cc-cat">${item.category||'Jewellery'}</div>
+      <div class="cc-name">${item.name}</div>
+      <div class="cc-row"><div class="cc-price">₹${price.toLocaleString('en-IN')}</div><div class="cc-wt">${item.weight}g · ${item.purity}K</div></div>
+    </div>
+  </div>`;
+}
+
+// WISHLIST
+function renderWL(){
+  const g=document.getElementById('wl-grid');
+  const list=items.filter(i=>wishIds.has(i.id));
+  document.getElementById('wl-ct').textContent=list.length+' saved pieces';
+  if(!list.length){g.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="e-icon">🤍</div><p>No saved items yet.<br/>Browse and tap ❤️ to save pieces.</p></div>';return;}
+  g.innerHTML=list.map(item=>{
+    const price=calcP(item);
+    return`<div class="cc" onclick="openModal('${item.id}')">
+      <div class="cc-img">
+        ${item.imageUrl?`<img src="${item.imageUrl}" alt="${item.name}" onerror="this.parentElement.innerHTML='${catEmoji(item.category)}'"/>`:`<span style="font-size:50px">${catEmoji(item.category)}</span>`}
+        <button class="cc-wb sv" data-wib="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}','wl')">❤️</button>
+      </div>
+      <div class="cc-body">
+        <div class="cc-cat">${item.category||'Jewellery'}</div>
+        <div class="cc-name">${item.name}</div>
+        <div class="cc-row"><div class="cc-price">₹${price.toLocaleString('en-IN')}</div><div class="cc-wt">${item.weight}g · ${item.purity}K</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// MODAL
+window.openModal=function(id){
+  modalItemId=id;
+  const it=items.find(i=>i.id===id);if(!it)return;
+  const price=calcP(it);const w=wishIds.has(id);
+  document.getElementById('m-price').textContent='₹'+price.toLocaleString('en-IN');
+  document.getElementById('m-name').textContent=it.name;
+  document.getElementById('m-cat').textContent=(it.category||'jewellery').toUpperCase()+' · '+it.purity+'K GOLD';
+  document.getElementById('m-desc').textContent=it.description||'A stunning piece from our exclusive collection, crafted with fine gold.';
+  document.getElementById('m-specs').innerHTML=`
+    <div class="spec"><div class="spec-l">Weight</div><div class="spec-v">${it.weight}g</div></div>
+    <div class="spec"><div class="spec-l">Purity</div><div class="spec-v">${it.purity}K Gold</div></div>
+    <div class="spec"><div class="spec-l">Making Charges</div><div class="spec-v">₹${(it.making||0).toLocaleString('en-IN')}</div></div>
+    <div class="spec"><div class="spec-l">Stone Cost</div><div class="spec-v">₹${(it.stone||0).toLocaleString('en-IN')}</div></div>
+  `;
+  const mw=document.getElementById('modal-img');
+  if(it.imageUrl){mw.innerHTML=`<img src="${it.imageUrl}" alt="${it.name}" onerror="this.parentElement.innerHTML='<div class=modal-img-emoji>${catEmoji(it.category)}</div>'"/>`;}
+  else{mw.innerHTML=`<div class="modal-img-emoji">${catEmoji(it.category)}</div>`;}
+  const mwb=document.getElementById('m-wish');mwb.textContent=w?'❤️ Saved to Wishlist':'🤍 Add to Wishlist';mwb.classList.toggle('sv',w);
+  document.getElementById('modal').classList.add('open');
+};
+window.closeModal=function(){document.getElementById('modal').classList.remove('open');modalItemId=null;};
+window.wishFromModal=async function(){
+  if(!modalItemId)return;
+  await toggleWish(modalItemId);
+  const w=wishIds.has(modalItemId);
+  const b=document.getElementById('m-wish');b.textContent=w?'❤️ Saved to Wishlist':'🤍 Add to Wishlist';b.classList.toggle('sv',w);
+};
+
+// CHAT
+window.enterKey=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}};
+window.autoH=function(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';};
+window.useSQ=function(el){document.getElementById('ci').value=el.textContent;sendMsg();el.closest('.sq-wrap')?.remove();};
+
+window.sendMsg=async function(){
+  const inp=document.getElementById('ci');
+  const txt=inp.value.trim();if(!txt)return;
+  inp.value='';inp.style.height='auto';
+  const btn=document.getElementById('sbtn');btn.disabled=true;
+  addUserMsg(txt);
+  const tid=addTyping();
+
+  const ctx=items.map(i=>`ID:${i.id}|Name:${i.name}|Category:${i.category}|Weight:${i.weight}g|Purity:${i.purity}K|Price:₹${calcP(i).toLocaleString('en-IN')}|Making:₹${i.making||0}|Stone:₹${i.stone||0}|Occasion:${i.tags||''}|Desc:${i.description||''}`).join('\n');
+
+  const prompt=`You are an expert jewellery assistant at "Sample Jewellery Store". Current 24K gold rate: ₹${goldRate}/gram.
+
+AVAILABLE ITEMS:
+${ctx||'No items added yet by admin.'}
+
+CUSTOMER MESSAGE: "${txt}"
+
+INSTRUCTIONS:
+1. Reply warmly in 1-2 sentences addressing their need
+2. If they ask for items by budget/category/occasion/style — identify matching items by their ID
+3. After your reply suggest 5 follow-up options relevant to what they asked
+4. If no items match, suggest they browse the catalogue or ask differently
+
+RESPOND IN THIS EXACT JSON FORMAT:
+{
+  "reply": "Your warm 1-2 sentence response here",
+  "matchedIds": ["id1","id2","id3"],
+  "followups": ["option 1","option 2","option 3","option 4","option 5"],
+  "hasMore": true
+}
+
+matchedIds = item IDs that match (empty array if none match)
+followups = 5 short follow-up suggestion buttons relevant to context
+hasMore = true if there could be more variations to explore`;
+
+  try{
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GKEY}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.7}})
+    });
+    const data=await res.json();
+    let raw=data.candidates?.[0]?.content?.parts?.[0]?.text||'{}';
+    raw=raw.replace(/```json|```/g,'').trim();
+    let parsed={reply:'',matchedIds:[],followups:[],hasMore:false};
+    try{parsed=JSON.parse(raw);}catch(e){parsed.reply=raw;}
+    removeTyping(tid);
+    const matched=items.filter(i=>parsed.matchedIds?.includes(i.id));
+    addAIMsg(parsed.reply||'Here are some options for you!',matched,parsed.followups||[],parsed.hasMore,txt);
+  }catch(e){
+    removeTyping(tid);
+    addAIMsg('Sorry, I had trouble connecting. Please try again!', [], [], false, txt);
+  }
+  btn.disabled=false;
+};
+
+function addUserMsg(txt){
+  const msgs=document.getElementById('msgs');
+  const nm=CU?.displayName||'U';
+  const d=document.createElement('div');d.className='msg u';
+  d.innerHTML=`<div class="mav">${nm[0].toUpperCase()}</div><div class="msg-inner"><div class="mb">${txt.replace(/</g,'&lt;')}</div></div>`;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+}
+
+function addAIMsg(txt,matched,followups,hasMore,origQuery){
+  const msgs=document.getElementById('msgs');
+  const d=document.createElement('div');d.className='msg ai';
+
+  let itemsHTML='';
+  if(matched.length>0){
+    itemsHTML='<div class="products-grid">'+matched.map(item=>{
+      const price=calcP(item);const w=wishIds.has(item.id);
+      return`<div class="pcard" onclick="openModal('${item.id}')">
+        <div class="pcard-img">
+          ${item.imageUrl?`<img src="${item.imageUrl}" alt="${item.name}" onerror="this.parentElement.innerHTML='<span style=font-size:40px>${catEmoji(item.category)}</span>'"/>`:`<span style="font-size:40px">${catEmoji(item.category)}</span>`}
+          <button class="pcard-wish ${w?'sv':''}" data-wib="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}')">${w?'❤️':'🤍'}</button>
+        </div>
+        <div class="pcard-body">
+          <div class="pcard-cat">${item.category||'jewellery'}</div>
+          <div class="pcard-name">${item.name}</div>
+          <div class="pcard-price">₹${price.toLocaleString('en-IN')}</div>
+          <div class="pcard-meta">${item.weight}g · ${item.purity}K Gold</div>
+          <div class="pcard-desc">${item.description||'Premium quality jewellery from our exclusive collection.'}</div>
+          <div class="pcard-actions">
+            <button class="btn-wish-sm ${w?'sv':''}" data-wid="${item.id}" onclick="event.stopPropagation();toggleWish('${item.id}')">${w?'❤️ Saved':'🤍 Save'}</button>
+            <button class="btn-view-sm" onclick="event.stopPropagation();openModal('${item.id}')">View Details</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('')+'</div>';
+  }
+
+  let fuHTML='';
+  if(followups&&followups.length>0){
+    fuHTML=`<div class="followup-wrap">
+      <div class="followup-label">What would you like to explore next?</div>
+      <div class="followup-chips">${followups.map(f=>`<button class="fc" onclick="useFU(this)">${f}</button>`).join('')}</div>
+    </div>`;
+  }
+
+  let moreHTML='';
+  if(hasMore&&matched.length>0){
+    moreHTML=`<button class="show-more-btn" onclick="showMore(this,'${origQuery.replace(/'/g,"\\'")}')">Show 10 more options ↓</button>`;
+  }
+
+  d.innerHTML=`<div class="mav">💎</div><div class="msg-inner"><div class="mb">${txt.replace(/\n/g,'<br/>')}${itemsHTML}${moreHTML}</div>${fuHTML}</div>`;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+}
+
+window.useFU=function(el){
+  document.getElementById('ci').value=el.textContent;
+  sendMsg();
+};
+
+window.showMore=async function(btn,origQuery){
+  btn.textContent='Loading more options...';btn.disabled=true;
+  document.getElementById('ci').value='Show me 10 more different options for: '+origQuery;
+  await sendMsg();
+  btn.remove();
+};
+
+function addTyping(){
+  const msgs=document.getElementById('msgs');
+  const id='t'+Date.now();const d=document.createElement('div');d.className='msg ai';d.id=id;
+  d.innerHTML='<div class="mav">💎</div><div class="msg-inner"><div class="mb"><div class="typing"><span></span><span></span><span></span></div></div></div>';
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return id;
+}
+function removeTyping(id){document.getElementById(id)?.remove();}
+
+// ADMIN
+window.addItem=async function(){
+  const n=document.getElementById('in').value.trim();
+  const c=document.getElementById('ic').value;
+  const w=parseFloat(document.getElementById('iw').value);
+  const m=parseFloat(document.getElementById('im').value)||0;
+  const st=parseFloat(document.getElementById('ist').value)||0;
+  const p=parseInt(document.getElementById('ip').value);
+  const desc=document.getElementById('id').value.trim();
+  const url=document.getElementById('iurl').value.trim();
+  const tags=document.getElementById('itags').value.trim();
+  const msg=document.getElementById('adm-msg');
+  if(!n||!c||!w){msg.className='auth-msg err';msg.textContent='Fill all required fields';return;}
+  msg.className='auth-msg';msg.textContent='Adding...';
+  try{
+    await addDoc(collection(db,'jewelry_items'),{name:n,category:c,weight:w,making:m,stone:st,purity:p,description:desc,imageUrl:url,tags:tags,createdAt:serverTimestamp()});
+    msg.className='auth-msg ok';msg.textContent='✅ Item added!';
+    ['in','iw','im','ist','id','iurl','itags'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('ic').value='';
+    await loadItems();renderAdmList();
+  }catch(e){msg.className='auth-msg err';msg.textContent='Error: '+e.message;}
+};
+
+function renderAdmList(){
+  const c=document.getElementById('adm-list');
+  if(!items.length){c.innerHTML='<p style="color:var(--gray)">No items yet. Add your first item above!</p>';return;}
+  c.innerHTML=items.map(it=>{
+    const price=calcP(it);
+    return`<div class="air">
+      <div class="air-thumb">${it.imageUrl?`<img src="${it.imageUrl}" alt="${it.name}" onerror="this.parentElement.textContent='${catEmoji(it.category)}'"/>`:`${catEmoji(it.category)}`}</div>
+      <div class="air-d"><div class="air-n">${it.name}</div><div class="air-m">${it.category} · ${it.weight}g · ${it.purity}K · ₹${price.toLocaleString('en-IN')}</div></div>
+      <button class="del-btn" onclick="delItem('${it.id}')">Delete</button>
+    </div>`;
+  }).join('');
+}
+
+window.delItem=async function(id){
+  if(!confirm('Delete this item?'))return;
+  await deleteDoc(doc(db,'jewelry_items',id));
+  await loadItems();renderAdmList();notify('Item deleted');
+};
+
+// NOTIFY
+window.notify=function(txt,type=''){
+  const n=document.getElementById('notif');n.textContent=txt;n.className='notif show '+(type==='gold'?'gold':'');
+  setTimeout(()=>n.classList.remove('show'),3000);
+};
+</script>
+</body>
+</html>
